@@ -31,6 +31,20 @@ export function bootDelegation() {
   // once with that extension before giving up. If it still 404s, hide the
   // <img> so the keshi placeholder shows through — a missing image is
   // expected while the archive is being filled in, not an error.
+  // If a full-size version of a hero image exists, quietly swap it in once
+  // it has loaded. Until then the 't' file (the only size uploaded today)
+  // is what shows, so the detail screen is never blank.
+  document.addEventListener('load', e => {
+    const t = e.target;
+    if (!t || t.tagName !== 'IMG') return;
+    const full = t.getAttribute('data-imgupgrade');
+    if (!full || t.dataset.upgraded) return;
+    t.dataset.upgraded = '1';
+    const probe = new Image();
+    probe.onload = () => { if (probe.naturalWidth > t.naturalWidth) t.src = full; };
+    probe.src = full;
+  }, true);
+
   document.addEventListener('error', e => {
     const t = e.target;
     if (!t || t.tagName !== 'IMG' || !t.hasAttribute('data-imgfallback')) return;

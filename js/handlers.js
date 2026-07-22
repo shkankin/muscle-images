@@ -6,7 +6,7 @@
 // ════════════════════════════════════════════════════════════════════
 
 import { S, store } from './state.js';
-import { render, toast, haptic } from './render.js';
+import { render, toast, haptic, onAfterRender } from './render.js';
 import { onClick, onInput, onChange } from './delegate.js';
 import {
   toggleOwned, toggleWant, toggleColor, setField, setFigField, toggleFigColor,
@@ -129,3 +129,44 @@ onClick('pick-import', () => {
   });
   inp.click();
 });
+
+// ── Hardware / browser back ────────────────────────────────────────
+// Without this, Android's back button (and the browser's) exits the app
+// from anywhere. Strategy: keep one "guard" history entry parked on top of
+// the real one while any UI layer is open. Pressing back pops the guard,
+// which we intercept to close that layer instead of leaving the page. At
+// the top level there is no guard, so back exits normally — which is what
+// a user expects.
+let _guard = false;
+
+function openGuard() {
+  if (_guard) return;
+  _guard = true;
+  history.pushState({ muscleGuard: true }, '');
+}
+function dropGuard() {
+  if (!_guard) return;
+  _guard = false;
+  history.back();          // removes our guard entry without navigating away
+}
+
+// Called after every render: keep the guard in sync with what is open.
+export function syncHistory() {
+  const deep = !!S.sheet || S.screen === 'figure';
+  if (deep) openGuard();
+  else if (_guard) dropGuard();
+}
+
+window.addEventListener('popstate', e => {
+  // Our guard was popped (user pressed back). Close one UI layer.
+  if (_guard) {
+    _guard = false;
+    if (S.sheet) { S.sheet = null; render(); return; }
+    if (S.screen === 'figure') {
+      S.screen = 'main'; S.activeFig = null; S._justNavigated = true; render(); return;
+    }
+  }
+  // No guard: nothing of ours to close, let the browser do its thing.
+});
+
+onAfterRender(syncHistory);

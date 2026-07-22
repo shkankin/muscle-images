@@ -51,7 +51,13 @@ export function render() {
       <button class="btn" data-action="recover">Reload</button></div>`;
   }
   renderSheet();
+  if (_afterRender) { try { _afterRender(); } catch (e) { console.error('afterRender', e); } }
 }
+
+// handlers.js registers a hook here (history sync) — a callback rather than
+// an import so render.js stays free of a circular dependency.
+let _afterRender = null;
+export function onAfterRender(fn) { _afterRender = fn; }
 
 function viewLoading() {
   return `<div class="boot">
@@ -155,11 +161,11 @@ function posterSheet(figs) {
   if (!figs.length) return emptyState('the poster');
   return `<div class="sheet-poster">
     <div class="sp-head">
-      <img class="sp-art" src="images/poster-head.jpg" alt="M.U.S.C.L.E. — Millions of Unusual Small Creatures Lurking Everywhere">
-      <span class="sp-sub">Can You Collect Them All? · Fill The Star As You Catch Each One</span>
+      <span class="sp-title">M.U.S.C.L.E.</span>
+      <span class="sp-tag">Millions of Unusual Small Creatures Lurking Everywhere</span>
+      <span class="sp-sub">Fill The Star As You Catch Each One</span>
     </div>
     <div class="sp-grid">${figs.map(posterCell).join('')}</div>
-    <img class="sp-foot" src="images/poster-foot.jpg" alt="" aria-hidden="true">
   </div>`;
 }
 
@@ -343,9 +349,15 @@ function viewDetail(f) {
   const SHOT_COLOR = { db: 'Dark Blue', lb: 'Light Blue', r: 'Red', g: 'Green',
     o: 'Orange', s: 'Salmon', p: 'Purple', m: 'Magenta', f: 'Flesh', fb: 'Flesh' };
   const activeShot = shots.includes(S.detailShot) ? S.detailShot : (shots[0] || null);
-  const heroSrc = activeShot === 'group' ? imgFor(f, 'group')
-    : activeShot === 'fb' ? imgFor(f, 'back')
-    : activeShot ? imgFor(f, SHOT_COLOR[activeShot]) : '';
+  // Use the 't' file as the hero source: right now that is the only size
+  // uploaded (the full-size files 404). data-imgupgrade swaps in the
+  // full-size version if and when one exists, so the hero sharpens
+  // automatically as the archive fills out — no code change needed.
+  const heroKind = activeShot === 'group' ? 'group'
+    : activeShot === 'fb' ? 'back'
+    : activeShot ? SHOT_COLOR[activeShot] : null;
+  const heroSrc = heroKind ? imgFor(f, heroKind, true) : '';
+  const heroFull = heroKind ? imgFor(f, heroKind, false) : '';
   const filmstrip = shots.length > 1 ? `<div class="filmstrip">
       ${shots.map(k => `<button class="film-sw ${k === activeShot ? 'on' : ''}" data-action="view-shot" data-id="${esc(f.id)}" data-shot="${esc(k)}" style="--sw:${k === 'group' ? 'linear-gradient(135deg,#E5A594,#C6413A,#31508C)' : (COLOR_HEX[SHOT_COLOR[k]] || '#888')}" aria-label="Show ${esc(SHOT_LABEL[k] || k)}"><span></span></button>`).join('')}
       <span class="film-label">${esc(SHOT_LABEL[activeShot] || '')}</span>
@@ -362,7 +374,7 @@ function viewDetail(f) {
       <span class="hero-num" aria-hidden="true">${f.num}</span>
       <div class="hero-fig">
         <span class="hero-keshi" style="--tint:${COLOR_HEX[cols[0] || BASE_COLOR]}">${keshiSVG()}</span>
-        ${heroSrc ? `<img class="hero-img" alt="${esc(f.name || ('Figure ' + f.num))} — ${esc(SHOT_LABEL[activeShot] || '')}" src="${heroSrc}" data-imgfallback>` : ''}
+        ${heroSrc ? `<img class="hero-img" alt="${esc(f.name || ('Figure ' + f.num))} — ${esc(SHOT_LABEL[activeShot] || '')}" src="${heroSrc}" data-imgfallback data-imgupgrade="${esc(heroFull)}">` : ''}
       </div>
     </div>
     ${filmstrip}

@@ -449,16 +449,19 @@ img { max-width: 100%; }
   color: color-mix(in srgb, var(--fg) 5%, transparent);
   letter-spacing: 4px; pointer-events: none; user-select: none;
 }
-.hero-fig { position: relative; width: 150px; height: 200px; display: grid; place-items: center; }
+.hero-fig { position: relative; width: min(88vw, 460px); height: 236px; display: grid; place-items: center; }
 .hero-keshi { width: 100%; color: var(--tint, var(--flesh)); filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .4)); }
 .hero-keshi svg { width: 100%; height: auto; }
+/* The figure photo fills the whole hero area — these are landscape group
+   shots, so contain (not cover) keeps every variant in frame. */
 .hero-img {
-  position: absolute; inset: 0; margin: auto; max-width: 100%; max-height: 100%;
+  position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: contain; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .4));
+  border-radius: 8px; background: #fff;
 }
 /* When a photo is present it fills the hero; the keshi stays behind as the
    fallback if the image 404s. */
-.hero.has-photo .hero-img { max-width: 92%; max-height: 92%; }
+.hero.has-photo .hero-keshi { opacity: 0; }
 
 /* Filmstrip — switch which colour's photo the hero shows. */
 .filmstrip { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 12px 14px 0; }
@@ -657,47 +660,52 @@ img { max-width: 100%; }
 .vt.on { background: var(--gold); color: #241713; }
 
 .sheet-poster {
-  margin: 0 auto 18px; max-width: 620px; border-radius: 8px; overflow: hidden;
-  /* The poster artwork: logo/starburst on top, the purple ray field tiling
-     down behind the cells, sunburst closing it off at the bottom. The tile
-     is mirrored so the repeat has no visible seam. */
-  background: #6E4479 url("../images/poster-bg.jpg") repeat-y center top / 100% auto;
-  border: 2px solid #F2E6C8; box-shadow: 0 8px 30px rgba(0,0,0,.5);
+  margin: 0 auto 18px; max-width: 620px; border-radius: 6px;
+  /* Background art intentionally omitted — new artwork pending. This is the
+     self-contained CSS poster: black sheet, cream keyline, gold wordmark. */
+  background: #0A0A0A;
+  border: 2px solid #E8E4DA; padding: 12px 10px 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.5);
 }
-.sp-head { text-align: center; padding: 0; }
-.sp-art { display: block; width: 100%; height: auto; }
+.sp-head { text-align: center; padding: 2px 0 12px; }
+.sp-title {
+  display: block; font-family: var(--font-display);
+  font-size: clamp(26px, 8vw, 44px); letter-spacing: 1px; line-height: 1;
+  color: #FFE940; text-shadow: 2px 2px 0 #C6413A;
+}
+.sp-tag {
+  display: block; font-size: clamp(8px, 2.2vw, 10px); font-weight: 600;
+  letter-spacing: .3px; color: #C9C2B4; margin-top: 4px;
+}
 .sp-sub {
-  display: block; font-size: clamp(9px, 2.6vw, 12px); font-weight: 700;
-  letter-spacing: .6px; color: #fff; padding: 2px 10px 8px; margin-top: -6px;
-  text-shadow: 0 1px 3px rgba(0,0,0,.85), 0 0 8px rgba(0,0,0,.6);
+  display: block; font-size: clamp(9px, 2.5vw, 11.5px); font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: #E8E4DA; margin-top: 5px;
 }
-.sp-foot { display: block; width: 100%; height: auto; margin-top: 4px; }
 
-.sp-grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 5px; padding: 4px 10px 10px; }
+.sp-grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; }
 @media (max-width: 900px) { .sp-grid { grid-template-columns: repeat(8, 1fr); } }
 @media (max-width: 560px) { .sp-grid { grid-template-columns: repeat(6, 1fr); } }
 @media (max-width: 380px) { .sp-grid { grid-template-columns: repeat(5, 1fr); } }
 
-/* A cell: dark card with a cream keyline, sitting on the purple field. */
+/* A cell: black card, cream keyline and soft glow, like the printed sheet. */
 .pcell {
-  position: relative; aspect-ratio: 100 / 110; background: rgba(8, 5, 10, .82);
+  position: relative; aspect-ratio: 100 / 110; background: #050505;
   border: 2px solid #F2E6C8; border-radius: 4px; padding: 0; overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,.5), 0 0 7px rgba(255, 236, 190, .22);
+  box-shadow: 0 0 7px rgba(255, 236, 190, .28);
   display: block; transition: box-shadow .15s, transform .1s, background .15s;
 }
 .pcell:active { transform: scale(.96); }
 .pc-num {
   position: absolute; top: 2px; left: 3px; z-index: 3;
   font-family: var(--font-display); font-size: clamp(8px, 2vw, 11px);
-  color: #F2E6C8; line-height: 1; letter-spacing: .3px;
-  text-shadow: 0 1px 2px #000;
+  color: #F2E6C8; line-height: 1; letter-spacing: .3px; text-shadow: 0 1px 2px #000;
 }
-.pc-art { position: absolute; inset: 14% 5% 24% 5%; display: grid; place-items: center; }
+/* The photo fills the cell; the number and star sit above it. */
+.pc-art { position: absolute; inset: 12% 4% 22% 4%; display: grid; place-items: center; }
 .pc-art img { width: 100%; height: 100%; object-fit: contain; }
-.pc-keshi { width: 50%; color: #2C2530; display: block; }
+.pc-keshi { width: 50%; color: #241F1B; display: block; }
 .pc-keshi svg { width: 100%; height: auto; }
-/* The star: hollow outline until owned, then filled in — the whole point of
-   the original sheet. */
+/* The star: hollow until owned, then filled in — the point of the sheet. */
 .pc-star {
   position: absolute; bottom: 4%; left: 50%; transform: translateX(-50%);
   width: 22%; min-width: 12px; z-index: 3; line-height: 0;
@@ -705,6 +713,6 @@ img { max-width: 100%; }
 .pc-star svg path { fill: transparent; stroke: #F2E6C8; }
 .pcell.owned .pc-star svg path { fill: #FFE940; stroke: #FFE940; }
 .pcell.owned .pc-star { filter: drop-shadow(0 0 4px rgba(255, 233, 64, .8)); }
-.pcell.owned { border-color: #FFE940; background: rgba(20, 12, 4, .86); box-shadow: 0 0 11px rgba(255, 233, 64, .45); }
+.pcell.owned { border-color: #FFE940; box-shadow: 0 0 11px rgba(255, 233, 64, .42); }
 .pcell.want .pc-star svg path { stroke: var(--acc); fill: transparent; }
 .pcell.owned .pc-num { color: #FFE940; }
