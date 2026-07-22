@@ -3,28 +3,43 @@
   "id": "001",
   "num": 1,
   "slug": "001",
-  "name": "Kinnikuman",
-  "aka": "Muscleman",
+  "name": "Kinnikuman D",
+  "aka": "The Superman Muscleman",
   "origin": "The hero of Kinnikuman",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Orange"
   ],
+  "img": {},
   "notes": "'Muscleman' in the US line"
  },
  {
   "id": "002",
   "num": 2,
   "slug": "002",
-  "name": "Buffaloman",
-  "aka": "",
-  "origin": "1000-Man-Power Chojin",
+  "name": "Buffalo Man B",
+  "aka": "Terri-Bull",
+  "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Light Blue",
+   "Dark Blue",
+   "Orange",
+   "Salmon",
+   "Purple",
+   "Red"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -39,6 +54,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -53,6 +69,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -67,6 +84,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -81,6 +99,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -95,6 +114,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -109,6 +129,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -123,6 +144,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -137,6 +159,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -151,6 +174,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -165,6 +189,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -179,6 +204,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -193,6 +219,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -207,6 +234,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -221,6 +249,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -235,6 +264,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -249,6 +279,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -263,6 +294,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -277,6 +309,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -291,6 +324,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -305,6 +339,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -319,6 +354,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -333,6 +369,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -347,6 +384,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -361,6 +399,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -375,6 +414,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -389,6 +429,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -403,6 +444,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -417,6 +459,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -431,6 +474,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -445,6 +489,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -459,6 +504,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -473,6 +519,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -487,6 +534,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -501,6 +549,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -515,6 +564,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -529,6 +579,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -543,6 +594,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -557,6 +609,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -571,6 +624,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -585,6 +639,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -599,6 +654,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -613,6 +669,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -627,6 +684,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -641,20 +699,27 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
   "id": "047",
   "num": 47,
   "slug": "047",
-  "name": "",
+  "name": "Chairman",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Red",
+   "Magenta",
+   "Purple",
+   "Orange"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -669,20 +734,28 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
   "id": "049",
   "num": 49,
   "slug": "049",
-  "name": "",
+  "name": "Black Shadow",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Orange",
+   "Purple",
+   "Light Blue",
+   "Red",
+   "Green"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -697,6 +770,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -711,6 +785,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -725,6 +800,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -739,6 +815,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -753,6 +830,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -767,6 +845,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -781,6 +860,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -795,6 +875,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -809,6 +890,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -823,6 +905,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -837,6 +920,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -851,6 +935,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -865,6 +950,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -879,6 +965,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -893,6 +980,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -907,6 +995,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -921,6 +1010,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -935,6 +1025,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -949,6 +1040,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -963,6 +1055,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -977,6 +1070,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -991,6 +1085,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1005,6 +1100,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1019,6 +1115,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1033,6 +1130,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1047,6 +1145,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1061,6 +1160,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1075,6 +1175,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1089,6 +1190,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1103,6 +1205,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1117,6 +1220,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1131,6 +1235,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1145,6 +1250,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1159,6 +1265,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1173,6 +1280,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1187,6 +1295,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1201,6 +1310,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1215,6 +1325,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1229,6 +1340,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1243,6 +1355,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1257,6 +1370,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1271,6 +1385,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1285,6 +1400,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1299,6 +1415,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1313,6 +1430,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1327,6 +1445,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1341,6 +1460,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1355,6 +1475,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1369,6 +1490,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1383,6 +1505,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1397,6 +1520,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1411,6 +1535,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1425,6 +1550,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1439,6 +1565,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1453,6 +1580,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1467,6 +1595,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1481,6 +1610,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1495,6 +1625,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1509,6 +1640,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1523,6 +1655,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1537,6 +1670,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1551,6 +1685,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1565,6 +1700,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1579,6 +1715,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1593,6 +1730,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1607,6 +1745,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1621,6 +1760,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1635,6 +1775,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1649,6 +1790,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1663,6 +1805,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1677,6 +1820,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1691,6 +1835,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1705,6 +1850,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1719,6 +1865,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1733,6 +1880,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1747,6 +1895,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1761,6 +1910,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1775,6 +1925,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1789,6 +1940,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1803,6 +1955,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1817,6 +1970,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1831,6 +1985,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1845,6 +2000,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1859,6 +2015,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1873,6 +2030,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1887,6 +2045,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1901,6 +2060,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1915,6 +2075,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1929,6 +2090,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1943,6 +2105,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1957,6 +2120,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1971,6 +2135,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": "Poster version — differs from Wrestling Ring #234"
  },
  {
@@ -1985,6 +2150,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -1999,6 +2165,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2013,6 +2180,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2027,6 +2195,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2041,6 +2210,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2055,6 +2225,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2069,6 +2240,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2083,6 +2255,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2097,6 +2270,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2111,6 +2285,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2125,6 +2300,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2139,6 +2315,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": "The famously rare Purple #153"
  },
  {
@@ -2153,6 +2330,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2167,6 +2345,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2181,6 +2360,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2195,6 +2375,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2209,6 +2390,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2223,6 +2405,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2237,6 +2420,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2251,6 +2435,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2265,6 +2450,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2279,6 +2465,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2293,6 +2480,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2307,6 +2495,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2321,6 +2510,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2335,6 +2525,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2349,6 +2540,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2363,6 +2555,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2377,6 +2570,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2391,6 +2585,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2405,6 +2600,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2419,6 +2615,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2433,6 +2630,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2447,6 +2645,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2461,6 +2660,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2475,6 +2675,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2489,6 +2690,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2503,6 +2705,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2517,6 +2720,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2531,6 +2735,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2545,6 +2750,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2559,6 +2765,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2573,6 +2780,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2587,6 +2795,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2601,6 +2810,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2615,6 +2825,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2629,6 +2840,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2643,6 +2855,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2657,6 +2870,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2671,6 +2885,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2685,6 +2900,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2699,6 +2915,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2713,6 +2930,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2727,6 +2945,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2741,6 +2960,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2755,6 +2975,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2769,6 +2990,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2783,6 +3005,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2797,6 +3020,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2811,6 +3035,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2825,6 +3050,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2839,6 +3065,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2853,6 +3080,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2867,6 +3095,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2881,6 +3110,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2895,6 +3125,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2909,6 +3140,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2923,6 +3155,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2937,6 +3170,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2951,6 +3185,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2965,6 +3200,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2979,6 +3215,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -2993,6 +3230,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3007,6 +3245,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3021,6 +3260,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3035,6 +3275,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3049,6 +3290,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3063,6 +3305,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3077,6 +3320,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3091,6 +3335,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3105,6 +3350,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3119,6 +3365,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3133,6 +3380,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3147,6 +3395,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3161,6 +3410,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": "A fan favourite"
  },
  {
@@ -3175,6 +3425,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3189,6 +3440,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3203,6 +3455,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3217,6 +3470,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3231,6 +3485,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3245,6 +3500,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3259,6 +3515,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": ""
  },
  {
@@ -3273,6 +3530,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": "Wrestling Ring exclusive — not on the poster"
  },
  {
@@ -3287,6 +3545,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": "Wrestling Ring exclusive — not on the poster"
  },
  {
@@ -3301,6 +3560,7 @@
   "colors": [
    "Flesh"
   ],
+  "img": {},
   "notes": "Famous non-poster figure"
  }
 ]
