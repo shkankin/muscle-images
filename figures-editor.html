@@ -153,6 +153,7 @@
       <button class="fchip" data-filter="unnamed">Unnamed</button>
       <button class="fchip" data-filter="photos">Has photos</button>
       <button class="fchip" data-filter="nophotos">No photos</button>
+      <button class="fchip" data-filter="nojp">No JP name</button>
       <button class="fchip" data-filter="noclass">No class set</button>
       <button class="fchip" data-filter="classA">Has Class A</button>
     </div>
@@ -175,6 +176,7 @@
         <div class="field"><label>Also known as (US name)</label><input type="text" id="f_aka" placeholder="e.g. Muscleman"></div>
         <div class="field"><label>Rarity</label><select id="f_rarity"><option value="common">Common</option><option value="uncommon">Uncommon</option><option value="rare">Rare</option><option value="grail">Grail</option></select></div>
       </div>
+      <div class="field"><label>Japanese name (kana / kanji)</label><input type="text" id="f_jp" placeholder="e.g. キン肉マン" lang="ja"></div>
       <div class="field"><label>Kinnikuman identity / notes on origin</label><input type="text" id="f_origin" placeholder="e.g. 1000-Man-Power Chojin"></div>
       <div class="field"><label class="check"><input type="checkbox" id="f_poster"> On the mail-away poster</label></div>
       <div class="field"><label>Notes</label><textarea id="f_notes" placeholder="Anything worth recording…"></textarea></div>
@@ -333,9 +335,10 @@ function normalize(f){
     colors:migrateColors(f.colors),
     img:(f.img&&typeof f.img==='object')?{...f.img}:{},
     cls:migrateClsKeys(f.cls),
+    jp:f.jp||'',
     notes:f.notes||'' };
 }
-function seedSkeleton(){ const a=[]; for(let n=1;n<=236;n++){ a.push({id:pad3(n),num:n,slug:pad3(n),name:'',aka:'',origin:'',poster:!NON_POSTER.has(n),rarity:'common',colors:['Flesh'],img:{},cls:{},notes:''}); } return a; }
+function seedSkeleton(){ const a=[]; for(let n=1;n<=236;n++){ a.push({id:pad3(n),num:n,slug:pad3(n),name:'',aka:'',origin:'',poster:!NON_POSTER.has(n),rarity:'common',colors:['Flesh'],img:{},cls:{},jp:'',notes:''}); } return a; }
 
 // ── list ──
 $('search').oninput = renderList;
@@ -345,6 +348,7 @@ function matchFilter(f){
   if(filter==='unnamed') return !f.name;
   if(filter==='photos') return Object.keys(f.img||{}).length>0;
   if(filter==='nophotos') return Object.keys(f.img||{}).length===0;
+  if(filter==='nojp') return !f.jp;
   if(filter==='noclass') return Object.keys(f.cls||{}).length===0;
   if(filter==='classA') return Object.values(f.cls||{}).includes('A');
   return true;
@@ -397,20 +401,20 @@ function openEdit(id){
   $('listView').classList.add('hidden'); $('editView').classList.remove('hidden');
   $('editNum').textContent='No. '+f.num;
   $('f_name').value=f.name; $('f_aka').value=f.aka; $('f_origin').value=f.origin;
-  $('f_rarity').value=f.rarity; $('f_poster').checked=f.poster; $('f_notes').value=f.notes;
+  $('f_rarity').value=f.rarity; $('f_poster').checked=f.poster; $('f_notes').value=f.notes; $('f_jp').value=f.jp||'';
   renderColorGrid(f); renderPhotoGrid(f);
   window.scrollTo(0,0);
 }
 // Pull current form values into the figure object + mark dirty if changed.
 function commitCurrentFields(){
   if(!curId) return; const f=byId[curId]; if(!f) return;
-  const before=JSON.stringify([f.name,f.aka,f.origin,f.rarity,f.poster,f.notes]);
+  const before=JSON.stringify([f.name,f.aka,f.origin,f.rarity,f.poster,f.notes,f.jp]);
   f.name=$('f_name').value.trim(); f.aka=$('f_aka').value.trim(); f.origin=$('f_origin').value.trim();
-  f.rarity=$('f_rarity').value; f.poster=$('f_poster').checked; f.notes=$('f_notes').value.trim();
-  if(JSON.stringify([f.name,f.aka,f.origin,f.rarity,f.poster,f.notes])!==before) markDirty(f.id);
+  f.rarity=$('f_rarity').value; f.poster=$('f_poster').checked; f.notes=$('f_notes').value.trim(); f.jp=$('f_jp').value.trim();
+  if(JSON.stringify([f.name,f.aka,f.origin,f.rarity,f.poster,f.notes,f.jp])!==before) markDirty(f.id);
 }
-['f_name','f_aka','f_origin','f_notes'].forEach(id=>$(id).addEventListener('input',()=>{ /* captured on blur/nav */ }));
-['f_name','f_aka','f_origin','f_notes','f_rarity','f_poster'].forEach(id=>$(id).addEventListener('change',commitCurrentFields));
+['f_name','f_aka','f_origin','f_notes','f_jp'].forEach(id=>$(id).addEventListener('input',()=>{ /* captured on blur/nav */ }));
+['f_name','f_aka','f_origin','f_notes','f_jp','f_rarity','f_poster'].forEach(id=>$(id).addEventListener('change',commitCurrentFields));
 
 function renderColorGrid(f){
   const set=new Set(f?f.colors:['Flesh']);

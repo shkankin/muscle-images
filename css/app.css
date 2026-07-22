@@ -840,3 +840,15 @@ img { max-width: 100%; }
 }
 .ow-panel.is-want .vchip.have { border-color: var(--gold); }
 .ow-panel.is-want .vchip.have .vsw { opacity: 1; }
+
+/* Japanese name — the character's original kana/kanji, a nod to the line's
+   Kinkeshi roots. Uses a JP system font stack so glyphs render properly. */
+.jp-kana {
+  display: inline-block; margin-left: 9px; padding-left: 9px;
+  border-left: 1px solid var(--bd);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    "Noto Sans JP", "MS PGothic", sans-serif;
+  font-size: 15px; color: var(--acc); letter-spacing: .5px;
+}
+.detail-jp:not(:has(.jp-kana)) .jp-kana,
+.jp-kana:first-child { margin-left: 0; padding-left: 0; border-left: 0; }

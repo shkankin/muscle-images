@@ -542,7 +542,7 @@ function viewDetail(f) {
 
     <div class="detail-body">
       <h1 class="detail-name">${displayName(f)}</h1>
-      ${f.aka && f.name ? `<p class="detail-jp">${esc(f.name)}</p>` : ''}
+      ${(f.aka && f.name) || f.jp ? `<p class="detail-jp">${esc(f.aka && f.name ? f.name : '')}${f.jp ? `<span class="jp-kana" lang="ja">${esc(f.jp)}</span>` : ''}</p>` : ''}
       <p class="detail-origin">${f.origin ? esc(f.origin) : `<span class="dim">Kinnikuman identity not recorded — tap edit to add it.</span>`}</p>
       ${detailBadges(f)}
 

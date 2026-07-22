@@ -89,6 +89,7 @@ function normalizeRows(rows) {
     colors: migrateColors(f.colors),
     img: f.img && typeof f.img === 'object' ? f.img : {},  // which shots exist + their extension case
     cls: migrateClsKeys(f.cls),   // { color: 'A'|'B'|'C' } per-sculpt class
+    jp: f.jp || '',               // Japanese name in kana/kanji (e.g. キン肉マン)
     image: f.image || (f.slug ? `${IMG}/${f.slug}.jpg` : ''),
   }));
 }
