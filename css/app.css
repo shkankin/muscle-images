@@ -658,30 +658,32 @@ img { max-width: 100%; }
 
 .sheet-poster {
   margin: 0 auto 18px; max-width: 620px; border-radius: 8px; overflow: hidden;
-  /* The poster's own background art, tiled down the sheet behind the cells. */
-  background: #1B1016 url("../images/poster-bg.jpg") repeat-y center top / 100% auto;
-  border: 2px solid #E8E4DA; box-shadow: 0 8px 30px rgba(0,0,0,.5);
+  /* The poster artwork: logo/starburst on top, the purple ray field tiling
+     down behind the cells, sunburst closing it off at the bottom. The tile
+     is mirrored so the repeat has no visible seam. */
+  background: #6E4479 url("../images/poster-bg.jpg") repeat-y center top / 100% auto;
+  border: 2px solid #F2E6C8; box-shadow: 0 8px 30px rgba(0,0,0,.5);
 }
-.sp-head { text-align: center; padding: 0 0 10px; }
-/* The real starburst + logo lifted from the poster art. */
+.sp-head { text-align: center; padding: 0; }
 .sp-art { display: block; width: 100%; height: auto; }
 .sp-sub {
   display: block; font-size: clamp(9px, 2.6vw, 12px); font-weight: 700;
-  letter-spacing: .6px; color: #fff; margin-top: -2px; padding: 0 10px 4px;
-  text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 6px rgba(0,0,0,.7);
+  letter-spacing: .6px; color: #fff; padding: 2px 10px 8px; margin-top: -6px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.85), 0 0 8px rgba(0,0,0,.6);
 }
+.sp-foot { display: block; width: 100%; height: auto; margin-top: 4px; }
 
-.sp-grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 5px; padding: 0 10px 14px; }
+.sp-grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 5px; padding: 4px 10px 10px; }
 @media (max-width: 900px) { .sp-grid { grid-template-columns: repeat(8, 1fr); } }
 @media (max-width: 560px) { .sp-grid { grid-template-columns: repeat(6, 1fr); } }
 @media (max-width: 380px) { .sp-grid { grid-template-columns: repeat(5, 1fr); } }
 
-/* A cell: black card, cream keyline and soft glow, exactly like the sheet. */
+/* A cell: dark card with a cream keyline, sitting on the purple field. */
 .pcell {
-  position: relative; aspect-ratio: 100 / 110; background: #050505;
+  position: relative; aspect-ratio: 100 / 110; background: rgba(8, 5, 10, .82);
   border: 2px solid #F2E6C8; border-radius: 4px; padding: 0; overflow: hidden;
-  box-shadow: 0 0 7px rgba(255, 236, 190, .3);
-  display: block; transition: box-shadow .15s, transform .1s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.5), 0 0 7px rgba(255, 236, 190, .22);
+  display: block; transition: box-shadow .15s, transform .1s, background .15s;
 }
 .pcell:active { transform: scale(.96); }
 .pc-num {
@@ -692,17 +694,17 @@ img { max-width: 100%; }
 }
 .pc-art { position: absolute; inset: 14% 5% 24% 5%; display: grid; place-items: center; }
 .pc-art img { width: 100%; height: 100%; object-fit: contain; }
-.pc-keshi { width: 50%; color: #241F1B; display: block; }
+.pc-keshi { width: 50%; color: #2C2530; display: block; }
 .pc-keshi svg { width: 100%; height: auto; }
 /* The star: hollow outline until owned, then filled in — the whole point of
    the original sheet. */
 .pc-star {
   position: absolute; bottom: 4%; left: 50%; transform: translateX(-50%);
-  width: 22%; min-width: 12px; color: #4A4A4A; z-index: 3; line-height: 0;
+  width: 22%; min-width: 12px; z-index: 3; line-height: 0;
 }
 .pc-star svg path { fill: transparent; stroke: #F2E6C8; }
 .pcell.owned .pc-star svg path { fill: #FFE940; stroke: #FFE940; }
 .pcell.owned .pc-star { filter: drop-shadow(0 0 4px rgba(255, 233, 64, .8)); }
-.pcell.owned { border-color: #FFE940; box-shadow: 0 0 11px rgba(255, 233, 64, .45); }
+.pcell.owned { border-color: #FFE940; background: rgba(20, 12, 4, .86); box-shadow: 0 0 11px rgba(255, 233, 64, .45); }
 .pcell.want .pc-star svg path { stroke: var(--acc); fill: transparent; }
 .pcell.owned .pc-num { color: #FFE940; }

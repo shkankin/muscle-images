@@ -10,7 +10,7 @@
 // A new worker signals clients (UPDATE_AVAILABLE) so the app can refresh.
 // ════════════════════════════════════════════════════════════════════
 
-const VERSION = '0.3';
+const VERSION = '0.4';
 const CACHE = `muscle-v${VERSION}`;
 const RUNTIME = `muscle-runtime-v${VERSION}`;
 
@@ -36,6 +36,7 @@ const CORE = [
   'js/idb-store.js',
   'images/poster-head.jpg',
   'images/poster-bg.jpg',
+  'images/poster-foot.jpg',
   'images/icon-192.png',
   'images/icon-512.png',
 ];

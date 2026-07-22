@@ -159,6 +159,7 @@ function posterSheet(figs) {
       <span class="sp-sub">Can You Collect Them All? · Fill The Star As You Catch Each One</span>
     </div>
     <div class="sp-grid">${figs.map(posterCell).join('')}</div>
+    <img class="sp-foot" src="images/poster-foot.jpg" alt="" aria-hidden="true">
   </div>`;
 }
 
