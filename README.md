@@ -1,7 +1,7 @@
 # M.U.S.C.L.E. Collector
 
 A collection tracker for the **236 M.U.S.C.L.E. figures** — the 1985–88 US Mattel
-release of Kinnikuman's *Kinkeshi* erasers. Track what you own, which **colour
+release of Kinnikuman's *Kinkeshi* erasers. Track what you own, which **color
 variants** you have, and what's left to find. Works offline, installs as a PWA,
 no account needed.
 
@@ -73,7 +73,7 @@ is built in `js/state.js`; `IMG` is the base URL.)
 `figures.json` ships with the app (so the set loads instantly and offline). To
 edit catalog data without redeploying the app, you can later host `figures.json`
 in the images repo and point `FIGS_URL` in `js/state.js` at it. The in-app editor
-(the pencil on any figure) already lets you fill in names, identities, and colours;
+(the pencil on any figure) already lets you fill in names, identities, and colors;
 those edits are saved locally per device for now.
 
 ---
@@ -83,14 +83,14 @@ those edits are saved locally per device for now.
 - **236 figures**, numbered #001–#236 (the collector/poster numbers). 233 appear
   on the mail-away poster; #234 Muscleman, #235 Terri-Bull (both Wrestling Ring)
   and #236 Satan Cross do not — the app flags these.
-- **11 colours**: Flesh, Dark Blue, Red, Purple, Magenta, Light Blue, Green,
+- **11 colors**: Flesh, Dark Blue, Red, Purple, Magenta, Light Blue, Green,
   Orange, Neon Orange, Salmon, and the rare **Grape** (Mega-Match board-game
-  exclusive). Ownership is tracked per figure *per colour* — the collecting axis
+  exclusive). Ownership is tracked per figure *per color* — the collecting axis
   unique to this line.
 - **Rarity** where documented (e.g. the rare Purple #153 "Claw", uncommon Satan
   Cross). Most figures are common.
 - Per-copy notes: condition, which pack it came in.
-- A **want list**, plus completion stats and colour-variant breakdowns.
+- A **want list**, plus completion stats and color-variant breakdowns.
 
 ### About the catalog data
 

@@ -463,13 +463,33 @@ img { max-width: 100%; }
    fallback if the image 404s. */
 .hero.has-photo .hero-keshi { opacity: 0; }
 
-/* Filmstrip — switch which colour's photo the hero shows. */
-.filmstrip { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 12px 14px 0; }
-.film-sw { width: 26px; height: 26px; border-radius: 50%; padding: 0; border: 2px solid var(--bd); display: grid; place-items: center; transition: transform .12s, border-color .12s; }
+/* Filmstrip — switch which color's photo the hero shows. */
+/* Shot switcher. The label sits on its OWN line with a fixed height, so
+   picking a color never reflows the swatch row — a long name like
+   "LIGHT BLUE" used to widen the row and shove the circles sideways.
+   The row does not wrap, and the active swatch scales without pushing its
+   neighbours (the outline is drawn outside the box). */
+.filmstrip {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+  margin: 12px 14px 0; padding: 3px 0;
+}
+.filmstrip::-webkit-scrollbar { display: none; }
+.film-sw {
+  width: 26px; height: 26px; flex: none; border-radius: 50%; padding: 0;
+  border: 2px solid var(--bd); display: grid; place-items: center;
+  transition: outline-color .12s, box-shadow .12s;
+  outline: 2px solid transparent; outline-offset: 2px;
+}
 .film-sw span { width: 100%; height: 100%; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .2); }
-.film-sw:active { transform: scale(.9); }
-.film-sw.on { border-color: var(--gold); transform: scale(1.12); box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 40%, transparent); }
-.film-label { font-size: 12px; font-weight: 700; color: var(--fg2); letter-spacing: .4px; text-transform: uppercase; margin-left: 2px; }
+.film-sw:active { box-shadow: inset 0 0 0 8px rgba(0, 0, 0, .18); }
+.film-sw.on { border-color: var(--gold); outline-color: color-mix(in srgb, var(--gold) 55%, transparent); }
+/* Fixed height reserves the line whether or not a name is showing. */
+.film-label {
+  height: 16px; line-height: 16px; text-align: center;
+  font-size: 12px; font-weight: 700; color: var(--fg2);
+  letter-spacing: .4px; text-transform: uppercase; margin-top: 6px;
+}
 
 .detail-body { padding: 20px 20px 0; }
 .detail-name { font-family: var(--font-display); font-size: 30px; line-height: 1.02; letter-spacing: .5px; color: var(--fg); }
@@ -701,7 +721,8 @@ img { max-width: 100%; }
   color: #F2E6C8; line-height: 1; letter-spacing: .3px; text-shadow: 0 1px 2px #000;
 }
 /* The photo fills the cell; the number and star sit above it. */
-.pc-art { position: absolute; inset: 12% 4% 22% 4%; display: grid; place-items: center; }
+/* Single-figure portraits (600x600) — fill the cell above the star. */
+.pc-art { position: absolute; inset: 10% 3% 20% 3%; display: grid; place-items: center; }
 .pc-art img { width: 100%; height: 100%; object-fit: contain; }
 .pc-keshi { width: 50%; color: #241F1B; display: block; }
 .pc-keshi svg { width: 100%; height: auto; }
@@ -717,8 +738,8 @@ img { max-width: 100%; }
 .pcell.want .pc-star svg path { stroke: var(--acc); fill: transparent; }
 .pcell.owned .pc-num { color: #FFE940; }
 
-/* ── Colour class (A/B/C) ──────────────────────────────────────────
-   Per sculpt, per colour: the same figure can be Class C in one colour
+/* ── Color class (A/B/C) ──────────────────────────────────────────
+   Per sculpt, per color: the same figure can be Class C in one color
    and Class A in another. Only A and B are flagged on the wall — C is
    the norm and would just add noise. */
 .cls-A { --cls: #E3A93C; }
@@ -741,7 +762,7 @@ img { max-width: 100%; }
   font-family: var(--font-display); font-size: clamp(7px, 1.7vw, 9px);
   line-height: 1.5; text-align: center; color: #17120E; background: var(--cls);
 }
-/* Chip on the detail colour belt */
+/* Chip on the detail color belt */
 .vcls {
   margin-left: auto; min-width: 17px; height: 17px; border-radius: 5px;
   font-family: var(--font-display); font-size: 11px; line-height: 17px;
@@ -763,7 +784,7 @@ img { max-width: 100%; }
 .chip-cls.on { background: var(--cls); border-color: var(--cls); color: #17120E; }
 .belt-empty { padding: 10px 2px; }
 
-/* "Other colour" — undocumented colours, revealed on demand so the belt
+/* "Other color" — undocumented colors, revealed on demand so the belt
    stays clean but ownership is always recordable. */
 .belt-more {
   margin: 8px 0 0; padding: 7px 12px; font-size: 12.5px; font-weight: 700;

@@ -308,7 +308,7 @@ async function deploy(){
     }
 
     // 2a. Merge the catalog rather than overwrite or skip it.
-    // figures.json holds BOTH editor-owned content (names, colours, notes)
+    // figures.json holds BOTH editor-owned content (names, colors, notes)
     // and fields that ship with a build. Skipping it entirely means a new
     // build's catalog improvements never land; overwriting it wipes your
     // edits. So: take the repo's row as the base, and only fill in fields

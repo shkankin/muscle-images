@@ -48,11 +48,22 @@ export function bootDelegation() {
   document.addEventListener('error', e => {
     const t = e.target;
     if (!t || t.tagName !== 'IMG' || !t.hasAttribute('data-imgfallback')) return;
+    // 1. Same name with an uppercase .JPG (a few files in the repo use it).
     if (!t.dataset.retried && /\.jpg(\?|$)/.test(t.src)) {
       t.dataset.retried = '1';
       t.src = t.src.replace(/\.jpg(\?|$)/, '.JPG$1');
       return;
     }
+    // 2. An alternate shot — tiles and poster cells prefer the single flesh
+    //    front photo and fall back to the group shot when it isn't up yet.
+    const alt = t.getAttribute('data-imgalt');
+    if (alt && !t.dataset.altTried) {
+      t.dataset.altTried = '1';
+      t.dataset.retried = '';
+      t.src = alt;
+      return;
+    }
+    // 3. Nothing available — hide so the keshi silhouette shows through.
     t.style.display = 'none';
   }, true);
 }

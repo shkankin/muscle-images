@@ -56,7 +56,7 @@ export function rebuildIndex() {
 // Every catalog row gets a resolved image URL (images/{slug}.jpg) and any
 // local overrides merged in. A missing image is expected during collecting
 // and renders as the salmon keshi placeholder — not a broken state.
-// Colour list retired 'Orange' (only Neon Orange exists in the line) and
+// Color list retired 'Orange' (only Neon Orange exists in the line) and
 // 'Grape' (a board-game exclusive we don't track). Catalog rows saved before
 // that still carry them, so map rather than drop: an Orange tick the user
 // made in the editor becomes Neon Orange instead of vanishing.
@@ -88,7 +88,7 @@ function normalizeRows(rows) {
     num: f.num != null ? Number(f.num) : Number(f.id),
     colors: migrateColors(f.colors),
     img: f.img && typeof f.img === 'object' ? f.img : {},  // which shots exist + their extension case
-    cls: migrateClsKeys(f.cls),   // { colour: 'A'|'B'|'C' } per-sculpt class
+    cls: migrateClsKeys(f.cls),   // { color: 'A'|'B'|'C' } per-sculpt class
     image: f.image || (f.slug ? `${IMG}/${f.slug}.jpg` : ''),
   }));
 }
@@ -251,16 +251,16 @@ export function visibleFigs() {
     if (S.filterColor) {
       // color filter matches sculpts that come in that color OR that you
       // own in that color — the union is what a collector wants to see.
-      // A recorded class for a colour is itself evidence the sculpt exists
+      // A recorded class for a color is itself evidence the sculpt exists
       // in it, so it counts as being in the line even if `colors` is stale.
       const inLine = (f.colors || []).includes(S.filterColor) || !!(f.cls || {})[S.filterColor];
       const owned = ownedColors(f.id).includes(S.filterColor);
       if (!inLine && !owned) return false;
     }
     if (S.filterClass) {
-      // Class filter: does this sculpt have ANY colour of that class?
-      // When a colour filter is also active, the two combine — that exact
-      // sculpt-and-colour must carry the class.
+      // Class filter: does this sculpt have ANY color of that class?
+      // When a color filter is also active, the two combine — that exact
+      // sculpt-and-color must carry the class.
       const cls = f.cls || {};
       const ok = S.filterColor ? cls[S.filterColor] === S.filterClass
                                : Object.values(cls).includes(S.filterClass);

@@ -11,7 +11,7 @@
 // level data-action delegate for all events (CSP-safe, no inline JS).
 // ════════════════════════════════════════════════════════════════════
 
-export const APP_VERSION = '0.8';
+export const APP_VERSION = '0.9';
 
 // § REPO / NETWORK ─────────────────────────────────────────────────
 // The catalog (figures.json) and figure images live in the same GitHub
@@ -29,7 +29,7 @@ export const FIGS_URL = `${ROOT}/figures.json`;
 
 // ── Image naming ────────────────────────────────────────────────────
 // Files in the images repo follow:  MUSCLEFigure###<suffix>.jpg
-//   ''   group shot — the figure in all its colour variants
+//   ''   group shot — the figure in all its color variants
 //   'f'  front, flesh          'fb' back, flesh
 //   'db' dark blue   'lb' light blue   'r' red    'g' green
 //   'o'  orange      's'  salmon       'p' purple 'm' magenta
@@ -45,7 +45,7 @@ export const IMG_SUFFIX = {
   'Neon Orange': 'o', 'Salmon': 's', 'Purple': 'p', 'Magenta': 'm',
   'Flesh': 'f',
 };
-// Build a URL. kind: 'group' | a colour name | 'back'. thumb → the 't' variant.
+// Build a URL. kind: 'group' | a color name | 'back'. thumb → the 't' variant.
 // Always returns a URL (we don't know ahead of time what's uploaded); the
 // <img> hides itself if the file 404s, revealing the keshi behind it.
 export function imgFor(fig, kind = 'group', thumb = false) {
@@ -58,7 +58,7 @@ export function imgFor(fig, kind = 'group', thumb = false) {
 // present (it lists what's known to exist), but we always offer the group
 // and flesh-front shots so newly uploaded files appear without a catalog
 // update — each one hides itself if it isn't there yet.
-// Reverse of IMG_SUFFIX: which colour a shot suffix represents.
+// Reverse of IMG_SUFFIX: which color a shot suffix represents.
 export const SHOT_TO_COLOR = {
   db: 'Dark Blue', lb: 'Light Blue', r: 'Red', g: 'Green',
   o: 'Neon Orange', s: 'Salmon', p: 'Purple', m: 'Magenta',
@@ -71,9 +71,9 @@ export const shotsFor = fig => {
   const known = order.filter(k => img[k]);
   if (known.length) return known;
   // Nothing recorded yet: offer the group + flesh shots, plus a slot only
-  // for colours this sculpt is actually documented in. Never offer a colour
+  // for colors this sculpt is actually documented in. Never offer a color
   // the figure was not made in — that was showing e.g. Green on a sculpt
-  // that only came in 7 other colours.
+  // that only came in 7 other colors.
   const made = new Set(fig && fig.colors ? fig.colors : []);
   const colorShots = order.filter(k => {
     const color = SHOT_TO_COLOR[k];
@@ -117,26 +117,26 @@ export const CONDITIONS = ['Loose', 'Sealed', 'Damaged'];
 // Rarity tiers. Most of the 236 are common; the app surfaces the documented
 // exceptions (e.g. the rare Purple #153 "Claw", Satan Cross) rather than
 // guessing — the catalog carries a per-figure `rarity` field.
-// ── Colour class (per sculpt, per colour) ───────────────────────────
+// ── Color class (per sculpt, per color) ───────────────────────────
 // Distinct from a figure's overall `rarity`: the SAME sculpt can be Class C
-// in one colour and Class A in another, because it describes how many of
-// that specific sculpt-and-colour combination were produced.
-//   C — the most frequently produced colour for that sculpt. A random lot
+// in one color and Class A in another, because it describes how many of
+// that specific sculpt-and-color combination were produced.
+//   C — the most frequently produced color for that sculpt. A random lot
 //       find is almost certainly Class C.
 //   B — produced in noticeably lower numbers; harder to find, higher price.
-//   A — the absolute rarest colour for that sculpt; extremely limited, and
-//       sells for significantly more than the same sculpt in a Class C colour.
+//   A — the absolute rarest color for that sculpt; extremely limited, and
+//       sells for significantly more than the same sculpt in a Class C color.
 export const CLASSES = {
   C: { key: 'C', label: 'Class C', name: 'Common',   hex: '#8A9BA8', rank: 0,
-       blurb: 'Most frequently produced colour for this sculpt.' },
+       blurb: 'Most frequently produced color for this sculpt.' },
   B: { key: 'B', label: 'Class B', name: 'Uncommon', hex: '#6FA9C9', rank: 1,
        blurb: 'Produced in noticeably lower numbers — harder to find.' },
   A: { key: 'A', label: 'Class A', name: 'Rare',     hex: '#E3A93C', rank: 2,
-       blurb: 'The rarest colour for this sculpt — extremely limited.' },
+       blurb: 'The rarest color for this sculpt — extremely limited.' },
 };
 export const CLASS_ORDER = ['A', 'B', 'C'];
 // A figure's class map lives in figures.json as { "Purple": "A", ... }.
-// Unclassified colours return null rather than a guess.
+// Unclassified colors return null rather than a guess.
 export const classOf = (fig, color) => {
   const c = fig && fig.cls && fig.cls[color];
   return CLASSES[c] ? c : null;
@@ -227,12 +227,12 @@ export const S = {
   setView: (v => v === 'poster' ? 'poster' : 'grid')(store.get('muscle-setview')),  // grid | poster
   screen: 'main',      // main | figure
   activeFig: null,     // id when screen === 'figure'
-  showOtherColors: false,  // detail: reveal colours not documented for the sculpt
+  showOtherColors: false,  // detail: reveal colors not documented for the sculpt
   detailShot: null,    // which shot the detail hero shows ('group','f','fb','r',… ; null = first)
 
   search: '',
   filterColor: '',
-  filterClass: '',     // '' | 'A' | 'B' | 'C' — colour-class filter
+  filterClass: '',     // '' | 'A' | 'B' | 'C' — color-class filter
   filterOwn: '',       // '' = all | 'owned' | 'missing' | 'want'
 
   theme: (t => THEMES[t] ? t : 'arena')(store.get('muscle-theme')),

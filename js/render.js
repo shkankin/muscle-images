@@ -107,7 +107,7 @@ function tabBody() {
   }
 }
 
-// The rarest class recorded for a sculpt across all its colours — used to
+// The rarest class recorded for a sculpt across all its colors — used to
 // flag Class A/B figures on the wall without opening them.
 function topClass(f) {
   const cls = f && f.cls; if (!cls) return null;
@@ -189,12 +189,16 @@ function posterSheet(figs) {
 function posterCell(f) {
   const owned = isOwned(f.id);
   const want = isWanted(f.id);
-  const thumb = imgFor(f, 'group', true);
+  // The original poster shows one figure per box, so use the flesh FRONT
+  // shot (MUSCLEFigure###ft.jpg) rather than the group photo. If a figure
+  // has no front shot yet, fall back to the group shot, then the keshi.
+  const thumb = imgFor(f, 'Flesh', true);
+  const fallback = imgFor(f, 'group', true);
   const ptc = topClass(f);
   return `<button class="pcell ${owned ? 'owned' : ''} ${want ? 'want' : ''}" data-action="open-fig" data-id="${esc(f.id)}"
       aria-label="Figure ${f.num}${(f.aka || f.name) ? ' ' + displayName(f) : ''}${owned ? ', owned' : ', not owned'}">
     <span class="pc-num">${f.num}</span>
-    <span class="pc-art">${thumb ? `<img src="${thumb}" alt="" loading="lazy" data-imgfallback>` : `<span class="pc-keshi">${keshiSVG()}</span>`}</span>
+    <span class="pc-art">${thumb ? `<img src="${thumb}" alt="" loading="lazy" data-imgfallback data-imgalt="${esc(fallback)}">` : `<span class="pc-keshi">${keshiSVG()}</span>`}</span>
     ${ptc && ptc !== 'C' ? `<span class="pc-cls cls-${ptc}">${ptc}</span>` : ''}
     <span class="pc-star" aria-hidden="true">${starSVG()}</span>
   </button>`;
@@ -222,11 +226,13 @@ function tile(f) {
   const primary = owned ? (ownedColors(f.id)[0] || BASE_COLOR) : BASE_COLOR;
   const tint = COLOR_HEX[primary] || COLOR_HEX[BASE_COLOR];
   // Thumbnail of the group shot when it exists; otherwise the keshi silhouette.
-  const thumb = imgFor(f, 'group', true);
+  // Single flesh front shot first (matches the poster), group shot as backup.
+  const thumb = imgFor(f, 'Flesh', true);
+  const fallback = imgFor(f, 'group', true);
   const tc = topClass(f);
   return `<button class="${cls}" data-action="open-fig" data-id="${esc(f.id)}" style="--tint:${tint}" aria-label="Figure ${f.num}${owned ? ', owned' : ', missing'}">
     <span class="tile-fig" aria-hidden="true">${keshiSVG()}</span>
-    ${thumb ? `<img class="tile-img" alt="" src="${thumb}" data-imgfallback loading="lazy">` : ''}
+    ${thumb ? `<img class="tile-img" alt="" src="${thumb}" data-imgfallback data-imgalt="${esc(fallback)}" loading="lazy">` : ''}
     <span class="tile-num">${f.num}</span>
     ${tc && tc !== 'C' ? `<span class="tile-cls cls-${tc}" title="${esc(CLASSES[tc].label)} — ${esc(CLASSES[tc].name)}">${tc}</span>` : ''}
     ${want ? `<span class="tile-flag">${icon(ICO.heart, 11)}</span>` : ''}
@@ -299,8 +305,8 @@ function viewCollection() {
 }
 
 // § STATS ──────────────────────────────────────────────────────────
-// How many of the classed colours you actually own, per class. Only counts
-// sculpt+colour combinations that have a class recorded.
+// How many of the classed colors you actually own, per class. Only counts
+// sculpt+color combinations that have a class recorded.
 function classStats() {
   const tally = { A: [0, 0], B: [0, 0], C: [0, 0] };   // [owned, total]
   for (const f of S.figs) {
@@ -313,7 +319,7 @@ function classStats() {
     }
   }
   const any = CLASS_ORDER.some(k => tally[k][1] > 0);
-  if (!any) return `<div class="stat-note dim sm">No classes recorded yet. Class is set per sculpt and colour in the figure editor.</div>`;
+  if (!any) return `<div class="stat-note dim sm">No classes recorded yet. Class is set per sculpt and color in the figure editor.</div>`;
   return `<div class="cls-legend">${CLASS_ORDER.map(k => {
     const [own, tot] = tally[k];
     const c = CLASSES[k];
@@ -384,17 +390,17 @@ function viewDetail(f) {
   const idx = S.figs.findIndex(x => x.id === f.id);
   const prev = S.figs[idx - 1], next = S.figs[idx + 1];
 
-  // Color belt: ONLY the colours this sculpt is documented to come in (set
-  // per figure in the editor), plus any colour already owned or classed —
+  // Color belt: ONLY the colors this sculpt is documented to come in (set
+  // per figure in the editor), plus any color already owned or classed —
   // so ownership recorded earlier never becomes unreachable if the catalog
-  // changes later. Undocumented colours are hidden rather than greyed out.
+  // changes later. Undocumented colors are hidden rather than greyed out.
   const inLine = new Set(f.colors || [BASE_COLOR]);
   const beltColors = COLORS.filter(c =>
     inLine.has(c.key) || cols.includes(c.key) || !!classOf(f, c.key));
   const colorBelt = beltColors.map(c => {
     const have = cols.includes(c.key);
     const known = inLine.has(c.key);
-    // Class (A/B/C) for THIS sculpt in THIS colour, when recorded.
+    // Class (A/B/C) for THIS sculpt in THIS color, when recorded.
     const k = classOf(f, c.key);
     const cl = k ? CLASSES[k] : null;
     const clTitle = cl ? ` — ${cl.label} (${cl.name}): ${cl.blurb}` : '';
@@ -403,15 +409,15 @@ function viewDetail(f) {
       ${cl ? `<span class="vcls" aria-label="${esc(cl.label)} — ${esc(cl.name)}">${k}</span>` : ''}
       ${have ? `<span class="vtick">${icon(ICO.check, 13)}</span>` : ''}
     </button>`;
-  }).join('') || `<div class="dim sm belt-empty">No colours documented for this sculpt yet.</div>`;
+  }).join('') || `<div class="dim sm belt-empty">No colors documented for this sculpt yet.</div>`;
 
-  // Colours NOT documented for this sculpt and not owned. Hidden behind a
+  // Colors NOT documented for this sculpt and not owned. Hidden behind a
   // toggle so the belt stays clean, but still reachable — the catalog is
   // mostly unfilled, so you can always record what you actually own.
   const otherColors = COLORS.filter(c => !beltColors.includes(c));
   const otherBelt = otherColors.length ? `
     <button class="belt-more" data-action="toggle-other-colors" aria-expanded="${S.showOtherColors ? 'true' : 'false'}">
-      ${S.showOtherColors ? '− Hide other colours' : '+ Other colour'}
+      ${S.showOtherColors ? '− Hide other colors' : '+ Other color'}
     </button>
     ${S.showOtherColors ? `<div class="vbelt vbelt-other">
       <div class="dim sm belt-note">Not documented for this sculpt. Marking one records what you own; tell the editor to add it to the catalog.</div>
@@ -420,9 +426,9 @@ function viewDetail(f) {
       </button>`).join('')}
     </div>` : ''}` : '';
 
-  // Available shots for this figure (group / front / back / per-colour).
+  // Available shots for this figure (group / front / back / per-color).
   const shots = shotsFor(f);
-  const SHOT_LABEL = { group: 'All colours', f: 'Front', fb: 'Back', db: 'Dark Blue',
+  const SHOT_LABEL = { group: 'All colors', f: 'Front', fb: 'Back', db: 'Dark Blue',
     lb: 'Light Blue', r: 'Red', g: 'Green', o: 'Neon Orange', s: 'Salmon', p: 'Purple', m: 'Magenta' };
   const SHOT_COLOR = { db: 'Dark Blue', lb: 'Light Blue', r: 'Red', g: 'Green',
     o: 'Neon Orange', s: 'Salmon', p: 'Purple', m: 'Magenta', f: 'Flesh', fb: 'Flesh' };
@@ -438,8 +444,8 @@ function viewDetail(f) {
   const heroFull = heroKind ? imgFor(f, heroKind, false) : '';
   const filmstrip = shots.length > 1 ? `<div class="filmstrip">
       ${shots.map(k => `<button class="film-sw ${k === activeShot ? 'on' : ''}" data-action="view-shot" data-id="${esc(f.id)}" data-shot="${esc(k)}" style="--sw:${k === 'group' ? 'linear-gradient(135deg,#E5A594,#C6413A,#31508C)' : (COLOR_HEX[SHOT_COLOR[k]] || '#888')}" aria-label="Show ${esc(SHOT_LABEL[k] || k)}"><span></span></button>`).join('')}
-      <span class="film-label">${esc(SHOT_LABEL[activeShot] || '')}</span>
-    </div>` : '';
+    </div>
+    <div class="film-label">${esc(SHOT_LABEL[activeShot] || '')}</div>` : '';
 
   return `<div class="detail">
     <header class="detail-bar">

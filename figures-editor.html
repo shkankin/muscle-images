@@ -103,8 +103,8 @@
   .savebar .pending b{color:var(--gold)}
   .log{margin-top:10px;background:#0E0B09;border:1px solid var(--bd);border-radius:9px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.5;max-height:160px;overflow:auto;display:none}
   .log .ok{color:var(--green)} .log .err{color:var(--red)} .log .inf{color:var(--fg2)} .log .dim{color:var(--fg3)} .log .warn{color:var(--gold)}
-  /* Colour + class card. The class control sits on its OWN line under the
-     colour name so neither gets squeezed — at 120px wide the name used to
+  /* Color + class card. The class control sits on its OWN line under the
+     color name so neither gets squeezed — at 120px wide the name used to
      truncate to "Da… Blu…" and the dropdown had no room to show a value. */
   .crow{display:flex;flex-direction:column;gap:8px;padding:9px 10px;background:var(--bg3);
     border:1px solid var(--bd);border-radius:10px;transition:border-color .15s,opacity .15s}
@@ -129,7 +129,7 @@
 </head>
 <body>
   <div class="head"><span class="dot"></span><h1>Figure Editor <b>M.U.S.C.L.E.</b></h1></div>
-  <div class="sub">Fill in figure info and upload a photo per colour. Saves to <code>shkankin/muscle-images</code>; photos go to <code>images/MUSCLEFigure###&lt;suffix&gt;.jpg</code> (+ a <code>t</code> thumbnail).</div>
+  <div class="sub">Fill in figure info and upload a photo per color. Saves to <code>shkankin/muscle-images</code>; photos go to <code>images/MUSCLEFigure###&lt;suffix&gt;.jpg</code> (+ a <code>t</code> thumbnail).</div>
 
   <!-- token -->
   <div class="card" id="tokenCard">
@@ -181,14 +181,14 @@
     </div>
 
     <div class="card">
-      <div class="lbl">Colours &amp; class</div>
-      <div class="mini" style="text-align:left;margin-bottom:9px">Tick each colour this sculpt was made in, then set its class — <b>C</b> common for this sculpt, <b>B</b> uncommon, <b>A</b> rarest. Class is per sculpt <i>and</i> colour: the same figure can be C in flesh and A in purple.</div>
+      <div class="lbl">Colors &amp; class</div>
+      <div class="mini" style="text-align:left;margin-bottom:9px">Tick each color this sculpt was made in, then set its class — <b>C</b> common for this sculpt, <b>B</b> uncommon, <b>A</b> rarest. Class is per sculpt <i>and</i> color: the same figure can be C in flesh and A in purple.</div>
       <div class="cgrid" id="colorGrid"></div>
     </div>
 
     <div class="card">
       <div class="lbl">Shots</div>
-      <div class="mini" style="text-align:left;margin-bottom:10px">Each upload saves two files: the full shot and its <b>t</b> thumbnail. Uploading a colour also marks that colour available.</div>
+      <div class="mini" style="text-align:left;margin-bottom:10px">Each upload saves two files: the full shot and its <b>t</b> thumbnail. Uploading a color also marks that color available.</div>
       <div class="photos" id="photoGrid"></div>
     </div>
   </div>
@@ -218,18 +218,18 @@ const COLORS = [
   {key:'Magenta',hex:'#B54A83',suf:'m'},
 ];
 // Shot slots in the editor = the real file convention:
-//   ''(group) all colours · f front flesh · fb back flesh · then per-colour.
+//   ''(group) all colors · f front flesh · fb back flesh · then per-color.
 const SHOTS = [
-  {key:'group', suf:'',   label:'All colours (group)'},
+  {key:'group', suf:'',   label:'All colors (group)'},
   {key:'f',     suf:'f',  label:'Front · Flesh'},
   {key:'fb',    suf:'fb', label:'Back · Flesh'},
   ...COLORS.filter(c=>c.key!=='Flesh').map(c=>({key:c.suf,suf:c.suf,label:c.key,hex:c.hex})),
 ];
-// Per-sculpt, per-colour class. The SAME sculpt can be Class C in one
-// colour and Class A in another.
-//   C Common   — most frequently produced colour for this sculpt
+// Per-sculpt, per-color class. The SAME sculpt can be Class C in one
+// color and Class A in another.
+//   C Common   — most frequently produced color for this sculpt
 //   B Uncommon — noticeably lower numbers, harder to find
-//   A Rare     — the absolute rarest colour for this sculpt
+//   A Rare     — the absolute rarest color for this sculpt
 const CLASSES={C:{name:'Common',hex:'#8A9BA8'},B:{name:'Uncommon',hex:'#6FA9C9'},A:{name:'Rare',hex:'#E3A93C'}};
 const HEX = Object.fromEntries(COLORS.map(c=>[c.key,c.hex]));
 // images/MUSCLEFigure###<suffix>[t].<ext>  — 't' marks the thumbnail.
@@ -246,7 +246,7 @@ let catalog = [];             // array of figure objects (mutated as edited)
 let byId = {};                // id -> figure
 let dirty = new Set();        // ids with field/photo changes
 let staged = {};              // `${id}-${slug}` -> { blob, url }  (images to upload)
-let removed = new Set();      // colour keys removed from a figure (id::color) — untrack only
+let removed = new Set();      // color keys removed from a figure (id::color) — untrack only
 let curId = null;             // figure being edited
 let figuresSha = null;        // sha of figures.json blob (for reference)
 let filter = 'all';
@@ -424,7 +424,7 @@ function renderColorGrid(f){
     return `<div class="crow ${on?'on':''}">
       <label class="check"><input type="checkbox" data-color="${c.key}" ${on?'checked':''}><i style="background:${c.hex}"></i><span class="cname">${c.key}</span></label>
       <div class="clsseg">${seg}</div>
-      <div class="clshint">${on?(k?`Class ${k} · ${CLASSES[k].name}`:'Class not set'):'Not made in this colour'}</div>
+      <div class="clshint">${on?(k?`Class ${k} · ${CLASSES[k].name}`:'Class not set'):'Not made in this color'}</div>
     </div>`;
   }).join('');
   if(!f) return;
@@ -447,7 +447,7 @@ function renderColorGrid(f){
 
 function renderPhotoGrid(f){
   $('photoGrid').innerHTML = SHOTS.map(sh=>{
-    const key=sh.key;                       // 'group' | 'f' | 'fb' | colour suffix
+    const key=sh.key;                       // 'group' | 'f' | 'fb' | color suffix
     const skey=`${f.id}::${key}`;
     const isStaged=!!staged[skey];
     const ext=(f.img||{})[key];
@@ -487,7 +487,7 @@ async function handleUpload(shotKey, file){
     if(staged[skey]&&staged[skey].url) URL.revokeObjectURL(staged[skey].url);
     staged[skey]={ blob:full, thumb, url:URL.createObjectURL(thumb) };
     f.img=f.img||{}; f.img[shotKey]='jpg';       // new uploads are always lowercase .jpg
-    // A colour shot implies the figure comes in that colour.
+    // A color shot implies the figure comes in that color.
     const col=COLORS.find(c=>c.suf===shotKey);
     if(col&&!f.colors.includes(col.key)) f.colors.push(col.key);
     markDirty(f.id);
