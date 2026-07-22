@@ -141,6 +141,10 @@
     <div class="edit-top">
       <button class="ghost" id="backBtn">← List</button>
       <span class="badge" id="editNum"></span>
+      <span style="flex:1"></span>
+      <button class="ghost" id="prevBtn" title="Previous figure">‹</button>
+      <button class="ghost" id="nextBtn" title="Next figure">›</button>
+      <button class="ghost" id="nextGapBtn" title="Next figure with no name">Next gap ›</button>
     </div>
     <div class="card">
       <div class="field"><label>Name</label><input type="text" id="f_name" placeholder="e.g. Kinnikuman"></div>
@@ -169,7 +173,7 @@
 
   <!-- save bar -->
   <div class="savebar" id="saveBar">
-    <span class="pending" id="pending">No changes yet</span>
+    <span class="pending" id="pending">No changes yet</span><span class="mini" id="progress" style="white-space:nowrap"></span>
     <button class="ghost" id="discardBtn">Discard</button>
     <button class="primary" id="commitBtn" disabled>Save to GitHub</button>
   </div>
@@ -312,6 +316,23 @@ function renderList(){
 }
 
 // ── edit ──
+$('prevBtn').onclick = ()=>step(-1);
+$('nextBtn').onclick = ()=>step(1);
+$('nextGapBtn').onclick = ()=>{
+  commitCurrentFields();
+  const i=catalog.findIndex(f=>f.id===curId);
+  const next=catalog.slice(i+1).find(f=>!f.name) || catalog.find(f=>!f.name);
+  if(next) openEdit(next.id); else alert('Every figure has a name.');
+};
+function step(d){
+  commitCurrentFields();
+  const i=catalog.findIndex(f=>f.id===curId);
+  const t=catalog[i+d]; if(t) openEdit(t.id);
+}
+// Warn before losing unsaved edits (this catalog is shared with all users).
+window.addEventListener('beforeunload', e => {
+  if(dirty.size||Object.keys(staged).length){ e.preventDefault(); e.returnValue=''; }
+});
 $('backBtn').onclick = ()=>{ commitCurrentFields(); curId=null; $('editView').classList.add('hidden'); $('listView').classList.remove('hidden'); renderList(); };
 function openEdit(id){
   commitCurrentFields();
@@ -425,6 +446,8 @@ function updatePending(){
   if(nImg) parts.push(`<b>${nImg}</b> photo${nImg>1?'s':''} to upload`);
   $('pending').innerHTML = parts.length? parts.join(' · ') : 'No changes yet';
   $('commitBtn').disabled = !(parts.length && _canPush);
+  const named=catalog.filter(f=>f.name).length;
+  const p=$('progress'); if(p&&catalog.length) p.textContent=`${named}/${catalog.length} named`;
 }
 
 $('discardBtn').onclick = () => {

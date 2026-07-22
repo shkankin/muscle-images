@@ -105,6 +105,48 @@
         integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+// ── Flat-zip path map ───────────────────────────────────────────────
+// The release zip is FLAT (every file at the root, no directories) so it
+// survives being re-zipped by macOS/Windows or emailed around. This maps
+// each flat filename to where it actually belongs in the repo. Anything
+// not listed here goes to the repo root as-is.
+const PATH_MAP = {
+  // js/
+  'app.js':        'js/app.js',
+  'data.js':       'js/data.js',
+  'delegate.js':   'js/delegate.js',
+  'handlers.js':   'js/handlers.js',
+  'idb-store.js':  'js/idb-store.js',
+  'render.js':     'js/render.js',
+  'state.js':      'js/state.js',
+  // css/
+  'app.css':       'css/app.css',
+  'fonts.css':     'css/fonts.css',
+  // fonts/
+  'anton-400.woff2':   'fonts/anton-400.woff2',
+  'barlow-400.woff2':  'fonts/barlow-400.woff2',
+  'barlow-500.woff2':  'fonts/barlow-500.woff2',
+  'barlow-600.woff2':  'fonts/barlow-600.woff2',
+  'barlow-700.woff2':  'fonts/barlow-700.woff2',
+  // images/  (app chrome only — figure photos are uploaded separately)
+  'icon-192.png':          'images/icon-192.png',
+  'icon-512.png':          'images/icon-512.png',
+  'icon-maskable-512.png': 'images/icon-maskable-512.png',
+  'favicon-32.png':        'images/favicon-32.png',
+  'og-image.png':          'images/og-image.png',
+  // root
+  'index.html':           'index.html',
+  'figures-editor.html':  'figures-editor.html',
+  'deploy.html':          'deploy.html',
+  'sw.js':                'sw.js',
+  'manifest.json':        'manifest.json',
+  'figures.json':         'figures.json',
+  'README.md':            'README.md',
+  'CNAME':                'CNAME',
+  '.nojekyll':            '.nojekyll',
+};
+const repoPathFor = name => PATH_MAP[name] || name;
+
 const REPO = 'shkankin/muscle-images';
 const BRANCH = 'main';
 const SITE = 'https://musclemen.app';
@@ -172,8 +214,10 @@ async function loadZip(file){
       if (entry.dir) return;
       if (path.startsWith('__MACOSX/') || path.endsWith('.DS_Store')) return;
       const bin = isBinary(path);
+      // Flat zip: strip any directory that a zipper may have added, then map.
+      const flat = path.split('/').pop();
       entries.push({
-        path, status:'',
+        path: repoPathFor(flat), status:'',
         getContent: async () => ({ content: await entry.async(bin?'base64':'string'), encoding: bin?'base64':'utf-8' }),
       });
     });
