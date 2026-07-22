@@ -46,7 +46,7 @@
   "id": "003",
   "num": 3,
   "slug": "003",
-  "name": "Sunshine",
+  "name": "Sunshine C",
   "aka": "",
   "origin": "Idol Chojin from the Devil Knights",
   "poster": true,
@@ -54,7 +54,10 @@
   "colors": [
    "Flesh"
   ],
-  "img": {},
+  "img": {
+   "f": "jpg",
+   "fb": "jpg"
+  },
   "notes": ""
  },
  {
@@ -3108,9 +3111,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Light Blue"
   ],
-  "img": {},
+  "img": {
+   "lb": "jpg"
+  },
   "notes": ""
  },
  {
