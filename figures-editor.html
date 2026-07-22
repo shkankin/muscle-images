@@ -103,6 +103,12 @@
   .savebar .pending b{color:var(--gold)}
   .log{margin-top:10px;background:#0E0B09;border:1px solid var(--bd);border-radius:9px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.5;max-height:160px;overflow:auto;display:none}
   .log .ok{color:var(--green)} .log .err{color:var(--red)} .log .inf{color:var(--fg2)} .log .dim{color:var(--fg3)} .log .warn{color:var(--gold)}
+  .crow{display:flex;align-items:center;gap:8px;padding:6px 9px;background:var(--bg3);border:1px solid var(--bd);border-radius:8px}
+  .crow.on{border-color:#5c4a38}
+  .crow .check{flex:1;min-width:0}
+  .clssel{width:58px;flex:none;padding:5px 6px;font-size:13px;font-weight:700;text-align:center}
+  .clssel:disabled{opacity:.35}
+  .clsdot{flex:none;min-width:17px;height:17px;border-radius:5px;color:#17120E;font-weight:800;font-size:11px;line-height:17px;text-align:center}
   .hidden{display:none!important}
 </style>
 </head>
@@ -132,6 +138,8 @@
       <button class="fchip" data-filter="unnamed">Unnamed</button>
       <button class="fchip" data-filter="photos">Has photos</button>
       <button class="fchip" data-filter="nophotos">No photos</button>
+      <button class="fchip" data-filter="noclass">No class set</button>
+      <button class="fchip" data-filter="classA">Has Class A</button>
     </div>
     <div class="list" id="list"></div>
   </div>
@@ -158,7 +166,8 @@
     </div>
 
     <div class="card">
-      <div class="lbl">Comes in these colours</div>
+      <div class="lbl">Colours &amp; class</div>
+      <div class="mini" style="text-align:left;margin-bottom:9px">Tick each colour this sculpt was made in, then set its class — <b>C</b> common for this sculpt, <b>B</b> uncommon, <b>A</b> rarest. Class is per sculpt <i>and</i> colour: the same figure can be C in flesh and A in purple.</div>
       <div class="cgrid" id="colorGrid"></div>
     </div>
 
@@ -189,7 +198,7 @@ const TOKEN_KEY = 'muscle-editor-gh-token';
 const COLORS = [
   {key:'Flesh',hex:'#E5A594',suf:'f'},{key:'Dark Blue',hex:'#31508C',suf:'db'},
   {key:'Light Blue',hex:'#6FA9C9',suf:'lb'},{key:'Red',hex:'#C6413A',suf:'r'},
-  {key:'Green',hex:'#5E9E62',suf:'g'},{key:'Orange',hex:'#D98341',suf:'o'},
+  {key:'Green',hex:'#5E9E62',suf:'g'},{key:'Neon Orange',hex:'#F2571E',suf:'o'},
   {key:'Salmon',hex:'#DD8A78',suf:'s'},{key:'Purple',hex:'#7C5AA6',suf:'p'},
   {key:'Magenta',hex:'#B54A83',suf:'m'},
 ];
@@ -201,6 +210,12 @@ const SHOTS = [
   {key:'fb',    suf:'fb', label:'Back · Flesh'},
   ...COLORS.filter(c=>c.key!=='Flesh').map(c=>({key:c.suf,suf:c.suf,label:c.key,hex:c.hex})),
 ];
+// Per-sculpt, per-colour class. The SAME sculpt can be Class C in one
+// colour and Class A in another.
+//   C Common   — most frequently produced colour for this sculpt
+//   B Uncommon — noticeably lower numbers, harder to find
+//   A Rare     — the absolute rarest colour for this sculpt
+const CLASSES={C:{name:'Common',hex:'#8A9BA8'},B:{name:'Uncommon',hex:'#6FA9C9'},A:{name:'Rare',hex:'#E3A93C'}};
 const HEX = Object.fromEntries(COLORS.map(c=>[c.key,c.hex]));
 // images/MUSCLEFigure###<suffix>[t].<ext>  — 't' marks the thumbnail.
 const fileFor = (id,suf,ext='jpg',thumb=false)=>`MUSCLEFigure${id}${suf}${thumb?'t':''}.${ext}`;
@@ -280,9 +295,10 @@ function normalize(f){
     rarity:f.rarity||'common',
     colors:Array.isArray(f.colors)&&f.colors.length?f.colors.slice():['Flesh'],
     img:(f.img&&typeof f.img==='object')?{...f.img}:{},
+    cls:(f.cls&&typeof f.cls==='object')?{...f.cls}:{},
     notes:f.notes||'' };
 }
-function seedSkeleton(){ const a=[]; for(let n=1;n<=236;n++){ a.push({id:pad3(n),num:n,slug:pad3(n),name:'',aka:'',origin:'',poster:!NON_POSTER.has(n),rarity:'common',colors:['Flesh'],img:{},notes:''}); } return a; }
+function seedSkeleton(){ const a=[]; for(let n=1;n<=236;n++){ a.push({id:pad3(n),num:n,slug:pad3(n),name:'',aka:'',origin:'',poster:!NON_POSTER.has(n),rarity:'common',colors:['Flesh'],img:{},cls:{},notes:''}); } return a; }
 
 // ── list ──
 $('search').oninput = renderList;
@@ -292,6 +308,8 @@ function matchFilter(f){
   if(filter==='unnamed') return !f.name;
   if(filter==='photos') return Object.keys(f.img||{}).length>0;
   if(filter==='nophotos') return Object.keys(f.img||{}).length===0;
+  if(filter==='noclass') return Object.keys(f.cls||{}).length===0;
+  if(filter==='classA') return Object.values(f.cls||{}).includes('A');
   return true;
 }
 function renderList(){
@@ -304,12 +322,14 @@ function renderList(){
   $('list').innerHTML = rows.map(f=>{
     const dots = f.colors.slice(0,6).map(c=>`<i style="background:${HEX[c]||'#888'}"></i>`).join('');
     const pc = Object.keys(f.img||{}).length;
+    const kk = Object.values(f.cls||{});
+    const top = kk.includes('A')?'A':kk.includes('B')?'B':kk.includes('C')?'C':'';
     return `<button class="frow ${dirty.has(f.id)?'edited':''}" data-id="${f.id}">
       <span class="fnum">${f.num}</span>
       <span class="fmain"><span class="fname">${f.name?esc(f.name):'<span class=un>unnamed</span>'}${f.aka?` · ${esc(f.aka)}`:''}</span>
         <span class="fmeta">${f.origin?esc(f.origin)+' · ':''}${f.rarity!=='common'?f.rarity+' · ':''}${f.poster?'poster':'not on poster'}</span></span>
       <span class="fdots">${dots}</span>
-      ${pc?`<span class="pcount">▣ ${pc}</span>`:''}
+      ${top?`<span class="clsdot" style="background:${CLASSES[top].hex}">${top}</span>`:''}${pc?`<span class="pcount">▣ ${pc}</span>`:''}
     </button>`;
   }).join('') || `<div class="mini" style="padding:20px">No figures match.</div>`;
   [...$('list').querySelectorAll('.frow')].forEach(b=>b.onclick=()=>openEdit(b.dataset.id));
@@ -357,14 +377,32 @@ function commitCurrentFields(){
 
 function renderColorGrid(f){
   const set=new Set(f?f.colors:['Flesh']);
-  $('colorGrid').innerHTML = COLORS.map(c=>`<label class="check"><input type="checkbox" data-color="${c.key}" ${set.has(c.key)?'checked':''}><i style="background:${c.hex}"></i>${c.key}</label>`).join('');
+  $('colorGrid').innerHTML = COLORS.map(c=>{
+    const on=set.has(c.key);
+    const k=(f&&f.cls&&f.cls[c.key])||'';
+    const sel=['C','B','A'].map(x=>`<option value="${x}" ${k===x?'selected':''}>${x}</option>`).join('');
+    return `<div class="crow ${on?'on':''}">
+      <label class="check"><input type="checkbox" data-color="${c.key}" ${on?'checked':''}><i style="background:${c.hex}"></i>${c.key}</label>
+      <select class="clssel" data-color="${c.key}" title="Class for this sculpt in ${c.key}" ${on?'':'disabled'}>
+        <option value="">—</option>${sel}
+      </select>
+    </div>`;
+  }).join('');
   if(!f) return;
-  [...$('colorGrid').querySelectorAll('input')].forEach(inp=>inp.onchange=()=>{
+  [...$('colorGrid').querySelectorAll('input[type=checkbox]')].forEach(inp=>inp.onchange=()=>{
     const col=inp.dataset.color; const fig=byId[curId];
     const i=fig.colors.indexOf(col);
     if(inp.checked){ if(i<0) fig.colors.push(col); }
-    else { if(i>=0) fig.colors.splice(i,1); }
-    markDirty(fig.id);
+    else { if(i>=0) fig.colors.splice(i,1); if(fig.cls) delete fig.cls[col]; }
+    markDirty(fig.id); renderColorGrid(fig);
+  });
+  [...$('colorGrid').querySelectorAll('select.clssel')].forEach(sel=>sel.onchange=()=>{
+    const fig=byId[curId]; fig.cls=fig.cls||{};
+    const col=sel.dataset.color;
+    if(sel.value) fig.cls[col]=sel.value; else delete fig.cls[col];
+    // A class implies the sculpt comes in that colour.
+    if(sel.value&&!fig.colors.includes(col)) fig.colors.push(col);
+    markDirty(fig.id); renderColorGrid(fig);
   });
 }
 

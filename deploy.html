@@ -47,6 +47,7 @@
   button.ghost{background:none}
   .status{font-size:13px;margin-top:9px;color:var(--fg3);min-height:18px}
   .status.ok{color:var(--green)} .status.bad{color:var(--red)}
+  .drop-sub{font-size:11.5px;color:var(--fg3);font-weight:600;margin-top:5px}
   .drop{border:2px dashed var(--bd);border-radius:14px;padding:26px 16px;text-align:center;color:var(--fg3);
     cursor:pointer;transition:border-color .15s,background .15s}
   .drop:hover,.drop.over{border-color:var(--gold);background:var(--bg3);color:var(--fg2)}
@@ -84,8 +85,8 @@
 
   <div class="card">
     <div class="lbl">Build zip</div>
-    <div class="drop" id="drop">Drop <b>muscle-collector-v*.zip</b> here, or click to choose</div>
-    <input type="file" id="file" accept=".zip" hidden>
+    <div class="drop" id="drop">Drop the <b>release .zip</b>, or any individual files / images<div class="drop-sub">.zip · .js .css .html .json · .jpg .png · fonts — paths are resolved automatically</div></div>
+    <input type="file" id="file" accept=".zip,.js,.css,.html,.json,.md,.py,.jpg,.jpeg,.png,.gif,.webp,.svg,.ico,.woff,.woff2,.ttf" multiple hidden>
     <div class="files" id="files"></div>
     <div class="bar" id="bar"><span></span></div>
     <div class="row" style="margin-top:14px">
@@ -145,7 +146,24 @@ const PATH_MAP = {
   'CNAME':                'CNAME',
   '.nojekyll':            '.nojekyll',
 };
-const repoPathFor = name => PATH_MAP[name] || name;
+// Resolution order: an explicit PATH_MAP entry first, then sensible
+// fallbacks so a new file never lands somewhere silly. Shared by BOTH the
+// zip path and a direct file drop, so the two can't drift apart.
+//   *.js                    -> js/
+//   *.css                   -> css/
+//   *.woff2 / *.woff / *.ttf-> fonts/
+//   figure + chrome images  -> images/
+//   *.py                    -> scripts/
+//   *.json / *.html / *.md  -> repo root
+function repoPathFor(name){
+  return PATH_MAP[name]
+    || (/\.js$/i.test(name)              ? 'js/' + name : null)
+    || (/\.css$/i.test(name)             ? 'css/' + name : null)
+    || (/\.(woff2?|ttf|otf)$/i.test(name)? 'fonts/' + name : null)
+    || (/\.(jpe?g|png|gif|webp|svg|ico)$/i.test(name) ? 'images/' + name : null)
+    || (/\.py$/i.test(name)              ? 'scripts/' + name : null)
+    || name;   // json / html / md / CNAME / .nojekyll stay at the root
+}
 
 const REPO = 'shkankin/muscle-images';
 const BRANCH = 'main';
@@ -199,32 +217,57 @@ const ghHeaders = t => ({ 'Authorization':`Bearer ${t}`, 'X-GitHub-Api-Version':
 
 // ── zip intake ──
 drop.onclick = () => fileEl.click();
-fileEl.onchange = () => fileEl.files[0] && loadZip(fileEl.files[0]);
+fileEl.onchange = () => fileEl.files.length && onFilePick(fileEl.files);
 drop.addEventListener('dragover', e=>{e.preventDefault();drop.classList.add('over');});
 drop.addEventListener('dragleave', ()=>drop.classList.remove('over'));
-drop.addEventListener('drop', e=>{ e.preventDefault(); drop.classList.remove('over'); const f=e.dataTransfer.files[0]; if(f) loadZip(f); });
+drop.addEventListener('drop', e=>{ e.preventDefault(); drop.classList.remove('over'); if(e.dataTransfer.files.length) onFilePick(e.dataTransfer.files); });
 
-async function loadZip(file){
-  if(!/\.zip$/i.test(file.name)) return setStatus('bad','That is not a .zip file.');
-  drop.innerHTML = `Reading <b>${file.name}</b>…`;
+// Intake for both a release zip AND loose files (including figure images).
+// Zips are expanded; loose files are routed through the same resolver, so a
+// single image drop and a full release land in exactly the right places.
+async function onFilePick(fileList){
+  const picked=[...fileList]; if(!picked.length) return;
+  drop.innerHTML='Reading…';
+  const added=[];
   try{
-    const zip = await JSZip.loadAsync(file);
-    entries = [];
-    zip.forEach((path, entry) => {
-      if (entry.dir) return;
-      if (path.startsWith('__MACOSX/') || path.endsWith('.DS_Store')) return;
-      const bin = isBinary(path);
-      // Flat zip: strip any directory that a zipper may have added, then map.
-      const flat = path.split('/').pop();
-      entries.push({
-        path: repoPathFor(flat), status:'',
-        getContent: async () => ({ content: await entry.async(bin?'base64':'string'), encoding: bin?'base64':'utf-8' }),
-      });
-    });
-    entries.sort((a,b)=>a.path.localeCompare(b.path));
-    drop.innerHTML = `<b>${file.name}</b> — ${entries.length} files ready`;
+    for(const file of picked){
+      if(/\.zip$/i.test(file.name)){
+        const zip=await JSZip.loadAsync(file);
+        const jobs=[];
+        zip.forEach((p,entry)=>{
+          if(entry.dir) return;
+          if(p.startsWith('__MACOSX/')||p.endsWith('.DS_Store')) return;
+          jobs.push({p,entry});
+        });
+        for(const {p,entry} of jobs){
+          const flat=p.split('/').pop();
+          const bin=isBinary(flat);
+          added.push({ path:repoPathFor(flat), status:'',
+            getContent: async()=>({content:await entry.async(bin?'base64':'string'),encoding:bin?'base64':'utf-8'}) });
+        }
+      } else {
+        const flat=file.name.split('/').pop();
+        const bin=isBinary(flat);
+        added.push({ path:repoPathFor(flat), status:'',
+          getContent: async()=>({content:await readFile(file,bin),encoding:bin?'base64':'utf-8'}) });
+      }
+    }
+    // Later picks replace earlier ones for the same repo path.
+    const byPath=Object.fromEntries(entries.map(e=>[e.path,e]));
+    for(const a of added) byPath[a.path]=a;
+    entries=Object.values(byPath).sort((a,b)=>a.path.localeCompare(b.path));
+    const imgs=entries.filter(e=>e.path.startsWith('images/')).length;
+    drop.innerHTML=`<b>${entries.length} file${entries.length===1?'':'s'} ready</b>${imgs?` — ${imgs} image${imgs===1?'':'s'}`:''}<div class="drop-sub">Drop more to add, or deploy</div>`;
     renderFiles(); updateBtn();
-  }catch(e){ setStatus('bad','Could not read zip: '+e.message); drop.innerHTML='Drop <b>muscle-collector-v*.zip</b> here, or click to choose'; }
+  }catch(e){ setStatus('bad','Could not read files: '+e.message); }
+}
+function readFile(file,asBase64){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(asBase64?String(r.result).split(',')[1]:String(r.result));
+    r.onerror=rej;
+    asBase64?r.readAsDataURL(file):r.readAsText(file);
+  });
 }
 
 function renderFiles(){

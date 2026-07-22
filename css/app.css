@@ -716,3 +716,60 @@ img { max-width: 100%; }
 .pcell.owned { border-color: #FFE940; box-shadow: 0 0 11px rgba(255, 233, 64, .42); }
 .pcell.want .pc-star svg path { stroke: var(--acc); fill: transparent; }
 .pcell.owned .pc-num { color: #FFE940; }
+
+/* ── Colour class (A/B/C) ──────────────────────────────────────────
+   Per sculpt, per colour: the same figure can be Class C in one colour
+   and Class A in another. Only A and B are flagged on the wall — C is
+   the norm and would just add noise. */
+.cls-A { --cls: #E3A93C; }
+.cls-B { --cls: #6FA9C9; }
+.cls-C { --cls: #8A9BA8; }
+
+/* Badge on a set tile */
+.tile-cls {
+  position: absolute; top: 4px; left: 4px; z-index: 3;
+  min-width: 14px; height: 14px; padding: 0 3px; border-radius: 4px;
+  font-family: var(--font-display); font-size: 10px; line-height: 14px;
+  text-align: center; letter-spacing: .5px;
+  color: #17120E; background: var(--cls);
+  box-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+/* Badge on a poster cell */
+.pc-cls {
+  position: absolute; top: 2px; right: 3px; z-index: 3;
+  min-width: 11px; padding: 0 2px; border-radius: 3px;
+  font-family: var(--font-display); font-size: clamp(7px, 1.7vw, 9px);
+  line-height: 1.5; text-align: center; color: #17120E; background: var(--cls);
+}
+/* Chip on the detail colour belt */
+.vcls {
+  margin-left: auto; min-width: 17px; height: 17px; border-radius: 5px;
+  font-family: var(--font-display); font-size: 11px; line-height: 17px;
+  text-align: center; color: #17120E; background: var(--cls, var(--fg3));
+  letter-spacing: .5px; flex: none;
+}
+.vchip.cls-A { border-color: color-mix(in srgb, #E3A93C 55%, var(--bd)); }
+.vchip.cls-A.have { box-shadow: 0 0 0 1px rgba(227,169,60,.45); }
+
+/* Legend + class filter */
+.cls-legend { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 2px; }
+.cls-key { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--fg2); }
+.cls-key b {
+  display: inline-grid; place-items: center; min-width: 18px; height: 18px;
+  border-radius: 5px; font-family: var(--font-display); font-size: 11px;
+  color: #17120E; background: var(--cls);
+}
+.chip-cls { min-width: 34px; font-family: var(--font-display); letter-spacing: .5px; }
+.chip-cls.on { background: var(--cls); border-color: var(--cls); color: #17120E; }
+.belt-empty { padding: 10px 2px; }
+
+/* "Other colour" — undocumented colours, revealed on demand so the belt
+   stays clean but ownership is always recordable. */
+.belt-more {
+  margin: 8px 0 0; padding: 7px 12px; font-size: 12.5px; font-weight: 700;
+  color: var(--fg2); background: none; border: 1px dashed var(--bd); border-radius: 8px;
+}
+.belt-more:active { transform: scale(.97); }
+.vbelt-other { margin-top: 8px; opacity: .82; }
+.belt-note { padding: 0 2px 8px; }
+.vchip.undoc { border-style: dashed; }

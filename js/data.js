@@ -63,6 +63,7 @@ function normalizeRows(rows) {
     num: f.num != null ? Number(f.num) : Number(f.id),
     colors: Array.isArray(f.colors) && f.colors.length ? f.colors : [BASE_COLOR],
     img: f.img && typeof f.img === 'object' ? f.img : {},  // which shots exist + their extension case
+    cls: f.cls && typeof f.cls === 'object' ? f.cls : {},  // { colour: 'A'|'B'|'C' } per-sculpt class
     image: f.image || (f.slug ? `${IMG}/${f.slug}.jpg` : ''),
   }));
 }
@@ -225,9 +226,20 @@ export function visibleFigs() {
     if (S.filterColor) {
       // color filter matches sculpts that come in that color OR that you
       // own in that color — the union is what a collector wants to see.
-      const inLine = (f.colors || []).includes(S.filterColor);
+      // A recorded class for a colour is itself evidence the sculpt exists
+      // in it, so it counts as being in the line even if `colors` is stale.
+      const inLine = (f.colors || []).includes(S.filterColor) || !!(f.cls || {})[S.filterColor];
       const owned = ownedColors(f.id).includes(S.filterColor);
       if (!inLine && !owned) return false;
+    }
+    if (S.filterClass) {
+      // Class filter: does this sculpt have ANY colour of that class?
+      // When a colour filter is also active, the two combine — that exact
+      // sculpt-and-colour must carry the class.
+      const cls = f.cls || {};
+      const ok = S.filterColor ? cls[S.filterColor] === S.filterClass
+                               : Object.values(cls).includes(S.filterClass);
+      if (!ok) return false;
     }
     if (q) {
       const hay = `${f.num} ${f.name} ${f.origin}`.toLowerCase();

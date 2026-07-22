@@ -9,6 +9,7 @@
 import {
   S, ICO, icon, esc, APP_VERSION, THEMES, COLORS, COLOR_HEX,
   PACKS, CONDITIONS, RARITY, SET_TOTAL, BASE_COLOR, imgFor, shotsFor,
+  CLASSES, CLASS_ORDER, classOf,
 } from './state.js';
 import {
   visibleFigs, stats, isOwned, isWanted, ownedColors, exportData,
@@ -106,6 +107,18 @@ function tabBody() {
   }
 }
 
+// The rarest class recorded for a sculpt across all its colours — used to
+// flag Class A/B figures on the wall without opening them.
+function topClass(f) {
+  const cls = f && f.cls; if (!cls) return null;
+  let best = null;
+  for (const c of Object.values(cls)) {
+    if (!CLASSES[c]) continue;
+    if (!best || CLASSES[c].rank > CLASSES[best].rank) best = c;
+  }
+  return best;
+}
+
 // § BELT (the hero completeness meter) ──────────────────────────────
 function belt() {
   const st = stats();
@@ -133,6 +146,10 @@ function facets() {
       ${own('owned', 'Owned')}
       ${own('missing', 'Missing')}
       ${own('want', 'Want')}
+    </div>
+    <div class="chips">
+      ${CLASS_ORDER.map(k => `<button class="chip chip-cls cls-${k} ${S.filterClass === k ? 'on' : ''}" data-action="filter-class" data-val="${k}" title="${esc(CLASSES[k].label)} — ${esc(CLASSES[k].name)}">${k}</button>`).join('')}
+      ${S.filterClass ? `<button class="chip" data-action="filter-class" data-val="">Clear class</button>` : ''}
     </div>
     <div class="swatches" role="group" aria-label="Filter by color">
       <button class="sw sw-any ${!S.filterColor ? 'on' : ''}" data-action="filter-color" data-val="" title="Any color">Any</button>
@@ -173,10 +190,12 @@ function posterCell(f) {
   const owned = isOwned(f.id);
   const want = isWanted(f.id);
   const thumb = imgFor(f, 'group', true);
+  const ptc = topClass(f);
   return `<button class="pcell ${owned ? 'owned' : ''} ${want ? 'want' : ''}" data-action="open-fig" data-id="${esc(f.id)}"
       aria-label="Figure ${f.num}${f.name ? ' ' + esc(f.name) : ''}${owned ? ', owned' : ', not owned'}">
     <span class="pc-num">${f.num}</span>
     <span class="pc-art">${thumb ? `<img src="${thumb}" alt="" loading="lazy" data-imgfallback>` : `<span class="pc-keshi">${keshiSVG()}</span>`}</span>
+    ${ptc && ptc !== 'C' ? `<span class="pc-cls cls-${ptc}">${ptc}</span>` : ''}
     <span class="pc-star" aria-hidden="true">${starSVG()}</span>
   </button>`;
 }
@@ -204,10 +223,12 @@ function tile(f) {
   const tint = COLOR_HEX[primary] || COLOR_HEX[BASE_COLOR];
   // Thumbnail of the group shot when it exists; otherwise the keshi silhouette.
   const thumb = imgFor(f, 'group', true);
+  const tc = topClass(f);
   return `<button class="${cls}" data-action="open-fig" data-id="${esc(f.id)}" style="--tint:${tint}" aria-label="Figure ${f.num}${owned ? ', owned' : ', missing'}">
     <span class="tile-fig" aria-hidden="true">${keshiSVG()}</span>
     ${thumb ? `<img class="tile-img" alt="" src="${thumb}" data-imgfallback loading="lazy">` : ''}
     <span class="tile-num">${f.num}</span>
+    ${tc && tc !== 'C' ? `<span class="tile-cls cls-${tc}" title="${esc(CLASSES[tc].label)} — ${esc(CLASSES[tc].name)}">${tc}</span>` : ''}
     ${want ? `<span class="tile-flag">${icon(ICO.heart, 11)}</span>` : ''}
   </button>`;
 }
@@ -278,6 +299,28 @@ function viewCollection() {
 }
 
 // § STATS ──────────────────────────────────────────────────────────
+// How many of the classed colours you actually own, per class. Only counts
+// sculpt+colour combinations that have a class recorded.
+function classStats() {
+  const tally = { A: [0, 0], B: [0, 0], C: [0, 0] };   // [owned, total]
+  for (const f of S.figs) {
+    const cls = f.cls || {};
+    const mine = ownedColors(f.id);
+    for (const [color, k] of Object.entries(cls)) {
+      if (!tally[k]) continue;
+      tally[k][1]++;
+      if (mine.includes(color)) tally[k][0]++;
+    }
+  }
+  const any = CLASS_ORDER.some(k => tally[k][1] > 0);
+  if (!any) return `<div class="stat-note dim sm">No classes recorded yet. Class is set per sculpt and colour in the figure editor.</div>`;
+  return `<div class="cls-legend">${CLASS_ORDER.map(k => {
+    const [own, tot] = tally[k];
+    const c = CLASSES[k];
+    return `<div class="cls-key cls-${k}"><b>${k}</b>${c.name} — ${own}/${tot}</div>`;
+  }).join('')}</div>`;
+}
+
 function viewStats() {
   const st = stats();
   const maxColor = Math.max(1, ...Object.values(st.byColor));
@@ -297,6 +340,8 @@ function viewStats() {
       <div class="stat-card"><b>${st.colorVariants}</b><span>color variants held</span></div>
       <div class="stat-card"><b>${st.wanted}</b><span>on want list</span></div>
     </section>
+    <h2 class="sec-h">Class</h2>
+    ${classStats()}
     <h2 class="sec-h">Variants by color</h2>
     <div class="cbars">${bars}</div>
     <div class="stat-note dim sm">A “sculpt” is one of the ${SET_TOTAL} numbered figures. Each color you own of a sculpt counts as a separate variant.</div>`;
@@ -331,23 +376,48 @@ function viewDetail(f) {
   const idx = S.figs.findIndex(x => x.id === f.id);
   const prev = S.figs[idx - 1], next = S.figs[idx + 1];
 
-  // Color belt: every color offered by the app; the ones this sculpt is
-  // known to come in are highlighted, tap toggles owned-in-that-color.
+  // Color belt: ONLY the colours this sculpt is documented to come in (set
+  // per figure in the editor), plus any colour already owned or classed —
+  // so ownership recorded earlier never becomes unreachable if the catalog
+  // changes later. Undocumented colours are hidden rather than greyed out.
   const inLine = new Set(f.colors || [BASE_COLOR]);
-  const colorBelt = COLORS.map(c => {
+  const beltColors = COLORS.filter(c =>
+    inLine.has(c.key) || cols.includes(c.key) || !!classOf(f, c.key));
+  const colorBelt = beltColors.map(c => {
     const have = cols.includes(c.key);
     const known = inLine.has(c.key);
-    return `<button class="vchip ${have ? 'have' : ''} ${known ? 'known' : ''}" data-action="toggle-color" data-id="${esc(f.id)}" data-color="${esc(c.key)}" style="--sw:${c.hex}" title="${c.key}${known ? '' : ' (not documented for this sculpt)'}">
-      <span class="vsw"></span><span class="vname">${c.key}</span>${have ? `<span class="vtick">${icon(ICO.check, 13)}</span>` : ''}
+    // Class (A/B/C) for THIS sculpt in THIS colour, when recorded.
+    const k = classOf(f, c.key);
+    const cl = k ? CLASSES[k] : null;
+    const clTitle = cl ? ` — ${cl.label} (${cl.name}): ${cl.blurb}` : '';
+    return `<button class="vchip ${have ? 'have' : ''} ${known ? 'known' : ''} ${k ? 'cls-' + k : ''}" data-action="toggle-color" data-id="${esc(f.id)}" data-color="${esc(c.key)}" style="--sw:${c.hex}${cl ? `;--cls:${cl.hex}` : ''}" title="${esc(c.key)}${known ? '' : ' (not documented for this sculpt)'}${esc(clTitle)}">
+      <span class="vsw"></span><span class="vname">${c.key}</span>
+      ${cl ? `<span class="vcls" aria-label="${esc(cl.label)} — ${esc(cl.name)}">${k}</span>` : ''}
+      ${have ? `<span class="vtick">${icon(ICO.check, 13)}</span>` : ''}
     </button>`;
-  }).join('');
+  }).join('') || `<div class="dim sm belt-empty">No colours documented for this sculpt yet.</div>`;
+
+  // Colours NOT documented for this sculpt and not owned. Hidden behind a
+  // toggle so the belt stays clean, but still reachable — the catalog is
+  // mostly unfilled, so you can always record what you actually own.
+  const otherColors = COLORS.filter(c => !beltColors.includes(c));
+  const otherBelt = otherColors.length ? `
+    <button class="belt-more" data-action="toggle-other-colors" aria-expanded="${S.showOtherColors ? 'true' : 'false'}">
+      ${S.showOtherColors ? '− Hide other colours' : '+ Other colour'}
+    </button>
+    ${S.showOtherColors ? `<div class="vbelt vbelt-other">
+      <div class="dim sm belt-note">Not documented for this sculpt. Marking one records what you own; tell the editor to add it to the catalog.</div>
+      ${otherColors.map(c => `<button class="vchip undoc" data-action="toggle-color" data-id="${esc(f.id)}" data-color="${esc(c.key)}" style="--sw:${c.hex}" title="${esc(c.key)} (not documented for this sculpt)">
+        <span class="vsw"></span><span class="vname">${c.key}</span>
+      </button>`).join('')}
+    </div>` : ''}` : '';
 
   // Available shots for this figure (group / front / back / per-colour).
   const shots = shotsFor(f);
   const SHOT_LABEL = { group: 'All colours', f: 'Front', fb: 'Back', db: 'Dark Blue',
-    lb: 'Light Blue', r: 'Red', g: 'Green', o: 'Orange', s: 'Salmon', p: 'Purple', m: 'Magenta' };
+    lb: 'Light Blue', r: 'Red', g: 'Green', o: 'Neon Orange', s: 'Salmon', p: 'Purple', m: 'Magenta' };
   const SHOT_COLOR = { db: 'Dark Blue', lb: 'Light Blue', r: 'Red', g: 'Green',
-    o: 'Orange', s: 'Salmon', p: 'Purple', m: 'Magenta', f: 'Flesh', fb: 'Flesh' };
+    o: 'Neon Orange', s: 'Salmon', p: 'Purple', m: 'Magenta', f: 'Flesh', fb: 'Flesh' };
   const activeShot = shots.includes(S.detailShot) ? S.detailShot : (shots[0] || null);
   // Use the 't' file as the hero source: right now that is the only size
   // uploaded (the full-size files 404). data-imgupgrade swaps in the
@@ -395,6 +465,7 @@ function viewDetail(f) {
 
       <h2 class="detail-h">Colors ${cols.length ? `<span>${cols.length} owned</span>` : ''}</h2>
       <div class="vbelt">${colorBelt}</div>
+      ${otherBelt}
 
       ${(e.condition || e.pack || e.notes) ? `<div class="detail-meta">
         ${e.condition ? `<div><span>Condition</span>${esc(e.condition)}</div>` : ''}

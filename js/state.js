@@ -11,7 +11,7 @@
 // level data-action delegate for all events (CSP-safe, no inline JS).
 // ════════════════════════════════════════════════════════════════════
 
-export const APP_VERSION = '0.5';
+export const APP_VERSION = '0.7';
 
 // § REPO / NETWORK ─────────────────────────────────────────────────
 // The catalog (figures.json) and figure images live in the same GitHub
@@ -42,7 +42,7 @@ export const FIGS_URL = `${ROOT}/figures.json`;
 // That means any image dropped in the repo shows up with no catalog edit.
 export const IMG_SUFFIX = {
   'Dark Blue': 'db', 'Light Blue': 'lb', 'Red': 'r', 'Green': 'g',
-  'Orange': 'o', 'Salmon': 's', 'Purple': 'p', 'Magenta': 'm',
+  'Neon Orange': 'o', 'Salmon': 's', 'Purple': 'p', 'Magenta': 'm',
   'Flesh': 'f',
 };
 // Build a URL. kind: 'group' | a colour name | 'back'. thumb → the 't' variant.
@@ -86,10 +86,8 @@ export const COLORS = [
   { key: 'Magenta',     hex: '#B54A83' },
   { key: 'Light Blue',  hex: '#6FA9C9' },
   { key: 'Green',       hex: '#5E9E62' },
-  { key: 'Orange',      hex: '#D98341' },
   { key: 'Neon Orange', hex: '#F2571E' },
   { key: 'Salmon',      hex: '#DD8A78' },
-  { key: 'Grape',       hex: '#7A4E8C' }, // rare Mega-Match board-game exclusive
 ];
 export const COLOR_HEX = Object.fromEntries(COLORS.map(c => [c.key, c.hex]));
 
@@ -101,6 +99,31 @@ export const CONDITIONS = ['Loose', 'Sealed', 'Damaged'];
 // Rarity tiers. Most of the 236 are common; the app surfaces the documented
 // exceptions (e.g. the rare Purple #153 "Claw", Satan Cross) rather than
 // guessing — the catalog carries a per-figure `rarity` field.
+// ── Colour class (per sculpt, per colour) ───────────────────────────
+// Distinct from a figure's overall `rarity`: the SAME sculpt can be Class C
+// in one colour and Class A in another, because it describes how many of
+// that specific sculpt-and-colour combination were produced.
+//   C — the most frequently produced colour for that sculpt. A random lot
+//       find is almost certainly Class C.
+//   B — produced in noticeably lower numbers; harder to find, higher price.
+//   A — the absolute rarest colour for that sculpt; extremely limited, and
+//       sells for significantly more than the same sculpt in a Class C colour.
+export const CLASSES = {
+  C: { key: 'C', label: 'Class C', name: 'Common',   hex: '#8A9BA8', rank: 0,
+       blurb: 'Most frequently produced colour for this sculpt.' },
+  B: { key: 'B', label: 'Class B', name: 'Uncommon', hex: '#6FA9C9', rank: 1,
+       blurb: 'Produced in noticeably lower numbers — harder to find.' },
+  A: { key: 'A', label: 'Class A', name: 'Rare',     hex: '#E3A93C', rank: 2,
+       blurb: 'The rarest colour for this sculpt — extremely limited.' },
+};
+export const CLASS_ORDER = ['A', 'B', 'C'];
+// A figure's class map lives in figures.json as { "Purple": "A", ... }.
+// Unclassified colours return null rather than a guess.
+export const classOf = (fig, color) => {
+  const c = fig && fig.cls && fig.cls[color];
+  return CLASSES[c] ? c : null;
+};
+
 export const RARITY = {
   common:   { label: 'Common',   hex: '#8A7869', rank: 0 },
   uncommon: { label: 'Uncommon', hex: '#6FA9C9', rank: 1 },
@@ -186,10 +209,12 @@ export const S = {
   setView: (v => v === 'poster' ? 'poster' : 'grid')(store.get('muscle-setview')),  // grid | poster
   screen: 'main',      // main | figure
   activeFig: null,     // id when screen === 'figure'
+  showOtherColors: false,  // detail: reveal colours not documented for the sculpt
   detailShot: null,    // which shot the detail hero shows ('group','f','fb','r',… ; null = first)
 
   search: '',
-  filterColor: '',     // '' = any; otherwise a color key
+  filterColor: '',
+  filterClass: '',     // '' | 'A' | 'B' | 'C' — colour-class filter
   filterOwn: '',       // '' = all | 'owned' | 'missing' | 'want'
 
   theme: (t => THEMES[t] ? t : 'arena')(store.get('muscle-theme')),
