@@ -56,14 +56,39 @@ export function rebuildIndex() {
 // Every catalog row gets a resolved image URL (images/{slug}.jpg) and any
 // local overrides merged in. A missing image is expected during collecting
 // and renders as the salmon keshi placeholder — not a broken state.
+// Colour list retired 'Orange' (only Neon Orange exists in the line) and
+// 'Grape' (a board-game exclusive we don't track). Catalog rows saved before
+// that still carry them, so map rather than drop: an Orange tick the user
+// made in the editor becomes Neon Orange instead of vanishing.
+const RETIRED_COLORS = { 'Orange': 'Neon Orange', 'Grape': null };
+function migrateColors(list) {
+  if (!Array.isArray(list) || !list.length) return [BASE_COLOR];
+  const out = [];
+  for (const c of list) {
+    const mapped = (c in RETIRED_COLORS) ? RETIRED_COLORS[c] : c;
+    if (mapped && !out.includes(mapped)) out.push(mapped);
+  }
+  return out.length ? out : [BASE_COLOR];
+}
+
+function migrateClsKeys(cls) {
+  if (!cls || typeof cls !== 'object') return {};
+  const out = {};
+  for (const [k, v] of Object.entries(cls)) {
+    const mapped = (k in RETIRED_COLORS) ? RETIRED_COLORS[k] : k;
+    if (mapped) out[mapped] = v;
+  }
+  return out;
+}
+
 function normalizeRows(rows) {
   const merged = applyFigEdits(rows);
   return merged.map(f => ({
     ...f,
     num: f.num != null ? Number(f.num) : Number(f.id),
-    colors: Array.isArray(f.colors) && f.colors.length ? f.colors : [BASE_COLOR],
+    colors: migrateColors(f.colors),
     img: f.img && typeof f.img === 'object' ? f.img : {},  // which shots exist + their extension case
-    cls: f.cls && typeof f.cls === 'object' ? f.cls : {},  // { colour: 'A'|'B'|'C' } per-sculpt class
+    cls: migrateClsKeys(f.cls),   // { colour: 'A'|'B'|'C' } per-sculpt class
     image: f.image || (f.slug ? `${IMG}/${f.slug}.jpg` : ''),
   }));
 }
@@ -242,7 +267,7 @@ export function visibleFigs() {
       if (!ok) return false;
     }
     if (q) {
-      const hay = `${f.num} ${f.name} ${f.origin}`.toLowerCase();
+      const hay = `${f.num} ${f.name} ${f.aka || ''} ${f.origin}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;

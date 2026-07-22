@@ -11,7 +11,7 @@
 // level data-action delegate for all events (CSP-safe, no inline JS).
 // ════════════════════════════════════════════════════════════════════
 
-export const APP_VERSION = '0.7';
+export const APP_VERSION = '0.8';
 
 // § REPO / NETWORK ─────────────────────────────────────────────────
 // The catalog (figures.json) and figure images live in the same GitHub
@@ -58,12 +58,30 @@ export function imgFor(fig, kind = 'group', thumb = false) {
 // present (it lists what's known to exist), but we always offer the group
 // and flesh-front shots so newly uploaded files appear without a catalog
 // update — each one hides itself if it isn't there yet.
+// Reverse of IMG_SUFFIX: which colour a shot suffix represents.
+export const SHOT_TO_COLOR = {
+  db: 'Dark Blue', lb: 'Light Blue', r: 'Red', g: 'Green',
+  o: 'Neon Orange', s: 'Salmon', p: 'Purple', m: 'Magenta',
+};
+
 export const shotsFor = fig => {
   const img = (fig && fig.img) || {};
   const order = ['group', 'f', 'fb', 'db', 'lb', 'r', 'g', 'o', 's', 'p', 'm'];
+  // Shots we KNOW exist (recorded in the catalog) always show.
   const known = order.filter(k => img[k]);
-  return known.length ? known : order;
+  if (known.length) return known;
+  // Nothing recorded yet: offer the group + flesh shots, plus a slot only
+  // for colours this sculpt is actually documented in. Never offer a colour
+  // the figure was not made in — that was showing e.g. Green on a sculpt
+  // that only came in 7 other colours.
+  const made = new Set(fig && fig.colors ? fig.colors : []);
+  const colorShots = order.filter(k => {
+    const color = SHOT_TO_COLOR[k];
+    return color ? made.has(color) : false;
+  });
+  return ['group', 'f', 'fb', ...colorShots];
 };
+
 
 export const CACHE_KEY = 'muscle-figs-cache';
 export const COLL_KEY = 'muscle-coll';

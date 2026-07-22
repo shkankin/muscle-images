@@ -773,3 +773,5 @@ img { max-width: 100%; }
 .vbelt-other { margin-top: 8px; opacity: .82; }
 .belt-note { padding: 0 2px 8px; }
 .vchip.undoc { border-style: dashed; }
+/* Japanese/original name, secondary to the US release name. */
+.detail-jp { font-size: 14px; color: var(--fg3); margin-top: 3px; letter-spacing: .2px; }

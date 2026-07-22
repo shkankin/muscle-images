@@ -192,7 +192,7 @@ function posterCell(f) {
   const thumb = imgFor(f, 'group', true);
   const ptc = topClass(f);
   return `<button class="pcell ${owned ? 'owned' : ''} ${want ? 'want' : ''}" data-action="open-fig" data-id="${esc(f.id)}"
-      aria-label="Figure ${f.num}${f.name ? ' ' + esc(f.name) : ''}${owned ? ', owned' : ', not owned'}">
+      aria-label="Figure ${f.num}${(f.aka || f.name) ? ' ' + displayName(f) : ''}${owned ? ', owned' : ', not owned'}">
     <span class="pc-num">${f.num}</span>
     <span class="pc-art">${thumb ? `<img src="${thumb}" alt="" loading="lazy" data-imgfallback>` : `<span class="pc-keshi">${keshiSVG()}</span>`}</span>
     ${ptc && ptc !== 'C' ? `<span class="pc-cls cls-${ptc}">${ptc}</span>` : ''}
@@ -266,7 +266,7 @@ function row(f) {
     <span class="row-num">${f.num}</span>
     <span class="row-fig ${owned ? 'owned' : 'ghost'}" aria-hidden="true">${keshiSVG()}</span>
     <span class="row-main">
-      <span class="row-name">${f.name ? esc(f.name) : `<span class="dim">Figure ${f.num}</span>`}</span>
+      <span class="row-name">${(f.aka || f.name) ? displayName(f) : `<span class="dim">Figure ${f.num}</span>`}</span>
       ${f.origin ? `<span class="row-origin">${esc(f.origin)}</span>` : ''}
       ${dots}
     </span>
@@ -357,12 +357,20 @@ function emptyState(msg) {
 
 // Verifiable catalog facts shown as chips on the detail screen. Kept off
 // the browsing tiles to avoid clutter; this is the "scarce info" payoff.
+// The US release name is what collectors use, so it leads. The Kinnikuman
+// name is shown underneath, and only becomes the headline when there is no
+// US name recorded.
+export function displayName(f) {
+  if (!f) return '';
+  const n = f.aka || f.name;
+  return n ? esc(n) : `Figure ${f.num}`;
+}
+
 function detailBadges(f) {
   const b = [];
   const r = RARITY[f.rarity];
   if (r && f.rarity !== 'common') b.push(`<span class="badge rare-badge" style="--bc:${r.hex}">${icon(ICO.trophy, 12)}${r.label}</span>`);
   if (f.poster === false) b.push(`<span class="badge">Not on the poster</span>`);
-  if (f.aka) b.push(`<span class="badge">aka ${esc(f.aka)}</span>`);
   return b.length ? `<div class="detail-badges">${b.join('')}</div>` : '';
 }
 
@@ -444,13 +452,14 @@ function viewDetail(f) {
       <span class="hero-num" aria-hidden="true">${f.num}</span>
       <div class="hero-fig">
         <span class="hero-keshi" style="--tint:${COLOR_HEX[cols[0] || BASE_COLOR]}">${keshiSVG()}</span>
-        ${heroSrc ? `<img class="hero-img" alt="${esc(f.name || ('Figure ' + f.num))} — ${esc(SHOT_LABEL[activeShot] || '')}" src="${heroSrc}" data-imgfallback data-imgupgrade="${esc(heroFull)}">` : ''}
+        ${heroSrc ? `<img class="hero-img" alt="${displayName(f)} — ${esc(SHOT_LABEL[activeShot] || '')}" src="${heroSrc}" data-imgfallback data-imgupgrade="${esc(heroFull)}">` : ''}
       </div>
     </div>
     ${filmstrip}
 
     <div class="detail-body">
-      <h1 class="detail-name">${f.name ? esc(f.name) : `Figure ${f.num}`}</h1>
+      <h1 class="detail-name">${displayName(f)}</h1>
+      ${f.aka && f.name ? `<p class="detail-jp">${esc(f.name)}</p>` : ''}
       <p class="detail-origin">${f.origin ? esc(f.origin) : `<span class="dim">Kinnikuman identity not recorded — tap edit to add it.</span>`}</p>
       ${detailBadges(f)}
 
