@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="arena">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Figure Editor · M.U.S.C.L.E. Collector</title>
+<!-- Holds a write-scoped GitHub token in localStorage; CSP locks the origin
+     to the GitHub API + inline code only (no third-party scripts). Figure
+     thumbnails load from the raw image host. -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: blob: https://raw.githubusercontent.com;
+  connect-src 'self' https://api.github.com;
+  base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'">
+<style>
+  :root{
+    --bg:#14100D; --bg2:#1E1813; --bg3:#2A211A; --bd:#3A2E24;
+    --acc:#E23B2E; --gold:#E3A93C; --gold-l:#F4CD73; --flesh:#E7A794;
+    --fg:#F7EEE6; --fg2:#C6B3A6; --fg3:#8A7869; --green:#5FB07A; --red:#E5544B;
+    --font:'Barlow Semi Condensed',system-ui,-apple-system,sans-serif;
+    --disp:'Anton','Arial Narrow',sans-serif;
+    --safe-b:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font);line-height:1.4;
+    max-width:720px;margin:0 auto;padding:16px 14px calc(96px + var(--safe-b));-webkit-font-smoothing:antialiased}
+  .head{display:flex;align-items:baseline;gap:9px;margin-bottom:3px}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px rgba(226,59,46,.6);align-self:center}
+  h1{font-size:22px;font-weight:700}h1 b{color:var(--gold)}
+  .sub{color:var(--fg3);font-size:13.5px;margin-bottom:18px}
+  .sub code{color:var(--flesh);background:var(--bg3);padding:1px 6px;border-radius:5px;font-size:12.5px}
+  .card{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+  .lbl{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--fg3);margin-bottom:8px}
+  .row{display:flex;gap:8px;align-items:center}
+  input[type=password],input[type=text],input[type=search],select,textarea{width:100%;background:var(--bg3);
+    border:1px solid var(--bd);border-radius:9px;padding:10px 11px;color:var(--fg);font-family:var(--font);font-size:15px;outline:none}
+  textarea{resize:vertical;min-height:60px}
+  input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+  button{font-family:var(--font);font-weight:700;font-size:14px;border:1px solid var(--bd);background:var(--bg3);
+    color:var(--fg);padding:10px 14px;border-radius:9px;cursor:pointer;transition:transform .1s,background .15s,border-color .15s}
+  button:hover{background:var(--bd)} button:active{transform:scale(.97)}
+  button.primary{background:linear-gradient(180deg,var(--gold-l),var(--gold) 60%,#B9822A);color:#241713;border-color:#B9822A}
+  button.primary:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
+  button.ghost{background:none}
+  .status{font-size:12.5px;margin-top:8px;color:var(--fg3);min-height:16px}
+  .status.ok{color:var(--green)} .status.bad{color:var(--red)}
+  a{color:var(--flesh)}
+
+  /* list */
+  .toolbar{display:flex;gap:8px;margin-bottom:10px}
+  .toolbar input{flex:1}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .fchip{padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--fg2);background:var(--bg2);border:1px solid var(--bd)}
+  .fchip.on{color:#241713;background:var(--gold);border-color:var(--gold)}
+  .list{display:flex;flex-direction:column;gap:4px}
+  .frow{display:flex;align-items:center;gap:11px;padding:9px 11px;background:var(--bg2);border:1px solid var(--bd);border-radius:11px;cursor:pointer;text-align:left;width:100%}
+  .frow:hover{border-color:var(--gold-d,#B9822A)}
+  .frow.edited{border-color:var(--gold)}
+  .fnum{font-family:var(--disp);font-size:19px;min-width:38px;text-align:center;color:var(--fg3);letter-spacing:.5px}
+  .fmain{flex:1;min-width:0}
+  .fname{font-weight:600;font-size:15px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fname .un{color:var(--fg3);font-weight:500;font-style:italic}
+  .fmeta{font-size:11.5px;color:var(--fg3);margin-top:1px}
+  .fdots{display:flex;gap:3px;align-items:center;flex:none}
+  .fdots i{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+  .pcount{font-size:11px;font-weight:700;color:var(--gold);flex:none;display:flex;align-items:center;gap:3px}
+
+  /* edit */
+  .edit-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .badge{font-family:var(--disp);font-size:26px;color:var(--gold-l);letter-spacing:1px}
+  .field{margin-bottom:12px}
+  .field>label{display:block;font-size:12px;font-weight:700;color:var(--fg2);margin-bottom:5px;letter-spacing:.2px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .check{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--fg2);cursor:pointer;user-select:none}
+  .check input{width:17px;height:17px;accent-color:var(--acc)}
+  .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:7px}
+  .cgrid .check{padding:7px 9px;background:var(--bg3);border:1px solid var(--bd);border-radius:8px}
+  .cgrid .check i{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+
+  /* photo slots */
+  .photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+  .slot{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:7px}
+  .slot-h{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--fg2)}
+  .slot-h i{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+  .thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#0E0B09;display:grid;place-items:center;border:1px dashed var(--bd)}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+  .thumb .ph{font-size:11px;color:var(--fg3)}
+  .thumb.has{border-style:solid}
+  .thumb .tag{position:absolute;top:4px;left:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:2px 5px;border-radius:4px;background:rgba(0,0,0,.6)}
+  .thumb .tag.new{color:#241713;background:var(--gold)}
+  .thumb .tag.live{color:var(--green);background:rgba(0,0,0,.6)}
+  .slot-btns{display:flex;gap:6px}
+  .slot-btns button{flex:1;padding:7px;font-size:12px}
+  .mini{font-size:11px;color:var(--fg3);text-align:center}
+
+  /* save bar */
+  .savebar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:color-mix(in srgb,var(--bg2) 94%,transparent);
+    backdrop-filter:blur(12px);border-top:1px solid var(--bd);padding:12px 14px calc(12px + var(--safe-b));
+    display:flex;gap:10px;align-items:center;max-width:720px;margin:0 auto}
+  .savebar .pending{flex:1;font-size:13px;color:var(--fg2);font-weight:600}
+  .savebar .pending b{color:var(--gold)}
+  .log{margin-top:10px;background:#0E0B09;border:1px solid var(--bd);border-radius:9px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.5;max-height:160px;overflow:auto;display:none}
+  .log .ok{color:var(--green)} .log .err{color:var(--red)} .log .inf{color:var(--fg2)} .log .dim{color:var(--fg3)} .log .warn{color:var(--gold)}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+  <div class="head"><span class="dot"></span><h1>Figure Editor <b>M.U.S.C.L.E.</b></h1></div>
+  <div class="sub">Fill in figure info and upload a photo per colour. Saves to <code>shkankin/muscle-images</code>; photos go to <code>images/MUSCLEFigure###&lt;suffix&gt;.jpg</code> (+ a <code>t</code> thumbnail).</div>
+
+  <!-- token -->
+  <div class="card" id="tokenCard">
+    <div class="lbl">GitHub token</div>
+    <div class="row">
+      <input type="password" id="token" placeholder="github_pat_… or ghp_…" autocomplete="off" spellcheck="false">
+      <button id="saveTok" class="ghost">Save</button>
+      <button id="loadBtn" class="primary">Load catalog</button>
+    </div>
+    <div class="status" id="tokenStatus">No token saved</div>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="listView" class="hidden">
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Search by number or name…">
+    </div>
+    <div class="chips" id="filters">
+      <button class="fchip on" data-filter="all">All</button>
+      <button class="fchip" data-filter="named">Named</button>
+      <button class="fchip" data-filter="unnamed">Unnamed</button>
+      <button class="fchip" data-filter="photos">Has photos</button>
+      <button class="fchip" data-filter="nophotos">No photos</button>
+    </div>
+    <div class="list" id="list"></div>
+  </div>
+
+  <!-- EDIT VIEW -->
+  <div id="editView" class="hidden">
+    <div class="edit-top">
+      <button class="ghost" id="backBtn">← List</button>
+      <span class="badge" id="editNum"></span>
+    </div>
+    <div class="card">
+      <div class="field"><label>Name</label><input type="text" id="f_name" placeholder="e.g. Kinnikuman"></div>
+      <div class="two">
+        <div class="field"><label>Also known as (US name)</label><input type="text" id="f_aka" placeholder="e.g. Muscleman"></div>
+        <div class="field"><label>Rarity</label><select id="f_rarity"><option value="common">Common</option><option value="uncommon">Uncommon</option><option value="rare">Rare</option><option value="grail">Grail</option></select></div>
+      </div>
+      <div class="field"><label>Kinnikuman identity / notes on origin</label><input type="text" id="f_origin" placeholder="e.g. 1000-Man-Power Chojin"></div>
+      <div class="field"><label class="check"><input type="checkbox" id="f_poster"> On the mail-away poster</label></div>
+      <div class="field"><label>Notes</label><textarea id="f_notes" placeholder="Anything worth recording…"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="lbl">Comes in these colours</div>
+      <div class="cgrid" id="colorGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="lbl">Shots</div>
+      <div class="mini" style="text-align:left;margin-bottom:10px">Each upload saves two files: the full shot and its <b>t</b> thumbnail. Uploading a colour also marks that colour available.</div>
+      <div class="photos" id="photoGrid"></div>
+    </div>
+  </div>
+
+  <div class="log" id="log"></div>
+
+  <!-- save bar -->
+  <div class="savebar" id="saveBar">
+    <span class="pending" id="pending">No changes yet</span>
+    <button class="ghost" id="discardBtn">Discard</button>
+    <button class="primary" id="commitBtn" disabled>Save to GitHub</button>
+  </div>
+
+<script>
+const REPO = 'shkankin/muscle-images';
+const BRANCH = 'main';
+const SITE = 'https://musclemen.app';
+const RAW = `https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
+const API = `https://api.github.com/repos/${REPO}`;
+const TOKEN_KEY = 'muscle-editor-gh-token';
+
+const COLORS = [
+  {key:'Flesh',hex:'#E5A594',suf:'f'},{key:'Dark Blue',hex:'#31508C',suf:'db'},
+  {key:'Light Blue',hex:'#6FA9C9',suf:'lb'},{key:'Red',hex:'#C6413A',suf:'r'},
+  {key:'Green',hex:'#5E9E62',suf:'g'},{key:'Orange',hex:'#D98341',suf:'o'},
+  {key:'Salmon',hex:'#DD8A78',suf:'s'},{key:'Purple',hex:'#7C5AA6',suf:'p'},
+  {key:'Magenta',hex:'#B54A83',suf:'m'},
+];
+// Shot slots in the editor = the real file convention:
+//   ''(group) all colours · f front flesh · fb back flesh · then per-colour.
+const SHOTS = [
+  {key:'group', suf:'',   label:'All colours (group)'},
+  {key:'f',     suf:'f',  label:'Front · Flesh'},
+  {key:'fb',    suf:'fb', label:'Back · Flesh'},
+  ...COLORS.filter(c=>c.key!=='Flesh').map(c=>({key:c.suf,suf:c.suf,label:c.key,hex:c.hex})),
+];
+const HEX = Object.fromEntries(COLORS.map(c=>[c.key,c.hex]));
+// images/MUSCLEFigure###<suffix>[t].<ext>  — 't' marks the thumbnail.
+const fileFor = (id,suf,ext='jpg',thumb=false)=>`MUSCLEFigure${id}${suf}${thumb?'t':''}.${ext}`;
+const pad3 = n => String(n).padStart(3,'0');
+const NON_POSTER = new Set([234,235,236]);
+
+const $ = id => document.getElementById(id);
+const ghHeaders = t => ({'Authorization':`Bearer ${t}`,'X-GitHub-Api-Version':'2022-11-28','Accept':'application/vnd.github+json'});
+const getToken = () => $('token').value.trim() || localStorage.getItem(TOKEN_KEY) || '';
+
+// state
+let catalog = [];             // array of figure objects (mutated as edited)
+let byId = {};                // id -> figure
+let dirty = new Set();        // ids with field/photo changes
+let staged = {};              // `${id}-${slug}` -> { blob, url }  (images to upload)
+let removed = new Set();      // colour keys removed from a figure (id::color) — untrack only
+let curId = null;             // figure being edited
+let figuresSha = null;        // sha of figures.json blob (for reference)
+let filter = 'all';
+
+// ── token ──
+window.addEventListener('DOMContentLoaded', () => {
+  const t = localStorage.getItem(TOKEN_KEY);
+  if (t) { $('token').value = t; verifyToken(t); }
+  renderColorGrid();
+});
+$('saveTok').onclick = () => { const t=$('token').value.trim(); if(!t) return setStatus('bad','Enter a token.'); localStorage.setItem(TOKEN_KEY,t); setStatus('','Saved. Verifying…'); verifyToken(t); };
+$('token').oninput = () => { clearTimeout($('token')._t); const v=$('token').value.trim(); if(!v){setStatus('','No token saved');return;} $('token')._t=setTimeout(()=>verifyToken(v),500); };
+const setStatus=(c,m)=>{ $('tokenStatus').className='status '+c; $('tokenStatus').textContent=m; };
+
+let _seq=0, _canPush=false;
+async function verifyToken(token){
+  const seq=++_seq; _canPush=false;
+  try{
+    const r=await fetch(API,{headers:ghHeaders(token)});
+    if(seq!==_seq) return;
+    if(r.status===401) return setStatus('bad','✗ Token invalid or expired');
+    if(r.status===404) return setStatus('bad',`✗ Can't see ${REPO} — wrong repo or no access`);
+    if(!r.ok) return setStatus('bad',`⚠ Verify failed (HTTP ${r.status})`);
+    const repo=await r.json();
+    _canPush=!!(repo.permissions&&(repo.permissions.push||repo.permissions.admin||repo.permissions.maintain));
+    setStatus(_canPush?'ok':'bad', _canPush?`✓ Push access to ${repo.full_name}`:`⚠ Read-only — needs Contents: write`);
+  }catch(e){ if(seq===_seq) setStatus('','⚠ Saved — could not verify (offline?)'); }
+}
+
+// ── load catalog ──
+$('loadBtn').onclick = loadCatalog;
+async function loadCatalog(){
+  const token=getToken();
+  if(!token) return setStatus('bad','Save a token first.');
+  setStatus('','Loading catalog…');
+  try{
+    let rows=null;
+    // Prefer the authenticated Contents API (works even for private repos, no CORS drama).
+    const r=await fetch(`${API}/contents/figures.json?ref=${BRANCH}`,{headers:ghHeaders(token)});
+    if(r.ok){
+      const j=await r.json(); figuresSha=j.sha;
+      rows=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
+      setStatus('ok',`✓ Loaded ${rows.length} figures from the repo`);
+    } else if(r.status===404){
+      rows=seedSkeleton();
+      setStatus('ok','No catalog in the repo yet — started a fresh 236-figure skeleton. Saving will create it.');
+    } else { throw new Error('HTTP '+r.status); }
+    catalog = rows.map(normalize);
+    byId = Object.fromEntries(catalog.map(f=>[f.id,f]));
+    dirty=new Set(); staged={}; removed=new Set();
+    $('tokenCard').classList.add('hidden');
+    $('listView').classList.remove('hidden');
+    renderList(); updatePending();
+  }catch(e){ setStatus('bad','Load failed: '+e.message); }
+}
+function normalize(f){
+  const num = f.num!=null?Number(f.num):Number(f.id);
+  return { id:f.id||pad3(num), num, slug:f.slug||pad3(num),
+    name:f.name||'', aka:f.aka||'', origin:f.origin||'',
+    poster: f.poster!==undefined?!!f.poster:!NON_POSTER.has(num),
+    rarity:f.rarity||'common',
+    colors:Array.isArray(f.colors)&&f.colors.length?f.colors.slice():['Flesh'],
+    img:(f.img&&typeof f.img==='object')?{...f.img}:{},
+    notes:f.notes||'' };
+}
+function seedSkeleton(){ const a=[]; for(let n=1;n<=236;n++){ a.push({id:pad3(n),num:n,slug:pad3(n),name:'',aka:'',origin:'',poster:!NON_POSTER.has(n),rarity:'common',colors:['Flesh'],img:{},notes:''}); } return a; }
+
+// ── list ──
+$('search').oninput = renderList;
+$('filters').onclick = e => { const b=e.target.closest('.fchip'); if(!b)return; filter=b.dataset.filter; [...$('filters').children].forEach(c=>c.classList.toggle('on',c===b)); renderList(); };
+function matchFilter(f){
+  if(filter==='named') return !!f.name;
+  if(filter==='unnamed') return !f.name;
+  if(filter==='photos') return Object.keys(f.img||{}).length>0;
+  if(filter==='nophotos') return Object.keys(f.img||{}).length===0;
+  return true;
+}
+function renderList(){
+  const q=$('search').value.trim().toLowerCase();
+  const rows=catalog.filter(f=>{
+    if(!matchFilter(f)) return false;
+    if(!q) return true;
+    return String(f.num).includes(q) || f.name.toLowerCase().includes(q) || f.aka.toLowerCase().includes(q);
+  });
+  $('list').innerHTML = rows.map(f=>{
+    const dots = f.colors.slice(0,6).map(c=>`<i style="background:${HEX[c]||'#888'}"></i>`).join('');
+    const pc = Object.keys(f.img||{}).length;
+    return `<button class="frow ${dirty.has(f.id)?'edited':''}" data-id="${f.id}">
+      <span class="fnum">${f.num}</span>
+      <span class="fmain"><span class="fname">${f.name?esc(f.name):'<span class=un>unnamed</span>'}${f.aka?` · ${esc(f.aka)}`:''}</span>
+        <span class="fmeta">${f.origin?esc(f.origin)+' · ':''}${f.rarity!=='common'?f.rarity+' · ':''}${f.poster?'poster':'not on poster'}</span></span>
+      <span class="fdots">${dots}</span>
+      ${pc?`<span class="pcount">▣ ${pc}</span>`:''}
+    </button>`;
+  }).join('') || `<div class="mini" style="padding:20px">No figures match.</div>`;
+  [...$('list').querySelectorAll('.frow')].forEach(b=>b.onclick=()=>openEdit(b.dataset.id));
+}
+
+// ── edit ──
+$('backBtn').onclick = ()=>{ commitCurrentFields(); curId=null; $('editView').classList.add('hidden'); $('listView').classList.remove('hidden'); renderList(); };
+function openEdit(id){
+  commitCurrentFields();
+  curId=id; const f=byId[id];
+  $('listView').classList.add('hidden'); $('editView').classList.remove('hidden');
+  $('editNum').textContent='No. '+f.num;
+  $('f_name').value=f.name; $('f_aka').value=f.aka; $('f_origin').value=f.origin;
+  $('f_rarity').value=f.rarity; $('f_poster').checked=f.poster; $('f_notes').value=f.notes;
+  renderColorGrid(f); renderPhotoGrid(f);
+  window.scrollTo(0,0);
+}
+// Pull current form values into the figure object + mark dirty if changed.
+function commitCurrentFields(){
+  if(!curId) return; const f=byId[curId]; if(!f) return;
+  const before=JSON.stringify([f.name,f.aka,f.origin,f.rarity,f.poster,f.notes]);
+  f.name=$('f_name').value.trim(); f.aka=$('f_aka').value.trim(); f.origin=$('f_origin').value.trim();
+  f.rarity=$('f_rarity').value; f.poster=$('f_poster').checked; f.notes=$('f_notes').value.trim();
+  if(JSON.stringify([f.name,f.aka,f.origin,f.rarity,f.poster,f.notes])!==before) markDirty(f.id);
+}
+['f_name','f_aka','f_origin','f_notes'].forEach(id=>$(id).addEventListener('input',()=>{ /* captured on blur/nav */ }));
+['f_name','f_aka','f_origin','f_notes','f_rarity','f_poster'].forEach(id=>$(id).addEventListener('change',commitCurrentFields));
+
+function renderColorGrid(f){
+  const set=new Set(f?f.colors:['Flesh']);
+  $('colorGrid').innerHTML = COLORS.map(c=>`<label class="check"><input type="checkbox" data-color="${c.key}" ${set.has(c.key)?'checked':''}><i style="background:${c.hex}"></i>${c.key}</label>`).join('');
+  if(!f) return;
+  [...$('colorGrid').querySelectorAll('input')].forEach(inp=>inp.onchange=()=>{
+    const col=inp.dataset.color; const fig=byId[curId];
+    const i=fig.colors.indexOf(col);
+    if(inp.checked){ if(i<0) fig.colors.push(col); }
+    else { if(i>=0) fig.colors.splice(i,1); }
+    markDirty(fig.id);
+  });
+}
+
+function renderPhotoGrid(f){
+  $('photoGrid').innerHTML = SHOTS.map(sh=>{
+    const key=sh.key;                       // 'group' | 'f' | 'fb' | colour suffix
+    const skey=`${f.id}::${key}`;
+    const isStaged=!!staged[skey];
+    const ext=(f.img||{})[key];
+    const isLive=!!ext&&!isStaged;
+    let inner;
+    if(isStaged){ inner=`<img src="${staged[skey].url}"><span class="tag new">New</span>`; }
+    else if(isLive){
+      const url=`${RAW}/images/${fileFor(f.id,sh.suf,ext,true)}?cb=${figuresSha||''}`;
+      inner=`<img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="ph" style="display:none">no image</span><span class="tag live">Saved</span>`;
+    }
+    else { inner=`<span class="ph">Upload</span>`; }
+    const has=isStaged||isLive;
+    const dot=sh.hex?`<i style="background:${sh.hex}"></i>`:`<i style="background:linear-gradient(135deg,#E5A594,#C6413A,#31508C)"></i>`;
+    return `<div class="slot">
+      <div class="slot-h">${dot}${sh.label}</div>
+      <label class="thumb ${has?'has':''}">${inner}<input type="file" accept="image/*" data-shot="${key}" class="hidden"></label>
+      <div class="slot-btns">
+        <button data-up="${key}">${has?'Replace':'Upload'}</button>
+        ${has?`<button data-rm="${key}" class="ghost">✕</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  [...$('photoGrid').querySelectorAll('input[type=file]')].forEach(inp=>inp.onchange=()=>handleUpload(inp.dataset.shot, inp.files[0]));
+  [...$('photoGrid').querySelectorAll('button[data-up]')].forEach(b=>b.onclick=()=>b.closest('.slot').querySelector('input[type=file]').click());
+  [...$('photoGrid').querySelectorAll('button[data-rm]')].forEach(b=>b.onclick=()=>removePhoto(b.dataset.rm));
+}
+
+// One upload produces TWO files: the full shot and its 't' thumbnail.
+async function handleUpload(shotKey, file){
+  if(!file) return; const f=byId[curId]; const skey=`${f.id}::${shotKey}`;
+  try{
+    const full=await compress(file,1200,0.85);
+    const thumb=await compress(file,600,0.82);
+    if(staged[skey]&&staged[skey].url) URL.revokeObjectURL(staged[skey].url);
+    staged[skey]={ blob:full, thumb, url:URL.createObjectURL(thumb) };
+    f.img=f.img||{}; f.img[shotKey]='jpg';       // new uploads are always lowercase .jpg
+    // A colour shot implies the figure comes in that colour.
+    const col=COLORS.find(c=>c.suf===shotKey);
+    if(col&&!f.colors.includes(col.key)) f.colors.push(col.key);
+    markDirty(f.id);
+    renderColorGrid(f); renderPhotoGrid(f);
+  }catch(e){ alert('Could not process image: '+e.message); }
+}
+function removePhoto(shotKey){
+  const f=byId[curId]; const skey=`${f.id}::${shotKey}`;
+  if(staged[skey]){ if(staged[skey].url) URL.revokeObjectURL(staged[skey].url); delete staged[skey]; }
+  if(f.img) delete f.img[shotKey];
+  markDirty(f.id);
+  renderPhotoGrid(f);
+}
+
+// Shrink to <=1200px, JPEG q0.85, honouring EXIF orientation.
+async function compress(file, max=1200, q=0.85){
+  const bmp=await createImageBitmap(file,{imageOrientation:'from-image'}).catch(()=>createImageBitmap(file));
+  let {width,height}=bmp;
+  if(Math.max(width,height)>max){ const s=max/Math.max(width,height); width=Math.round(width*s); height=Math.round(height*s); }
+  const c=document.createElement('canvas'); c.width=width; c.height=height;
+  c.getContext('2d').drawImage(bmp,0,0,width,height);
+  const blob=await new Promise(res=>c.toBlob(res,'image/jpeg',q));
+  if(!blob) throw new Error('encode failed');
+  return blob;
+}
+
+function markDirty(id){ dirty.add(id); updatePending(); }
+function updatePending(){
+  const nImg=Object.keys(staged).length;
+  const nFig=dirty.size;
+  const parts=[];
+  if(nFig) parts.push(`<b>${nFig}</b> figure${nFig>1?'s':''} edited`);
+  if(nImg) parts.push(`<b>${nImg}</b> photo${nImg>1?'s':''} to upload`);
+  $('pending').innerHTML = parts.length? parts.join(' · ') : 'No changes yet';
+  $('commitBtn').disabled = !(parts.length && _canPush);
+}
+
+$('discardBtn').onclick = () => {
+  if(!dirty.size && !Object.keys(staged).length) return;
+  if(!confirm('Discard all unsaved changes?')) return;
+  Object.values(staged).forEach(s=>s.url&&URL.revokeObjectURL(s.url));
+  loadCatalog(); // reload pristine from repo
+};
+
+// ── commit ──
+$('commitBtn').onclick = commitAll;
+async function commitAll(){
+  commitCurrentFields();
+  const token=getToken(); if(!token) return;
+  const headers=ghHeaders(token);
+  $('commitBtn').disabled=true; const logEl=$('log'); logEl.style.display='block'; logEl.innerHTML='';
+  const log=(c,m)=>{const d=document.createElement('div');d.className=c;d.textContent=m;logEl.appendChild(d);logEl.scrollTop=logEl.scrollHeight;};
+  try{
+    // Build the files to commit: figures.json + each staged image.
+    const files=[];
+    files.push({ path:'figures.json', content:toB64(JSON.stringify(catalog,null,1)), encoding:'base64' });
+    for(const [skey,st] of Object.entries(staged)){
+      const [fid,shotKey]=skey.split('::');
+      const sh=SHOTS.find(x=>x.key===shotKey); if(!sh) continue;
+      files.push({ path:`images/${fileFor(fid,sh.suf,'jpg',false)}`, content: await blobB64(st.blob), encoding:'base64' });
+      files.push({ path:`images/${fileFor(fid,sh.suf,'jpg',true )}`, content: await blobB64(st.thumb), encoding:'base64' });
+    }
+    log('inf',`Committing figures.json + ${Object.keys(staged).length*2} image file(s)…`);
+
+    // HEAD (repo has commits already; figures.json load implies it does, but handle empty too).
+    let headSha=null, baseTree=null, empty=false;
+    const ref=await fetch(`${API}/git/ref/heads/${BRANCH}`,{headers});
+    if(ref.status===404){ empty=true; log('warn','Empty repo — creating initial commit.'); }
+    else if(!ref.ok) throw new Error('ref '+ref.status);
+    else { headSha=(await ref.json()).object.sha; baseTree=(await (await fetch(`${API}/git/commits/${headSha}`,{headers})).json()).tree.sha; }
+
+    const tree=[];
+    for(const f of files){
+      const b=await fetch(`${API}/git/blobs`,{method:'POST',headers,body:JSON.stringify({content:f.content,encoding:f.encoding})});
+      if(!b.ok) throw new Error(`blob ${f.path}: ${b.status}`);
+      tree.push({path:f.path,mode:'100644',type:'blob',sha:(await b.json()).sha});
+      log('dim','  + '+f.path);
+    }
+    const tRes=await fetch(`${API}/git/trees`,{method:'POST',headers,body:JSON.stringify(empty?{tree}:{base_tree:baseTree,tree})});
+    if(!tRes.ok) throw new Error('tree '+tRes.status);
+    const newTree=(await tRes.json()).sha;
+    const msg=`Edit catalog: ${dirty.size} figure(s), ${Object.keys(staged).length} shot(s)`;
+    const coRes=await fetch(`${API}/git/commits`,{method:'POST',headers,body:JSON.stringify({message:msg,tree:newTree,parents:empty?[]:[headSha]})});
+    if(!coRes.ok) throw new Error('commit '+coRes.status);
+    const newCommit=(await coRes.json()).sha;
+    const rw= empty
+      ? await fetch(`${API}/git/refs`,{method:'POST',headers,body:JSON.stringify({ref:`refs/heads/${BRANCH}`,sha:newCommit})})
+      : await fetch(`${API}/git/refs/heads/${BRANCH}`,{method:'PATCH',headers,body:JSON.stringify({sha:newCommit})});
+    if(!rw.ok) throw new Error('ref update '+rw.status);
+
+    log('ok',`✓ Saved — commit ${newCommit.slice(0,7)}`);
+    log('dim',`Images are live immediately via raw; the app reflects catalog edits on next load. Site: ${SITE}`);
+    // Clear staged (now committed); mark photos as live.
+    Object.values(staged).forEach(s=>s.url&&URL.revokeObjectURL(s.url));
+    staged={}; dirty=new Set();
+    // refresh figuresSha so thumbnails cache-bust
+    figuresSha=newCommit;
+    updatePending();
+    if(curId) renderPhotoGrid(byId[curId]);
+  }catch(e){ log('err','✗ '+e.message); }
+  $('commitBtn').disabled=false; updatePending();
+}
+
+// helpers
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toB64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function blobB64(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=rej; r.readAsDataURL(blob); }); }
+</script>
+</body>
+</html>

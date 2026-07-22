@@ -220,9 +220,25 @@ async function deploy(){
       baseTreeSha = (await cRes.json()).tree.sha;
     }
 
+    // 2a. Protect the live catalog. figures.json in the repo is maintained by
+    // figures-editor.html (names, colours, which shots exist). The copy bundled
+    // in the app zip is only an offline seed — pushing it would wipe those edits.
+    // So: if the repo already has figures.json, skip the zip's copy.
+    let skipCatalog = false;
+    if (!emptyRepo){
+      const fj = await fetch(`${API}/contents/figures.json?ref=${BRANCH}`, { headers });
+      if (fj.ok){
+        skipCatalog = true;
+        log('warn','figures.json already in the repo — keeping the live catalog (editor data preserved).');
+      } else {
+        log('dim','No catalog in the repo yet — seeding it from this build.');
+      }
+    }
+
     // 2. Blobs.
     const tree = []; let done=0;
     for (const e of entries){
+      if (skipCatalog && e.path === 'figures.json'){ e.status='skip'; renderFiles(); continue; }
       e.status='up'; renderFiles();
       try{
         const { content, encoding } = await e.getContent();
