@@ -484,12 +484,8 @@ img { max-width: 100%; }
 .film-sw span { width: 100%; height: 100%; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .2); }
 .film-sw:active { box-shadow: inset 0 0 0 8px rgba(0, 0, 0, .18); }
 .film-sw.on { border-color: var(--gold); outline-color: color-mix(in srgb, var(--gold) 55%, transparent); }
-/* Fixed height reserves the line whether or not a name is showing. */
-.film-label {
-  height: 16px; line-height: 16px; text-align: center;
-  font-size: 12px; font-weight: 700; color: var(--fg2);
-  letter-spacing: .4px; text-transform: uppercase; margin-top: 6px;
-}
+/* The active shot's name now sits inside the photo (.hero-shot), so the
+   filmstrip needs no label line of its own. */
 
 .detail-body { padding: 20px 20px 0; }
 .detail-name { font-family: var(--font-display); font-size: 30px; line-height: 1.02; letter-spacing: .5px; color: var(--fg); }
@@ -796,3 +792,51 @@ img { max-width: 100%; }
 .vchip.undoc { border-style: dashed; }
 /* Japanese/original name, secondary to the US release name. */
 .detail-jp { font-size: 14px; color: var(--fg3); margin-top: 3px; letter-spacing: .2px; }
+
+/* ── Detail: shot name inside the photo ────────────────────────────
+   Lower-right corner of the image rather than a line underneath, so
+   switching colors never changes the layout height. */
+.hero-shot {
+  position: absolute; right: 8px; bottom: 8px; z-index: 3;
+  padding: 3px 9px; border-radius: 999px;
+  font-size: 11px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase;
+  color: #F7EEE6; background: rgba(10, 8, 6, .72);
+  backdrop-filter: blur(4px); box-shadow: 0 1px 6px rgba(0, 0, 0, .5);
+  pointer-events: none;
+}
+
+/* ── Detail: Owned / Want tabs ─────────────────────────────────────
+   Each tab owns its own set of color chips. A collector tracks variants,
+   so owning #1 in Red and wanting it in Purple are independent facts. */
+.ow { margin-top: 18px; }
+.ow-tabs { display: flex; gap: 6px; }
+.ow-tab {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 12px 10px; font-size: 14.5px; font-weight: 700;
+  color: var(--fg3); background: var(--bg2);
+  border: 1px solid var(--bd); border-bottom: 0;
+  border-radius: 12px 12px 0 0; transition: color .15s, background .15s;
+}
+.ow-tab.on { color: var(--fg); background: var(--bg3); }
+.ow-tab.on:not(.want) { box-shadow: inset 0 3px 0 var(--acc); }
+.ow-tab.want.on { box-shadow: inset 0 3px 0 var(--gold); }
+.ow-count {
+  min-width: 20px; padding: 0 6px; height: 19px; line-height: 19px;
+  border-radius: 999px; font-size: 11.5px; font-weight: 800;
+  background: var(--bd); color: var(--fg2);
+}
+.ow-tab.on:not(.want) .ow-count { background: var(--acc); color: #fff; }
+.ow-tab.want.on .ow-count { background: var(--gold); color: #241713; }
+.ow-panel {
+  background: var(--bg3); border: 1px solid var(--bd); border-radius: 0 0 12px 12px;
+  padding: 12px 12px 14px;
+}
+.ow-hint { font-size: 12.5px; color: var(--fg3); font-weight: 600; margin-bottom: 10px; }
+/* In the want list, a color you already own is dimmed with a check hint. */
+.vchip.dupe { opacity: .5; }
+.vchip.dupe::after {
+  content: '✓ owned'; position: absolute; right: 8px; bottom: 3px;
+  font-size: 9px; font-weight: 700; color: var(--green, #5FB07A); letter-spacing: .3px;
+}
+.ow-panel.is-want .vchip.have { border-color: var(--gold); }
+.ow-panel.is-want .vchip.have .vsw { opacity: 1; }

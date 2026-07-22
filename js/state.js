@@ -11,7 +11,7 @@
 // level data-action delegate for all events (CSP-safe, no inline JS).
 // ════════════════════════════════════════════════════════════════════
 
-export const APP_VERSION = '0.9';
+export const APP_VERSION = '1.0';
 
 // § REPO / NETWORK ─────────────────────────────────────────────────
 // The catalog (figures.json) and figure images live in the same GitHub
@@ -227,6 +227,7 @@ export const S = {
   setView: (v => v === 'poster' ? 'poster' : 'grid')(store.get('muscle-setview')),  // grid | poster
   screen: 'main',      // main | figure
   activeFig: null,     // id when screen === 'figure'
+  detailTab: 'own',        // detail: 'own' | 'want' — which variant list is showing
   showOtherColors: false,  // detail: reveal colors not documented for the sculpt
   detailShot: null,    // which shot the detail hero shows ('group','f','fb','r',… ; null = first)
 

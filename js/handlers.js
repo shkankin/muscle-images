@@ -9,7 +9,7 @@ import { S, store } from './state.js';
 import { render, toast, haptic, onAfterRender } from './render.js';
 import { onClick, onInput, onChange } from './delegate.js';
 import {
-  toggleOwned, toggleWant, toggleColor, setField, setFigField, toggleFigColor,
+  toggleOwned, toggleWant, toggleColor, toggleWantColor, setField, setFigField, toggleFigColor,
   fetchFigs, exportData, importData,
 } from './data.js';
 
@@ -22,13 +22,18 @@ onClick('nav-tab', el => {
 });
 
 onClick('open-fig', el => {
-  S.activeFig = el.dataset.id; S.screen = 'figure'; S.detailShot = null; S.showOtherColors = false; S._justNavigated = true;
+  S.activeFig = el.dataset.id; S.screen = 'figure'; S.detailShot = null; S.showOtherColors = false; S.detailTab = 'own'; S._justNavigated = true;
   render();
 });
 
 // Filmstrip: switch which shot the detail hero shows.
 onClick('view-shot', el => { S.detailShot = el.dataset.shot; render(); });
 onClick('toggle-other-colors', () => { S.showOtherColors = !S.showOtherColors; render(); });
+onClick('detail-tab', el => { S.detailTab = el.dataset.tab; S.showOtherColors = false; render(); });
+onClick('toggle-want-color', el => {
+  toggleWantColor(el.dataset.id, el.dataset.color);
+  haptic(); render();
+});
 
 onClick('back-main', () => { S.screen = 'main'; S.activeFig = null; S._justNavigated = true; render(); });
 onClick('recover', () => location.reload());

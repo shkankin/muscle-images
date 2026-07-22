@@ -12,7 +12,7 @@ import {
   CLASSES, CLASS_ORDER, classOf,
 } from './state.js';
 import {
-  visibleFigs, stats, isOwned, isWanted, ownedColors, exportData,
+  visibleFigs, stats, isOwned, isWanted, ownedColors, wantedColors, exportData,
 } from './data.js';
 
 const app = () => document.getElementById('app');
@@ -380,6 +380,83 @@ function detailBadges(f) {
   return b.length ? `<div class="detail-badges">${b.join('')}</div>` : '';
 }
 
+
+// Own / Want as tabs, each holding its OWN set of color chips. Collectors
+// track variants, not just sculpts: you can own #1 in Red while still
+// hunting it in Purple, so the two lists are independent.
+function ownWantTabs(f, cols, want) {
+  const wants = wantedColors(f.id);
+  const tab = S.detailTab === 'want' ? 'want' : 'own';
+  const hunting = tab === 'want';
+  const list = hunting ? wants : cols;
+  const action = hunting ? 'toggle-want-color' : 'toggle-color';
+
+  // Only colors this sculpt was made in (plus anything already marked, so a
+  // record made earlier never becomes unreachable).
+  const inLine = new Set(f.colors || [BASE_COLOR]);
+  const shown = COLORS.filter(c =>
+    inLine.has(c.key) || cols.includes(c.key) || wants.includes(c.key) || !!classOf(f, c.key));
+
+  const chips = shown.map(c => {
+    const on = list.includes(c.key);
+    const k = classOf(f, c.key);
+    const cl = k ? CLASSES[k] : null;
+    const alsoOwned = hunting && cols.includes(c.key);
+    return `<button class="vchip ${on ? 'have' : ''} known ${k ? 'cls-' + k : ''} ${alsoOwned ? 'dupe' : ''}"
+      data-action="${action}" data-id="${esc(f.id)}" data-color="${esc(c.key)}"
+      style="--sw:${c.hex}${cl ? `;--cls:${cl.hex}` : ''}"
+      title="${esc(c.key)}${cl ? ` — ${esc(cl.label)} (${esc(cl.name)})` : ''}${alsoOwned ? ' — already owned' : ''}">
+      <span class="vsw"></span><span class="vname">${c.key}</span>
+      ${cl ? `<span class="vcls">${k}</span>` : ''}
+      ${on ? `<span class="vtick">${icon(hunting ? ICO.heart : ICO.check, 13)}</span>` : ''}
+    </button>`;
+  }).join('') || `<div class="dim sm belt-empty">No colors documented for this sculpt yet.</div>`;
+
+  const hint = hunting
+    ? (wants.length ? `${wants.length} on the hunt list` : 'Tap the colors you\'re looking for.')
+    : (cols.length ? `${cols.length} owned` : 'Tap each color you own.');
+
+  return `<div class="ow">
+    <div class="ow-tabs" role="tablist">
+      <button class="ow-tab ${tab === 'own' ? 'on' : ''}" role="tab" aria-selected="${tab === 'own'}"
+        data-action="detail-tab" data-tab="own">
+        ${icon(ICO.owned, 16)}Owned${cols.length ? `<span class="ow-count">${cols.length}</span>` : ''}
+      </button>
+      <button class="ow-tab want ${tab === 'want' ? 'on' : ''}" role="tab" aria-selected="${tab === 'want'}"
+        data-action="detail-tab" data-tab="want">
+        ${icon(ICO.heart, 16)}Want${wants.length ? `<span class="ow-count">${wants.length}</span>` : ''}
+      </button>
+    </div>
+    <div class="ow-panel ${hunting ? 'is-want' : ''}" role="tabpanel">
+      <div class="ow-hint">${hint}</div>
+      <div class="vbelt">${chips}</div>
+      ${otherColorsFor(f, tab)}
+    </div>
+  </div>`;
+}
+
+// Colors not documented for this sculpt, behind a reveal so the list stays
+// clean but nothing is unrecordable while the catalog is still being filled.
+function otherColorsFor(f, tab) {
+  const hunting = tab === 'want';
+  const cols = ownedColors(f.id);
+  const wants = wantedColors(f.id);
+  const inLine = new Set(f.colors || [BASE_COLOR]);
+  const others = COLORS.filter(c =>
+    !(inLine.has(c.key) || cols.includes(c.key) || wants.includes(c.key) || classOf(f, c.key)));
+  if (!others.length) return '';
+  const action = hunting ? 'toggle-want-color' : 'toggle-color';
+  return `<button class="belt-more" data-action="toggle-other-colors" aria-expanded="${S.showOtherColors}">
+      ${S.showOtherColors ? '− Hide other colors' : '+ Other color'}
+    </button>
+    ${S.showOtherColors ? `<div class="vbelt vbelt-other">
+      <div class="dim sm belt-note">Not documented for this sculpt.</div>
+      ${others.map(c => `<button class="vchip undoc" data-action="${action}" data-id="${esc(f.id)}" data-color="${esc(c.key)}" style="--sw:${c.hex}" title="${esc(c.key)} (not documented)">
+        <span class="vsw"></span><span class="vname">${c.key}</span>
+      </button>`).join('')}
+    </div>` : ''}`;
+}
+
 // § FIGURE DETAIL ──────────────────────────────────────────────────
 function viewDetail(f) {
   if (!f) { S.screen = 'main'; return viewMain(); }
@@ -444,8 +521,7 @@ function viewDetail(f) {
   const heroFull = heroKind ? imgFor(f, heroKind, false) : '';
   const filmstrip = shots.length > 1 ? `<div class="filmstrip">
       ${shots.map(k => `<button class="film-sw ${k === activeShot ? 'on' : ''}" data-action="view-shot" data-id="${esc(f.id)}" data-shot="${esc(k)}" style="--sw:${k === 'group' ? 'linear-gradient(135deg,#E5A594,#C6413A,#31508C)' : (COLOR_HEX[SHOT_COLOR[k]] || '#888')}" aria-label="Show ${esc(SHOT_LABEL[k] || k)}"><span></span></button>`).join('')}
-    </div>
-    <div class="film-label">${esc(SHOT_LABEL[activeShot] || '')}</div>` : '';
+    </div>` : '';
 
   return `<div class="detail">
     <header class="detail-bar">
@@ -459,6 +535,7 @@ function viewDetail(f) {
       <div class="hero-fig">
         <span class="hero-keshi" style="--tint:${COLOR_HEX[cols[0] || BASE_COLOR]}">${keshiSVG()}</span>
         ${heroSrc ? `<img class="hero-img" alt="${displayName(f)} — ${esc(SHOT_LABEL[activeShot] || '')}" src="${heroSrc}" data-imgfallback data-imgupgrade="${esc(heroFull)}">` : ''}
+        ${activeShot ? `<span class="hero-shot">${esc(SHOT_LABEL[activeShot] || '')}</span>` : ''}
       </div>
     </div>
     ${filmstrip}
@@ -469,18 +546,7 @@ function viewDetail(f) {
       <p class="detail-origin">${f.origin ? esc(f.origin) : `<span class="dim">Kinnikuman identity not recorded — tap edit to add it.</span>`}</p>
       ${detailBadges(f)}
 
-      <div class="own-actions">
-        <button class="btn ${owned ? 'btn-owned' : 'btn-primary'}" data-action="toggle-owned" data-id="${esc(f.id)}">
-          ${icon(ICO.owned, 18)}${owned ? 'Owned' : 'Mark owned'}
-        </button>
-        <button class="btn btn-ghost ${want ? 'on' : ''}" data-action="toggle-want" data-id="${esc(f.id)}">
-          ${icon(ICO.heart, 18)}${want ? 'On want list' : 'Want'}
-        </button>
-      </div>
-
-      <h2 class="detail-h">Colors ${cols.length ? `<span>${cols.length} owned</span>` : ''}</h2>
-      <div class="vbelt">${colorBelt}</div>
-      ${otherBelt}
+      ${ownWantTabs(f, cols, want)}
 
       ${(e.condition || e.pack || e.notes) ? `<div class="detail-meta">
         ${e.condition ? `<div><span>Condition</span>${esc(e.condition)}</div>` : ''}

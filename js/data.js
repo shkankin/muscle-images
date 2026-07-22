@@ -188,12 +188,16 @@ function ensureEntry(id) {
 function pruneEntry(id) {
   const e = S.coll[id];
   if (!e) return;
-  if (!e.owned && !e.want && !e.notes && (!e.colors || !e.colors.length)) delete S.coll[id];
+  if (!e.owned && !e.want && !e.notes && (!e.colors || !e.colors.length) && (!e.want_colors || !e.want_colors.length)) delete S.coll[id];
 }
 
 export function isOwned(id) { return !!S.coll[id]?.owned; }
 export function isWanted(id) { return !!S.coll[id]?.want; }
 export function ownedColors(id) { return S.coll[id]?.colors || []; }
+// Colors you're hunting for. Kept separate from `colors` (owned) because a
+// collector can own #1 in Red and still want it in Purple — the two are not
+// mutually exclusive at the color level.
+export function wantedColors(id) { return S.coll[id]?.want_colors || []; }
 
 // Toggle overall owned. Turning on adds the base color if none set; turning
 // off clears colors but preserves a want flag.
@@ -205,7 +209,6 @@ export function toggleOwned(id) {
   } else {
     e.owned = true;
     if (!e.colors.length) e.colors = [BASE_COLOR];
-    e.want = false; // owning it clears the want
   }
   e.ts = Date.now();
   pruneEntry(id);
@@ -217,8 +220,15 @@ export function toggleColor(id, color) {
   const e = ensureEntry(id);
   const i = e.colors.indexOf(color);
   if (i >= 0) e.colors.splice(i, 1);
-  else { e.colors.push(color); e.want = false; }
+  else {
+    e.colors.push(color);
+    // Got the one you were hunting: drop it from the want list, but leave
+    // any other colors you still want alone.
+    const w = (e.want_colors || []).indexOf(color);
+    if (w >= 0) e.want_colors.splice(w, 1);
+  }
   e.owned = e.colors.length > 0;
+  e.want = (e.want_colors || []).length > 0;
   e.ts = Date.now();
   pruneEntry(id);
   saveColl();
@@ -227,7 +237,20 @@ export function toggleColor(id, color) {
 export function toggleWant(id) {
   const e = ensureEntry(id);
   e.want = !e.want;
-  if (e.want) { e.owned = false; e.colors = []; }
+  if (!e.want) e.want_colors = [];   // clearing the flag clears the hunt list
+  e.ts = Date.now();
+  pruneEntry(id);
+  saveColl();
+}
+
+// Toggle a specific color you're hunting for. Any wanted color ⇒ want.
+export function toggleWantColor(id, color) {
+  const e = ensureEntry(id);
+  if (!Array.isArray(e.want_colors)) e.want_colors = [];
+  const i = e.want_colors.indexOf(color);
+  if (i >= 0) e.want_colors.splice(i, 1);
+  else e.want_colors.push(color);
+  e.want = e.want_colors.length > 0;
   e.ts = Date.now();
   pruneEntry(id);
   saveColl();
