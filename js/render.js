@@ -8,7 +8,7 @@
 
 import {
   S, ICO, icon, esc, APP_VERSION, THEMES, COLORS, COLOR_HEX,
-  PACKS, CONDITIONS, RARITY, SET_TOTAL, BASE_COLOR,
+  PACKS, CONDITIONS, RARITY, SET_TOTAL, BASE_COLOR, imgFor, shotsFor,
 } from './state.js';
 import {
   visibleFigs, stats, isOwned, isWanted, ownedColors, exportData,
@@ -138,7 +138,48 @@ function facets() {
 // § SET (poster wall — the signature) ───────────────────────────────
 function viewSet() {
   const figs = visibleFigs();
-  return belt() + facets() + posterWall(figs, 'The set poster');
+  const modes = `<div class="viewtog" role="group" aria-label="View mode">
+    <button class="vt ${S.setView !== 'poster' ? 'on' : ''}" data-action="set-view" data-view="grid">Grid</button>
+    <button class="vt ${S.setView === 'poster' ? 'on' : ''}" data-action="set-view" data-view="poster">Poster</button>
+  </div>`;
+  if (S.setView === 'poster') return belt() + facets() + modes + posterSheet(figs);
+  return belt() + facets() + modes + posterWall(figs, 'The set poster');
+}
+
+// ── The collection poster ───────────────────────────────────────────
+// A CSS recreation of the mail-away poster: black numbered cells in an
+// 11-across grid, each with the outlined star that fills in when you own
+// the figure. The original art only covers #1–154 and is a fixed raster,
+// so the grid is rebuilt here to cover all 236 and reflow on any screen.
+function posterSheet(figs) {
+  if (!figs.length) return emptyState('the poster');
+  return `<div class="sheet-poster">
+    <div class="sp-head">
+      <span class="sp-title">M.U.S.C.L.E.</span>
+      <span class="sp-sub">Official Collector Poster · ${SET_TOTAL} Figures</span>
+    </div>
+    <div class="sp-grid">${figs.map(posterCell).join('')}</div>
+  </div>`;
+}
+
+function posterCell(f) {
+  const owned = isOwned(f.id);
+  const want = isWanted(f.id);
+  const thumb = imgFor(f, 'group', true);
+  return `<button class="pcell ${owned ? 'owned' : ''} ${want ? 'want' : ''}" data-action="open-fig" data-id="${esc(f.id)}"
+      aria-label="Figure ${f.num}${f.name ? ' ' + esc(f.name) : ''}${owned ? ', owned' : ', not owned'}">
+    <span class="pc-num">${f.num}</span>
+    <span class="pc-art">${thumb ? `<img src="${thumb}" alt="" loading="lazy" data-imgfallback>` : `<span class="pc-keshi">${keshiSVG()}</span>`}</span>
+    <span class="pc-star" aria-hidden="true">${starSVG()}</span>
+  </button>`;
+}
+
+// The poster's five-point star: outline by default, filled gold when owned.
+function starSVG() {
+  return `<svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true">
+    <path d="M12 2.6l2.9 6.05 6.6.88-4.82 4.6 1.22 6.55L12 17.5l-5.9 3.18 1.22-6.55L2.5 9.53l6.6-.88z"
+      fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+  </svg>`;
 }
 
 function posterWall(figs, emptyLabel) {
@@ -154,8 +195,11 @@ function tile(f) {
   // the wall at a glance.
   const primary = owned ? (ownedColors(f.id)[0] || BASE_COLOR) : BASE_COLOR;
   const tint = COLOR_HEX[primary] || COLOR_HEX[BASE_COLOR];
+  // Thumbnail of the group shot when it exists; otherwise the keshi silhouette.
+  const thumb = imgFor(f, 'group', true);
   return `<button class="${cls}" data-action="open-fig" data-id="${esc(f.id)}" style="--tint:${tint}" aria-label="Figure ${f.num}${owned ? ', owned' : ', missing'}">
     <span class="tile-fig" aria-hidden="true">${keshiSVG()}</span>
+    ${thumb ? `<img class="tile-img" alt="" src="${thumb}" data-imgfallback loading="lazy">` : ''}
     <span class="tile-num">${f.num}</span>
     ${want ? `<span class="tile-flag">${icon(ICO.heart, 11)}</span>` : ''}
   </button>`;
@@ -291,6 +335,21 @@ function viewDetail(f) {
     </button>`;
   }).join('');
 
+  // Available shots for this figure (group / front / back / per-colour).
+  const shots = shotsFor(f);
+  const SHOT_LABEL = { group: 'All colours', f: 'Front', fb: 'Back', db: 'Dark Blue',
+    lb: 'Light Blue', r: 'Red', g: 'Green', o: 'Orange', s: 'Salmon', p: 'Purple', m: 'Magenta' };
+  const SHOT_COLOR = { db: 'Dark Blue', lb: 'Light Blue', r: 'Red', g: 'Green',
+    o: 'Orange', s: 'Salmon', p: 'Purple', m: 'Magenta', f: 'Flesh', fb: 'Flesh' };
+  const activeShot = shots.includes(S.detailShot) ? S.detailShot : (shots[0] || null);
+  const heroSrc = activeShot === 'group' ? imgFor(f, 'group')
+    : activeShot === 'fb' ? imgFor(f, 'back')
+    : activeShot ? imgFor(f, SHOT_COLOR[activeShot]) : '';
+  const filmstrip = shots.length > 1 ? `<div class="filmstrip">
+      ${shots.map(k => `<button class="film-sw ${k === activeShot ? 'on' : ''}" data-action="view-shot" data-id="${esc(f.id)}" data-shot="${esc(k)}" style="--sw:${k === 'group' ? 'linear-gradient(135deg,#E5A594,#C6413A,#31508C)' : (COLOR_HEX[SHOT_COLOR[k]] || '#888')}" aria-label="Show ${esc(SHOT_LABEL[k] || k)}"><span></span></button>`).join('')}
+      <span class="film-label">${esc(SHOT_LABEL[activeShot] || '')}</span>
+    </div>` : '';
+
   return `<div class="detail">
     <header class="detail-bar">
       <button class="icon-btn" data-action="back-main" aria-label="Back">${icon(ICO.back)}</button>
@@ -298,13 +357,14 @@ function viewDetail(f) {
       <button class="icon-btn" data-action="open-sheet" data-sheet="edit" aria-label="Edit">${icon(ICO.edit)}</button>
     </header>
 
-    <div class="hero ${owned ? 'owned' : ''}">
+    <div class="hero ${owned ? 'owned' : ''} ${heroSrc ? 'has-photo' : ''}">
       <span class="hero-num" aria-hidden="true">${f.num}</span>
       <div class="hero-fig">
         <span class="hero-keshi" style="--tint:${COLOR_HEX[cols[0] || BASE_COLOR]}">${keshiSVG()}</span>
-        <img class="hero-img" alt="" src="${esc(f.image)}" data-imgfallback>
+        ${heroSrc ? `<img class="hero-img" alt="${esc(f.name || ('Figure ' + f.num))} — ${esc(SHOT_LABEL[activeShot] || '')}" src="${heroSrc}" data-imgfallback>` : ''}
       </div>
     </div>
+    ${filmstrip}
 
     <div class="detail-body">
       <h1 class="detail-name">${f.name ? esc(f.name) : `Figure ${f.num}`}</h1>

@@ -62,6 +62,7 @@ function normalizeRows(rows) {
     ...f,
     num: f.num != null ? Number(f.num) : Number(f.id),
     colors: Array.isArray(f.colors) && f.colors.length ? f.colors : [BASE_COLOR],
+    img: f.img && typeof f.img === 'object' ? f.img : {},  // which shots exist + their extension case
     image: f.image || (f.slug ? `${IMG}/${f.slug}.jpg` : ''),
   }));
 }

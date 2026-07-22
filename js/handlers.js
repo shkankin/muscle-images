@@ -22,15 +22,19 @@ onClick('nav-tab', el => {
 });
 
 onClick('open-fig', el => {
-  S.activeFig = el.dataset.id; S.screen = 'figure'; S._justNavigated = true;
+  S.activeFig = el.dataset.id; S.screen = 'figure'; S.detailShot = null; S._justNavigated = true;
   render();
 });
+
+// Filmstrip: switch which shot the detail hero shows.
+onClick('view-shot', el => { S.detailShot = el.dataset.shot; render(); });
 
 onClick('back-main', () => { S.screen = 'main'; S.activeFig = null; S._justNavigated = true; render(); });
 onClick('recover', () => location.reload());
 
 // ── Filters / search ───────────────────────────────────────────────
 onClick('filter-own', el => { S.filterOwn = el.dataset.val; render(); });
+onClick('set-view', el => { S.setView = el.dataset.view; store.set('muscle-setview', S.setView); render(); });
 onClick('filter-color', el => { S.filterColor = el.dataset.val; render(); });
 onClick('search-clear', () => { S.search = ''; render(); focusSearch(); });
 

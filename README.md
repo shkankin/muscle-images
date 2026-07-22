@@ -142,3 +142,47 @@ M.U.S.C.L.E. and Kinnikuman are trademarks of their respective owners (Mattel;
 Yudetamago / Shueisha). This is an unofficial, non-commercial fan tool. Catalog
 data is compiled from community references including musclefigures.com, Nathan's
 M.U.S.C.L.E. Blog, the University of M.U.S.C.L.E., and the Kinnikuman Wiki.
+
+
+## Images
+
+Files live in `images/` in the same repo, named:
+
+```
+MUSCLEFigure###.jpg      group shot — the figure in all its colour variants
+MUSCLEFigure###f.jpg     front, flesh        MUSCLEFigure###fb.jpg   back, flesh
+MUSCLEFigure###db.jpg    dark blue           MUSCLEFigure###lb.jpg   light blue
+MUSCLEFigure###r.jpg     red                 MUSCLEFigure###g.jpg    green
+MUSCLEFigure###o.jpg     orange              MUSCLEFigure###s.jpg    salmon
+MUSCLEFigure###p.jpg     purple              MUSCLEFigure###m.jpg    magenta
+```
+
+Every file also has a thumbnail counterpart with `t` appended before the
+extension (`MUSCLEFigure001t.jpg`, `MUSCLEFigure001ft.jpg`). Tiles and the
+poster use the `t` versions; the detail hero uses the full-size shot.
+
+A few files use an uppercase `.JPG`. GitHub Pages is case-sensitive, so the
+extension case is recorded per figure in `figures.json` (`img`) rather than
+assumed. Figures with no image simply show the keshi silhouette — that is the
+expected state while the archive is being filled in, not an error.
+
+## figures-editor.html
+
+Open it at `https://musclemen.app/figures-editor.html`. Paste a GitHub token
+with **Contents: write**, hit *Load catalog*, and edit any figure: name, aka,
+origin, rarity, poster flag, notes, which colours it comes in, and a photo per
+shot. Each upload saves **two** files — the full shot and its `t` thumbnail,
+both compressed client-side. Everything commits in one atomic commit.
+
+The editor owns the live `figures.json` in the repo. `deploy.html` therefore
+**skips** the zip's bundled `figures.json` whenever the repo already has one,
+so deploying a new app build never clobbers your catalog edits. The bundled
+copy is only the offline/first-run seed.
+
+## The poster
+
+The Set tab has a **Grid / Poster** toggle. Poster mode is a CSS recreation of
+the mail-away collection poster — black numbered cells, and the star fills gold
+when you mark a figure owned. It is rebuilt in CSS rather than using the poster
+artwork because the original only covers #1–154 and is far too heavy to ship;
+this version covers all 236 and reflows to 11/8/6/5 columns by screen width.
