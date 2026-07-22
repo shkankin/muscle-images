@@ -353,15 +353,18 @@ function renderPhotoGrid(f){
     const skey=`${f.id}::${key}`;
     const isStaged=!!staged[skey];
     const ext=(f.img||{})[key];
-    const isLive=!!ext&&!isStaged;
+    const isLive=!isStaged;              // always try; the <img> hides itself if absent
     let inner;
     if(isStaged){ inner=`<img src="${staged[skey].url}"><span class="tag new">New</span>`; }
-    else if(isLive){
-      const url=`${RAW}/images/${fileFor(f.id,sh.suf,ext,true)}?cb=${figuresSha||''}`;
-      inner=`<img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="ph" style="display:none">no image</span><span class="tag live">Saved</span>`;
+    else {
+      // Optimistic: build the .jpg URL, retry .JPG once, then show "Upload".
+      const url=`${RAW}/images/${fileFor(f.id,sh.suf,ext||'jpg',true)}`;
+      inner=`<img src="${url}" loading="lazy"
+        onerror="if(!this.dataset.r){this.dataset.r=1;this.src=this.src.replace(/\\.jpg$/,'.JPG');}else{this.style.display='none';this.parentNode.querySelector('.ph').style.display='block';this.parentNode.querySelector('.tag').style.display='none';}"
+        onload="this.parentNode.querySelector('.ph').style.display='none';this.parentNode.querySelector('.tag').style.display='block';"
+        ><span class="ph">Upload</span><span class="tag live" style="display:none">Saved</span>`;
     }
-    else { inner=`<span class="ph">Upload</span>`; }
-    const has=isStaged||isLive;
+    const has=isStaged||!!ext;
     const dot=sh.hex?`<i style="background:${sh.hex}"></i>`:`<i style="background:linear-gradient(135deg,#E5A594,#C6413A,#31508C)"></i>`;
     return `<div class="slot">
       <div class="slot-h">${dot}${sh.label}</div>

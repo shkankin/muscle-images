@@ -220,16 +220,47 @@ async function deploy(){
       baseTreeSha = (await cRes.json()).tree.sha;
     }
 
-    // 2a. Protect the live catalog. figures.json in the repo is maintained by
-    // figures-editor.html (names, colours, which shots exist). The copy bundled
-    // in the app zip is only an offline seed — pushing it would wipe those edits.
-    // So: if the repo already has figures.json, skip the zip's copy.
-    let skipCatalog = false;
+    // 2a. Merge the catalog rather than overwrite or skip it.
+    // figures.json holds BOTH editor-owned content (names, colours, notes)
+    // and fields that ship with a build. Skipping it entirely means a new
+    // build's catalog improvements never land; overwriting it wipes your
+    // edits. So: take the repo's row as the base, and only fill in fields
+    // it is missing from the build's copy.
+    let mergedCatalog = null;
     if (!emptyRepo){
       const fj = await fetch(`${API}/contents/figures.json?ref=${BRANCH}`, { headers });
       if (fj.ok){
-        skipCatalog = true;
-        log('warn','figures.json already in the repo — keeping the live catalog (editor data preserved).');
+        try{
+          const live = JSON.parse(decodeURIComponent(escape(atob((await fj.json()).content.replace(/\n/g,'')))));
+          const zipEntry = entries.find(e=>e.path==='figures.json');
+          if (zipEntry){
+            const { content } = await zipEntry.getContent();
+            const bundled = JSON.parse(decodeURIComponent(escape(atob(content))));
+            const byId = Object.fromEntries(live.map(r=>[r.id,r]));
+            let filled=0;
+            mergedCatalog = bundled.map(b=>{
+              const l = byId[b.id];
+              if (!l) return b;
+              const out = { ...b };
+              // The repo's values win wherever it actually has one.
+              for (const k of Object.keys(l)){
+                const v = l[k];
+                const empty = v==null || v==='' || (Array.isArray(v)&&!v.length) ||
+                              (typeof v==='object'&&!Array.isArray(v)&&!Object.keys(v).length);
+                if (!empty){ out[k]=v; filled++; }
+              }
+              return out;
+            });
+            log('ok', `Merged catalog — kept ${filled} field(s) from the live repo, added this build's new ones.`);
+          }
+        }catch(err){
+          mergedCatalog = null;
+          log('warn','Could not merge figures.json — leaving the repo copy untouched.');
+        }
+        if (mergedCatalog === null){
+          const e = entries.find(x=>x.path==='figures.json');
+          if (e) e._skip = true;
+        }
       } else {
         log('dim','No catalog in the repo yet — seeding it from this build.');
       }
@@ -238,10 +269,14 @@ async function deploy(){
     // 2. Blobs.
     const tree = []; let done=0;
     for (const e of entries){
-      if (skipCatalog && e.path === 'figures.json'){ e.status='skip'; renderFiles(); continue; }
+      if (e._skip){ e.status='skip'; renderFiles(); continue; }
       e.status='up'; renderFiles();
       try{
-        const { content, encoding } = await e.getContent();
+        let { content, encoding } = await e.getContent();
+        if (e.path === 'figures.json' && mergedCatalog){
+          content = btoa(unescape(encodeURIComponent(JSON.stringify(mergedCatalog, null, 1))));
+          encoding = 'base64';
+        }
         const bRes = await fetch(`${API}/git/blobs`, { method:'POST', headers, body:JSON.stringify({ content, encoding }) });
         if(!bRes.ok) throw new Error(String(bRes.status));
         const { sha } = await bRes.json();

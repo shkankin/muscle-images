@@ -155,8 +155,8 @@ function posterSheet(figs) {
   if (!figs.length) return emptyState('the poster');
   return `<div class="sheet-poster">
     <div class="sp-head">
-      <span class="sp-title">M.U.S.C.L.E.</span>
-      <span class="sp-sub">Official Collector Poster · ${SET_TOTAL} Figures</span>
+      <img class="sp-art" src="images/poster-head.jpg" alt="M.U.S.C.L.E. — Millions of Unusual Small Creatures Lurking Everywhere">
+      <span class="sp-sub">Can You Collect Them All? · Fill The Star As You Catch Each One</span>
     </div>
     <div class="sp-grid">${figs.map(posterCell).join('')}</div>
   </div>`;

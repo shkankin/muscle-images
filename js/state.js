@@ -11,7 +11,7 @@
 // level data-action delegate for all events (CSP-safe, no inline JS).
 // ════════════════════════════════════════════════════════════════════
 
-export const APP_VERSION = '0.2';
+export const APP_VERSION = '0.3';
 
 // § REPO / NETWORK ─────────────────────────────────────────────────
 // The catalog (figures.json) and figure images live in the same GitHub
@@ -35,28 +35,34 @@ export const FIGS_URL = `${ROOT}/figures.json`;
 //   'o'  orange      's'  salmon       'p' purple 'm' magenta
 // Every one also has a thumbnail: the same name with 't' appended
 //   (MUSCLEFigure001t.jpg, MUSCLEFigure001ft.jpg).
-// A few files use an uppercase .JPG, so the extension case is recorded
-// per figure in figures.json (`img`) rather than assumed.
+// A few files use an uppercase .JPG. Rather than depend on catalog
+// metadata (which goes stale the moment a new image is uploaded), the app
+// is OPTIMISTIC: it always builds the .jpg URL, and delegate.js retries
+// once with .JPG on error before falling back to the keshi silhouette.
+// That means any image dropped in the repo shows up with no catalog edit.
 export const IMG_SUFFIX = {
   'Dark Blue': 'db', 'Light Blue': 'lb', 'Red': 'r', 'Green': 'g',
   'Orange': 'o', 'Salmon': 's', 'Purple': 'p', 'Magenta': 'm',
   'Flesh': 'f',
 };
 // Build a URL. kind: 'group' | a colour name | 'back'. thumb → the 't' variant.
+// Always returns a URL (we don't know ahead of time what's uploaded); the
+// <img> hides itself if the file 404s, revealing the keshi behind it.
 export function imgFor(fig, kind = 'group', thumb = false) {
   if (!fig) return '';
-  const has = fig.img || {};
   const suffix = kind === 'group' ? '' : kind === 'back' ? 'fb' : (IMG_SUFFIX[kind] || '');
-  const key = kind === 'group' ? 'group' : suffix;
-  const ext = has[key];
-  if (!ext) return '';                       // not uploaded — caller shows the keshi
-  return `${IMG}/MUSCLEFigure${fig.id}${suffix}${thumb ? 't' : ''}.${ext}`;
+  if (kind !== 'group' && kind !== 'back' && !suffix) return '';
+  return `${IMG}/MUSCLEFigure${fig.id}${suffix}${thumb ? 't' : ''}.jpg`;
 }
-// Which extra shots exist for a figure, in display order.
+// Shots to offer on the detail view. `img` in the catalog is used when
+// present (it lists what's known to exist), but we always offer the group
+// and flesh-front shots so newly uploaded files appear without a catalog
+// update — each one hides itself if it isn't there yet.
 export const shotsFor = fig => {
   const img = (fig && fig.img) || {};
   const order = ['group', 'f', 'fb', 'db', 'lb', 'r', 'g', 'o', 's', 'p', 'm'];
-  return order.filter(k => img[k]);
+  const known = order.filter(k => img[k]);
+  return known.length ? known : order;
 };
 
 export const CACHE_KEY = 'muscle-figs-cache';

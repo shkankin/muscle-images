@@ -656,39 +656,53 @@ img { max-width: 100%; }
 .vt { padding: 6px 16px; font-size: 13px; font-weight: 700; border: 0; background: none; color: var(--fg3); border-radius: 7px; letter-spacing: .3px; }
 .vt.on { background: var(--gold); color: #241713; }
 
-.sheet-poster { margin: 0 auto 18px; max-width: 620px; background: #0A0A0A; border: 2px solid #E8E4DA; border-radius: 6px; padding: 10px 8px 14px; }
-.sp-head { text-align: center; padding: 4px 0 12px; }
-.sp-title { display: block; font-family: var(--font-display); font-size: clamp(26px, 8vw, 44px); letter-spacing: 1px; color: #FFE940; line-height: 1; text-shadow: 2px 2px 0 #C6413A; }
-.sp-sub { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #E8E4DA; margin-top: 5px; }
+.sheet-poster {
+  margin: 0 auto 18px; max-width: 620px; border-radius: 8px; overflow: hidden;
+  /* The poster's own background art, tiled down the sheet behind the cells. */
+  background: #1B1016 url("../images/poster-bg.jpg") repeat-y center top / 100% auto;
+  border: 2px solid #E8E4DA; box-shadow: 0 8px 30px rgba(0,0,0,.5);
+}
+.sp-head { text-align: center; padding: 0 0 10px; }
+/* The real starburst + logo lifted from the poster art. */
+.sp-art { display: block; width: 100%; height: auto; }
+.sp-sub {
+  display: block; font-size: clamp(9px, 2.6vw, 12px); font-weight: 700;
+  letter-spacing: .6px; color: #fff; margin-top: -2px; padding: 0 10px 4px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 6px rgba(0,0,0,.7);
+}
 
-/* 11 across mirrors the original sheet; narrow screens step down so cells
-   stay tappable. */
-.sp-grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; }
+.sp-grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 5px; padding: 0 10px 14px; }
 @media (max-width: 900px) { .sp-grid { grid-template-columns: repeat(8, 1fr); } }
 @media (max-width: 560px) { .sp-grid { grid-template-columns: repeat(6, 1fr); } }
 @media (max-width: 380px) { .sp-grid { grid-template-columns: repeat(5, 1fr); } }
 
+/* A cell: black card, cream keyline and soft glow, exactly like the sheet. */
 .pcell {
-  position: relative; aspect-ratio: 100 / 110; background: #0D0D0D;
-  border: 1px solid #E8E4DA; border-radius: 0; padding: 0; overflow: hidden;
-  display: block; transition: background .15s;
+  position: relative; aspect-ratio: 100 / 110; background: #050505;
+  border: 2px solid #F2E6C8; border-radius: 4px; padding: 0; overflow: hidden;
+  box-shadow: 0 0 7px rgba(255, 236, 190, .3);
+  display: block; transition: box-shadow .15s, transform .1s;
 }
-.pcell:active { background: #1A1A1A; }
+.pcell:active { transform: scale(.96); }
 .pc-num {
   position: absolute; top: 2px; left: 3px; z-index: 3;
   font-family: var(--font-display); font-size: clamp(8px, 2vw, 11px);
-  color: #E8E4DA; line-height: 1; letter-spacing: .3px;
+  color: #F2E6C8; line-height: 1; letter-spacing: .3px;
+  text-shadow: 0 1px 2px #000;
 }
-.pc-art { position: absolute; inset: 12% 4% 26% 4%; display: grid; place-items: center; }
+.pc-art { position: absolute; inset: 14% 5% 24% 5%; display: grid; place-items: center; }
 .pc-art img { width: 100%; height: 100%; object-fit: contain; }
-.pc-keshi { width: 52%; color: #2E2A26; display: block; }
+.pc-keshi { width: 50%; color: #241F1B; display: block; }
 .pc-keshi svg { width: 100%; height: auto; }
-/* The star: hollow until owned, then filled gold like a stamped poster. */
+/* The star: hollow outline until owned, then filled in — the whole point of
+   the original sheet. */
 .pc-star {
-  position: absolute; bottom: 3%; left: 50%; transform: translateX(-50%);
-  width: 20%; min-width: 11px; color: #3A3A3A; z-index: 3; line-height: 0;
+  position: absolute; bottom: 4%; left: 50%; transform: translateX(-50%);
+  width: 22%; min-width: 12px; color: #4A4A4A; z-index: 3; line-height: 0;
 }
-.pcell.owned .pc-star { color: var(--gold); filter: drop-shadow(0 0 3px rgba(227,169,60,.55)); }
-.pcell.owned { background: #141210; }
-.pcell.want .pc-star { color: var(--acc); }
-.pcell.owned .pc-num { color: var(--gold-l); }
+.pc-star svg path { fill: transparent; stroke: #F2E6C8; }
+.pcell.owned .pc-star svg path { fill: #FFE940; stroke: #FFE940; }
+.pcell.owned .pc-star { filter: drop-shadow(0 0 4px rgba(255, 233, 64, .8)); }
+.pcell.owned { border-color: #FFE940; box-shadow: 0 0 11px rgba(255, 233, 64, .45); }
+.pcell.want .pc-star svg path { stroke: var(--acc); fill: transparent; }
+.pcell.owned .pc-num { color: #FFE940; }
