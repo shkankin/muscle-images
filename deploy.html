@@ -91,7 +91,7 @@
     <div class="bar" id="bar"><span></span></div>
     <div class="row" style="margin-top:14px">
       <button class="primary" id="deployBtn" disabled style="flex:1">⬆ Commit to GitHub</button>
-      <button class="ghost" id="dlBtn" title="Download the current repo as a backup zip">⬇ Backup repo</button>
+      <button class="ghost" id="dlBtn" title="Download the catalog and app files as a backup zip (figure photos excluded)">⬇ Backup data</button>
     </div>
     <div class="log" id="log"></div>
     <div class="hint" id="pagesHint"></div>
@@ -449,8 +449,16 @@ dlBtn.onclick = async () => {
     const sha = (await refRes.json()).object.sha;
     const trRes = await fetch(`${API}/git/trees/${sha}?recursive=1`, { headers:ghHeaders(token) });
     if(!trRes.ok) throw new Error(`Tree read failed: ${trRes.status}`);
-    const blobs = (await trRes.json()).tree.filter(t=>t.type==='blob');
-    log('dim',`${blobs.length} files — downloading…`);
+    // Data files only. Figure photos live in images/ and are large, numerous,
+    // and already the canonical copy — backing them up here would balloon the
+    // zip and slow the download to a crawl for no benefit. What matters is the
+    // catalog and the app itself: figures.json plus the code and config.
+    const all = (await trRes.json()).tree.filter(t=>t.type==='blob');
+    const isImage = p => /\.(jpe?g|png|gif|webp|svg|ico|bmp|tiff?)$/i.test(p);
+    const blobs = all.filter(b => !isImage(b.path));
+    const skipped = all.length - blobs.length;
+    log('dim',`${blobs.length} data files — downloading…`);
+    if (skipped) log('dim',`  (skipping ${skipped} image${skipped===1?'':'s'})`);
     const zip = new JSZip(); let n=0;
     for (const b of blobs){
       const r = await fetch(`${API}/git/blobs/${b.sha}`, { headers:ghHeaders(token) });
@@ -463,11 +471,11 @@ dlBtn.onclick = async () => {
     const out = await zip.generateAsync({ type:'blob' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(out);
-    a.download = `muscle-images-backup-${new Date().toISOString().slice(0,10)}.zip`;
+    a.download = `muscle-data-backup-${new Date().toISOString().slice(0,10)}.zip`;
     a.click(); URL.revokeObjectURL(a.href);
-    log('ok',`✓ Downloaded ${n} files.`);
+    log('ok',`✓ Downloaded ${n} data file${n===1?'':'s'}.`);
   }catch(e){ log('err','✗ '+e.message); }
-  dlBtn.disabled=false; dlBtn.textContent='⬇ Backup repo';
+  dlBtn.disabled=false; dlBtn.textContent='⬇ Backup data';
 };
 </script>
 </body>

@@ -11,7 +11,7 @@
 // level data-action delegate for all events (CSP-safe, no inline JS).
 // ════════════════════════════════════════════════════════════════════
 
-export const APP_VERSION = '1.2';
+export const APP_VERSION = '1.3';
 
 // § REPO / NETWORK ─────────────────────────────────────────────────
 // The catalog (figures.json) and figure images live in the same GitHub
