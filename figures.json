@@ -4,7 +4,7 @@
   "num": 1,
   "slug": "001",
   "name": "Kinnikuman (D)",
-  "aka": "The Superman Muscleman",
+  "aka": "Muscle Man",
   "origin": "The hero of Kinnikuman",
   "poster": true,
   "rarity": "common",
@@ -29,8 +29,8 @@
    "Purple": "A",
    "Flesh": "C"
   },
-  "notes": "This was the fourth kinkeshi version of the Kinnikuman character, which is why he has the “D” designation. A Light Purple version was available with the board game.",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": "This was the fourth kinkeshi version of the Kinnikuman character, which is why he has the “D” designation. A Light Purple version was available with the board game."
  },
  {
   "id": "002",
@@ -60,8 +60,8 @@
    "Purple": "A",
    "Flesh": "C"
   },
-  "notes": "The translated Kinnikuman name of this figure is Buffalo Man. However, M.U.S.C.L.E. collectors know this character as Terri-Bull – one of the two M.U.S.C.L.E. figures with names (the other figure is Muscleman). This was the second version of “Buffalo Man” from the original Kinnikuman release.",
-  "jp": "バッファローマン"
+  "jp": "バッファローマン",
+  "notes": "The translated Kinnikuman name of this figure is Buffalo Man. However, M.U.S.C.L.E. collectors know this character as Terri-Bull – one of the two M.U.S.C.L.E. figures with names (the other figure is Muscleman). This was the second version of “Buffalo Man” from the original Kinnikuman release."
  },
  {
   "id": "003",
@@ -73,112 +73,147 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {
    "f": "jpg",
    "fb": "jpg"
   },
   "cls": {},
-  "notes": "",
-  "jp": "サンシャイン"
+  "jp": "サンシャイン",
+  "notes": ""
  },
  {
   "id": "004",
   "num": 4,
   "slug": "004",
-  "name": "Kani Base",
+  "name": "Kani Besu",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Dark Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
   "id": "005",
   "num": 5,
   "slug": "005",
-  "name": "Planet Man",
+  "name": "Planet Man (A)",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "プラネットマン"
+  "jp": "プラネットマン",
+  "notes": ""
  },
  {
   "id": "006",
   "num": 6,
   "slug": "006",
   "name": "Erimaki Tokage",
-  "aka": "",
-  "origin": "aka Eromaki Tokage / 'Collared Lizard'",
+  "aka": "Sneagator (A)",
+  "origin": "aka 'Collared Lizard'",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Light Blue",
+   "Purple"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
   "id": "007",
   "num": 7,
   "slug": "007",
-  "name": "Puyo",
+  "name": "Puyo Puyo",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Dark Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
   "id": "008",
   "num": 8,
   "slug": "008",
-  "name": "Shishikababu",
-  "aka": "",
+  "name": "Shishikababa",
+  "aka": "Shishkeba Boo",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Dark Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "シシカバ・ブー"
+  "jp": "シシカバ・ブー",
+  "notes": ""
  },
  {
   "id": "009",
   "num": 9,
   "slug": "009",
   "name": "Wakusei Barukan",
-  "aka": "",
+  "aka": "Planet Man (B)",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -186,15 +221,22 @@
   "num": 10,
   "slug": "010",
   "name": "Jessie Maybia",
-  "aka": "",
+  "aka": "Jessie Maivia",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -202,15 +244,22 @@
   "num": 11,
   "slug": "011",
   "name": "Hidora King",
-  "aka": "",
+  "aka": "Hydra King",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -223,12 +272,16 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "オイルマン"
+  "jp": "オイルマン",
+  "notes": ""
  },
  {
   "id": "013",
@@ -240,10 +293,17 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -256,12 +316,18 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ロビンマスク"
+  "jp": "ロビンマスク",
+  "notes": ""
  },
  {
   "id": "015",
@@ -273,12 +339,18 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "サンシャイン"
+  "jp": "サンシャイン",
+  "notes": ""
  },
  {
   "id": "016",
@@ -290,44 +362,62 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ネプチューンマン"
+  "jp": "ネプチューンマン",
+  "notes": ""
  },
  {
   "id": "017",
   "num": 17,
   "slug": "017",
   "name": "Kinnikuman (B)",
-  "aka": "",
+  "aka": "Muscle Man",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": ""
  },
  {
   "id": "018",
   "num": 18,
   "slug": "018",
   "name": "Daiyaman",
-  "aka": "",
+  "aka": "Diaman",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -340,10 +430,18 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta",
+   "Salmon"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -351,17 +449,24 @@
   "num": 20,
   "slug": "020",
   "name": "Kinniku Daiou",
-  "aka": "",
+  "aka": "Mayumi Kinniku",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉大王"
+  "jp": "キン肉大王",
+  "notes": ""
  },
  {
   "id": "021",
@@ -373,27 +478,40 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "悪魔将軍"
+  "jp": "悪魔将軍",
+  "notes": ""
  },
  {
   "id": "022",
   "num": 22,
   "slug": "022",
   "name": "The Manriki",
-  "aka": "",
+  "aka": "The Vice",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -406,12 +524,19 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "イワオ"
+  "jp": "イワオ",
+  "notes": ""
  },
  {
   "id": "024",
@@ -427,8 +552,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キューブマン"
+  "jp": "キューブマン",
+  "notes": ""
  },
  {
   "id": "025",
@@ -444,8 +569,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "カメハメ"
+  "jp": "カメハメ",
+  "notes": ""
  },
  {
   "id": "026",
@@ -461,8 +586,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ザ・ニンジャ"
+  "jp": "ザ・ニンジャ",
+  "notes": ""
  },
  {
   "id": "027",
@@ -478,8 +603,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アシュラマン"
+  "jp": "アシュラマン",
+  "notes": ""
  },
  {
   "id": "028",
@@ -495,6 +620,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -511,8 +637,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "テリーマン"
+  "jp": "テリーマン",
+  "notes": ""
  },
  {
   "id": "030",
@@ -528,6 +654,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -544,8 +671,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "テリーマン"
+  "jp": "テリーマン",
+  "notes": ""
  },
  {
   "id": "032",
@@ -561,6 +688,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -577,6 +705,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -593,6 +722,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -609,8 +739,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ウォーズマン"
+  "jp": "ウォーズマン",
+  "notes": ""
  },
  {
   "id": "036",
@@ -626,8 +756,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キンコツマン"
+  "jp": "キンコツマン",
+  "notes": ""
  },
  {
   "id": "037",
@@ -643,6 +773,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -659,8 +790,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "タイルマン"
+  "jp": "タイルマン",
+  "notes": ""
  },
  {
   "id": "039",
@@ -676,8 +807,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "サンシャイン"
+  "jp": "サンシャイン",
+  "notes": ""
  },
  {
   "id": "040",
@@ -693,8 +824,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ケンダマン"
+  "jp": "ケンダマン",
+  "notes": ""
  },
  {
   "id": "041",
@@ -710,6 +841,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -726,6 +858,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -742,8 +875,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "カレー・クック"
+  "jp": "カレー・クック",
+  "notes": ""
  },
  {
   "id": "044",
@@ -759,8 +892,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ベンキマン"
+  "jp": "ベンキマン",
+  "notes": ""
  },
  {
   "id": "045",
@@ -776,8 +909,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "スプリングマン"
+  "jp": "スプリングマン",
+  "notes": ""
  },
  {
   "id": "046",
@@ -793,8 +926,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ロビンマスク"
+  "jp": "ロビンマスク",
+  "notes": ""
  },
  {
   "id": "047",
@@ -822,6 +955,7 @@
    "Purple": "C",
    "Magenta": "C"
   },
+  "jp": "",
   "notes": ""
  },
  {
@@ -838,8 +972,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ティーパックマン"
+  "jp": "ティーパックマン",
+  "notes": ""
  },
  {
   "id": "049",
@@ -869,8 +1003,8 @@
    "Green": "C",
    "Purple": "C"
   },
-  "notes": "",
-  "jp": "ブラック・シャドー"
+  "jp": "ブラック・シャドー",
+  "notes": ""
  },
  {
   "id": "050",
@@ -886,6 +1020,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -916,8 +1051,8 @@
    "Neon Orange": "C",
    "Purple": "C"
   },
-  "notes": "",
-  "jp": "カナディアンマン"
+  "jp": "カナディアンマン",
+  "notes": ""
  },
  {
   "id": "052",
@@ -933,6 +1068,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -949,8 +1085,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ジャンクマン"
+  "jp": "ジャンクマン",
+  "notes": ""
  },
  {
   "id": "054",
@@ -966,6 +1102,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -982,8 +1119,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "スカイマン"
+  "jp": "スカイマン",
+  "notes": ""
  },
  {
   "id": "056",
@@ -999,8 +1136,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ネプチューン・キング"
+  "jp": "ネプチューン・キング",
+  "notes": ""
  },
  {
   "id": "057",
@@ -1016,8 +1153,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マングレート"
+  "jp": "キン肉マングレート",
+  "notes": ""
  },
  {
   "id": "058",
@@ -1033,8 +1170,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "バッファローマン"
+  "jp": "バッファローマン",
+  "notes": ""
  },
  {
   "id": "059",
@@ -1050,8 +1187,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ウォーズマン"
+  "jp": "ウォーズマン",
+  "notes": ""
  },
  {
   "id": "060",
@@ -1067,6 +1204,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1083,8 +1221,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": ""
  },
  {
   "id": "062",
@@ -1100,6 +1238,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1116,6 +1255,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1132,8 +1272,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "サンシャイン"
+  "jp": "サンシャイン",
+  "notes": ""
  },
  {
   "id": "065",
@@ -1149,8 +1289,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "クリスタルマン"
+  "jp": "クリスタルマン",
+  "notes": ""
  },
  {
   "id": "066",
@@ -1166,6 +1306,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1182,8 +1323,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ペンタゴン"
+  "jp": "ペンタゴン",
+  "notes": ""
  },
  {
   "id": "068",
@@ -1199,6 +1340,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1215,8 +1357,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "スペシャルマン"
+  "jp": "スペシャルマン",
+  "notes": ""
  },
  {
   "id": "070",
@@ -1232,8 +1374,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アシュラマン"
+  "jp": "アシュラマン",
+  "notes": ""
  },
  {
   "id": "071",
@@ -1249,8 +1391,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ネプチューンマン"
+  "jp": "ネプチューンマン",
+  "notes": ""
  },
  {
   "id": "072",
@@ -1266,6 +1408,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1282,6 +1425,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1298,6 +1442,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1314,8 +1459,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アブドーラ"
+  "jp": "アブドーラ",
+  "notes": ""
  },
  {
   "id": "076",
@@ -1331,6 +1476,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1347,6 +1493,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1363,8 +1510,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "バイキングマン"
+  "jp": "バイキングマン",
+  "notes": ""
  },
  {
   "id": "079",
@@ -1380,8 +1527,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ハンマーヘッド"
+  "jp": "ハンマーヘッド",
+  "notes": ""
  },
  {
   "id": "080",
@@ -1397,6 +1544,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1413,6 +1561,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1429,8 +1578,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ラーメンマン"
+  "jp": "ラーメンマン",
+  "notes": ""
  },
  {
   "id": "083",
@@ -1446,6 +1595,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1462,8 +1612,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "スネークマン"
+  "jp": "スネークマン",
+  "notes": ""
  },
  {
   "id": "085",
@@ -1479,8 +1629,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンゼブラ"
+  "jp": "キン肉マンゼブラ",
+  "notes": ""
  },
  {
   "id": "086",
@@ -1496,6 +1646,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1512,6 +1663,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1528,6 +1680,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1544,8 +1697,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ウォッチマン"
+  "jp": "ウォッチマン",
+  "notes": ""
  },
  {
   "id": "090",
@@ -1561,8 +1714,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "コンバットマン"
+  "jp": "コンバットマン",
+  "notes": ""
  },
  {
   "id": "091",
@@ -1578,6 +1731,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1594,6 +1748,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1610,8 +1765,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "バッファローマン"
+  "jp": "バッファローマン",
+  "notes": ""
  },
  {
   "id": "094",
@@ -1627,6 +1782,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1643,6 +1799,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1659,8 +1816,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ザ・ニンジャ"
+  "jp": "ザ・ニンジャ",
+  "notes": ""
  },
  {
   "id": "097",
@@ -1676,6 +1833,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1692,6 +1850,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1708,6 +1867,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1724,6 +1884,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1740,6 +1901,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1756,6 +1918,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1772,8 +1935,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ブラックホール"
+  "jp": "ブラックホール",
+  "notes": ""
  },
  {
   "id": "104",
@@ -1789,6 +1952,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1805,8 +1969,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "バッファローマン"
+  "jp": "バッファローマン",
+  "notes": ""
  },
  {
   "id": "106",
@@ -1822,6 +1986,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1838,8 +2003,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "サンシャイン"
+  "jp": "サンシャイン",
+  "notes": ""
  },
  {
   "id": "108",
@@ -1855,8 +2020,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "リキシマン"
+  "jp": "リキシマン",
+  "notes": ""
  },
  {
   "id": "109",
@@ -1872,6 +2037,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1888,8 +2054,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": ""
  },
  {
   "id": "111",
@@ -1905,8 +2071,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "悪魔将軍"
+  "jp": "悪魔将軍",
+  "notes": ""
  },
  {
   "id": "112",
@@ -1922,6 +2088,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1938,8 +2105,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンスーパー・フェニックス"
+  "jp": "キン肉マンスーパー・フェニックス",
+  "notes": ""
  },
  {
   "id": "114",
@@ -1955,8 +2122,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "パンダマン"
+  "jp": "パンダマン",
+  "notes": ""
  },
  {
   "id": "115",
@@ -1972,6 +2139,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -1988,8 +2156,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンソルジャー"
+  "jp": "キン肉マンソルジャー",
+  "notes": ""
  },
  {
   "id": "117",
@@ -2005,8 +2173,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ローラーマン"
+  "jp": "ローラーマン",
+  "notes": ""
  },
  {
   "id": "118",
@@ -2022,6 +2190,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2038,6 +2207,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2054,8 +2224,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "サボテンマン"
+  "jp": "サボテンマン",
+  "notes": ""
  },
  {
   "id": "121",
@@ -2071,6 +2241,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2087,8 +2258,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": ""
  },
  {
   "id": "123",
@@ -2104,8 +2275,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ジェロニモ"
+  "jp": "ジェロニモ",
+  "notes": ""
  },
  {
   "id": "124",
@@ -2121,8 +2292,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "フォックスマン"
+  "jp": "フォックスマン",
+  "notes": ""
  },
  {
   "id": "125",
@@ -2138,6 +2309,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2154,6 +2326,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2170,8 +2343,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ジャンクマン"
+  "jp": "ジャンクマン",
+  "notes": ""
  },
  {
   "id": "128",
@@ -2187,8 +2360,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "スマイルマン"
+  "jp": "スマイルマン",
+  "notes": ""
  },
  {
   "id": "129",
@@ -2204,8 +2377,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アシュラマン"
+  "jp": "アシュラマン",
+  "notes": ""
  },
  {
   "id": "130",
@@ -2221,6 +2394,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2237,6 +2411,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2253,8 +2428,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "スクリュー・キッド"
+  "jp": "スクリュー・キッド",
+  "notes": ""
  },
  {
   "id": "133",
@@ -2270,6 +2445,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2286,6 +2462,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2302,6 +2479,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2318,6 +2496,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2334,6 +2513,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2350,6 +2530,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2366,6 +2547,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2382,8 +2564,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "テリーマン"
+  "jp": "テリーマン",
+  "notes": ""
  },
  {
   "id": "141",
@@ -2399,8 +2581,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "Poster version — differs from Wrestling Ring #234",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": "Poster version — differs from Wrestling Ring #234"
  },
  {
   "id": "142",
@@ -2416,6 +2598,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2432,6 +2615,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2448,6 +2632,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2464,6 +2649,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2480,6 +2666,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2496,6 +2683,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2512,6 +2700,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2528,8 +2717,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "スクリュー・キッド"
+  "jp": "スクリュー・キッド",
+  "notes": ""
  },
  {
   "id": "150",
@@ -2545,8 +2734,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アポロン・ザ・ジャイアント"
+  "jp": "アポロン・ザ・ジャイアント",
+  "notes": ""
  },
  {
   "id": "151",
@@ -2562,6 +2751,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2578,8 +2768,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "モンゴルマン"
+  "jp": "モンゴルマン",
+  "notes": ""
  },
  {
   "id": "153",
@@ -2595,6 +2785,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": "The famously rare Purple #153"
  },
  {
@@ -2611,6 +2802,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2627,6 +2819,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2643,8 +2836,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ウルフマン"
+  "jp": "ウルフマン",
+  "notes": ""
  },
  {
   "id": "157",
@@ -2660,6 +2853,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2676,8 +2870,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "バズーガーラー"
+  "jp": "バズーガーラー",
+  "notes": ""
  },
  {
   "id": "159",
@@ -2693,6 +2887,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2709,6 +2904,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2725,8 +2921,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アトランティス"
+  "jp": "アトランティス",
+  "notes": ""
  },
  {
   "id": "162",
@@ -2742,6 +2938,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2758,8 +2955,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "マンモスマン"
+  "jp": "マンモスマン",
+  "notes": ""
  },
  {
   "id": "164",
@@ -2775,8 +2972,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンビッグボディ"
+  "jp": "キン肉マンビッグボディ",
+  "notes": ""
  },
  {
   "id": "165",
@@ -2792,6 +2989,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2808,8 +3006,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンマリポーサ"
+  "jp": "キン肉マンマリポーサ",
+  "notes": ""
  },
  {
   "id": "167",
@@ -2825,6 +3023,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2841,6 +3040,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2857,8 +3057,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ベンキマン"
+  "jp": "ベンキマン",
+  "notes": ""
  },
  {
   "id": "170",
@@ -2874,6 +3074,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2890,8 +3091,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ミキサー大帝"
+  "jp": "ミキサー大帝",
+  "notes": ""
  },
  {
   "id": "172",
@@ -2907,8 +3108,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "テリーマン"
+  "jp": "テリーマン",
+  "notes": ""
  },
  {
   "id": "173",
@@ -2924,6 +3125,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2940,8 +3142,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アシュラマン"
+  "jp": "アシュラマン",
+  "notes": ""
  },
  {
   "id": "175",
@@ -2957,6 +3159,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2973,6 +3176,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -2989,6 +3193,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3005,6 +3210,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3021,6 +3227,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3037,6 +3244,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3053,6 +3261,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3069,6 +3278,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3085,6 +3295,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3101,8 +3312,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ジェロニモ"
+  "jp": "ジェロニモ",
+  "notes": ""
  },
  {
   "id": "185",
@@ -3118,6 +3329,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3134,8 +3346,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ケンダマン"
+  "jp": "ケンダマン",
+  "notes": ""
  },
  {
   "id": "187",
@@ -3151,6 +3363,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3167,6 +3380,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3183,6 +3397,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3199,6 +3414,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3215,6 +3431,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3231,6 +3448,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3247,6 +3465,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3263,6 +3482,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3279,8 +3499,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "サンシャイン"
+  "jp": "サンシャイン",
+  "notes": ""
  },
  {
   "id": "196",
@@ -3296,6 +3516,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3312,8 +3533,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ロビンマスク"
+  "jp": "ロビンマスク",
+  "notes": ""
  },
  {
   "id": "198",
@@ -3329,6 +3550,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3345,8 +3567,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "アシュラマン"
+  "jp": "アシュラマン",
+  "notes": ""
  },
  {
   "id": "200",
@@ -3362,8 +3584,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "テリーマン"
+  "jp": "テリーマン",
+  "notes": ""
  },
  {
   "id": "201",
@@ -3379,6 +3601,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3395,6 +3618,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3411,6 +3635,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3427,6 +3652,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3443,6 +3669,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3462,8 +3689,8 @@
    "lb": "jpg"
   },
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": ""
  },
  {
   "id": "207",
@@ -3479,6 +3706,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3495,6 +3723,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3511,8 +3740,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ミキサー大帝"
+  "jp": "ミキサー大帝",
+  "notes": ""
  },
  {
   "id": "210",
@@ -3528,8 +3757,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンソルジャー"
+  "jp": "キン肉マンソルジャー",
+  "notes": ""
  },
  {
   "id": "211",
@@ -3545,8 +3774,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "バッファローマン"
+  "jp": "バッファローマン",
+  "notes": ""
  },
  {
   "id": "212",
@@ -3562,6 +3791,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3578,8 +3808,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンビッグボディ"
+  "jp": "キン肉マンビッグボディ",
+  "notes": ""
  },
  {
   "id": "214",
@@ -3595,8 +3825,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ロビンマスク"
+  "jp": "ロビンマスク",
+  "notes": ""
  },
  {
   "id": "215",
@@ -3612,8 +3842,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "バイクマン"
+  "jp": "バイクマン",
+  "notes": ""
  },
  {
   "id": "216",
@@ -3629,8 +3859,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ザ・ニンジャ"
+  "jp": "ザ・ニンジャ",
+  "notes": ""
  },
  {
   "id": "217",
@@ -3646,8 +3876,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンマリポーサ"
+  "jp": "キン肉マンマリポーサ",
+  "notes": ""
  },
  {
   "id": "218",
@@ -3663,8 +3893,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ウォーズマン"
+  "jp": "ウォーズマン",
+  "notes": ""
  },
  {
   "id": "219",
@@ -3680,8 +3910,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンゼブラ"
+  "jp": "キン肉マンゼブラ",
+  "notes": ""
  },
  {
   "id": "220",
@@ -3697,6 +3927,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3713,6 +3944,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3729,8 +3961,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マン"
+  "jp": "キン肉マン",
+  "notes": ""
  },
  {
   "id": "223",
@@ -3746,6 +3978,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3762,6 +3995,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3778,8 +4012,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ロビンマスク"
+  "jp": "ロビンマスク",
+  "notes": ""
  },
  {
   "id": "226",
@@ -3795,8 +4029,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "A fan favourite",
-  "jp": "ラーメンマン"
+  "jp": "ラーメンマン",
+  "notes": "A fan favourite"
  },
  {
   "id": "227",
@@ -3812,8 +4046,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マングレート"
+  "jp": "キン肉マングレート",
+  "notes": ""
  },
  {
   "id": "228",
@@ -3829,8 +4063,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ザ・ニンジャ"
+  "jp": "ザ・ニンジャ",
+  "notes": ""
  },
  {
   "id": "229",
@@ -3846,8 +4080,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "キン肉マンスーパー・フェニックス"
+  "jp": "キン肉マンスーパー・フェニックス",
+  "notes": ""
  },
  {
   "id": "230",
@@ -3863,8 +4097,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ケンダマン"
+  "jp": "ケンダマン",
+  "notes": ""
  },
  {
   "id": "231",
@@ -3880,8 +4114,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ウォーズマン"
+  "jp": "ウォーズマン",
+  "notes": ""
  },
  {
   "id": "232",
@@ -3897,8 +4131,8 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "",
-  "jp": "ターボマン"
+  "jp": "ターボマン",
+  "notes": ""
  },
  {
   "id": "233",
@@ -3914,6 +4148,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": ""
  },
  {
@@ -3930,6 +4165,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": "Wrestling Ring exclusive — not on the poster"
  },
  {
@@ -3946,6 +4182,7 @@
   ],
   "img": {},
   "cls": {},
+  "jp": "",
   "notes": "Wrestling Ring exclusive — not on the poster"
  },
  {
@@ -3962,7 +4199,7 @@
   ],
   "img": {},
   "cls": {},
-  "notes": "Famous non-poster figure",
-  "jp": "サタンクロス"
+  "jp": "サタンクロス",
+  "notes": "Famous non-poster figure"
  }
 ]
