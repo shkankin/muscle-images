@@ -83,7 +83,16 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Neon Orange": "B",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Green": "C",
+   "Salmon": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "サンシャイン",
   "notes": ""
  },
@@ -104,7 +113,13 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Dark Blue": "B",
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Neon Orange": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -125,7 +140,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Light Blue": "C"
+  },
   "jp": "プラネットマン",
   "notes": ""
  },
@@ -146,7 +167,13 @@
    "Purple"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Red": "C",
+   "Purple": "C",
+   "Green": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -167,7 +194,13 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Dark Blue": "B",
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Neon Orange": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -188,7 +221,13 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Dark Blue": "B",
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Neon Orange": "C"
+  },
   "jp": "シシカバ・ブー",
   "notes": ""
  },
@@ -209,7 +248,13 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C",
+   "Neon Orange": "C",
+   "Magenta": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -232,7 +277,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
