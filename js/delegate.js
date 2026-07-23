@@ -54,14 +54,20 @@ export function bootDelegation() {
       t.src = t.src.replace(/\.jpg(\?|$)/, '.JPG$1');
       return;
     }
-    // 2. An alternate shot — tiles and poster cells prefer the single flesh
-    //    front photo and fall back to the group shot when it isn't up yet.
+    // 2. Walk the alternate-shot chain. data-imgalt is a '|'-separated list,
+    //    tried in order: poster cells ask for the full-size cutout first,
+    //    then the 't' thumbnail, then the group shot. Each step also gets
+    //    the uppercase-.JPG retry above.
     const alt = t.getAttribute('data-imgalt');
-    if (alt && !t.dataset.altTried) {
-      t.dataset.altTried = '1';
-      t.dataset.retried = '';
-      t.src = alt;
-      return;
+    if (alt) {
+      const chain = alt.split('|').filter(Boolean);
+      const i = Number(t.dataset.altIndex || 0);
+      if (i < chain.length) {
+        t.dataset.altIndex = String(i + 1);
+        t.dataset.retried = '';
+        t.src = chain[i];
+        return;
+      }
     }
     // 3. Nothing available — hide so the keshi silhouette shows through.
     t.style.display = 'none';

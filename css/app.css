@@ -705,7 +705,7 @@ img { max-width: 100%; }
 
 /* A cell: black card, cream keyline and soft glow, like the printed sheet. */
 .pcell {
-  position: relative; aspect-ratio: 100 / 110; background: #050505;
+  position: relative; aspect-ratio: 100 / 110; background: #000;
   border: 2px solid #F2E6C8; border-radius: 4px; padding: 0; overflow: hidden;
   box-shadow: 0 0 7px rgba(255, 236, 190, .28);
   display: block; transition: box-shadow .15s, transform .1s, background .15s;
@@ -718,8 +718,12 @@ img { max-width: 100%; }
 }
 /* The photo fills the cell; the number and star sit above it. */
 /* Single-figure portraits (600x600) — fill the cell above the star. */
-.pc-art { position: absolute; inset: 10% 3% 20% 3%; display: grid; place-items: center; }
-.pc-art img { width: 100%; height: 100%; object-fit: contain; }
+/* Figure art. Once the flesh-front shots are cut out on solid black they
+   blend straight into the cell (both #000), so the figure reads as printed
+   on the sheet rather than as a pasted-in photo. `contain` keeps the whole
+   sculpt in frame; the box is inset to leave room for the number and star. */
+.pc-art { position: absolute; inset: 9% 3% 19% 3%; display: grid; place-items: center; }
+.pc-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .pc-keshi { width: 50%; color: #241F1B; display: block; }
 .pc-keshi svg { width: 100%; height: auto; }
 /* The star: hollow until owned, then filled in — the point of the sheet. */

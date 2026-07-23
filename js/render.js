@@ -190,10 +190,13 @@ function posterCell(f) {
   const owned = isOwned(f.id);
   const want = isWanted(f.id);
   // The original poster shows one figure per box, so use the flesh FRONT
-  // shot (MUSCLEFigure###ft.jpg) rather than the group photo. If a figure
-  // has no front shot yet, fall back to the group shot, then the keshi.
-  const thumb = imgFor(f, 'Flesh', true);
-  const fallback = imgFor(f, 'group', true);
+  // shot rather than the group photo. Order matters here: the FULL-SIZE
+  // front shot is tried first because that is where background-removed
+  // cutouts live (solid black, so they blend into the cell). If that isn't
+  // up yet we fall back to the 't' thumbnail, then the group shot, then the
+  // keshi silhouette — so the poster fills in as files are uploaded.
+  const thumb = imgFor(f, 'Flesh', false);
+  const fallback = [imgFor(f, 'Flesh', true), imgFor(f, 'group', true)].filter(Boolean).join('|');
   const ptc = topClass(f);
   return `<button class="pcell ${owned ? 'owned' : ''} ${want ? 'want' : ''}" data-action="open-fig" data-id="${esc(f.id)}"
       aria-label="Figure ${f.num}${(f.aka || f.name) ? ' ' + displayName(f) : ''}${owned ? ', owned' : ', not owned'}">
