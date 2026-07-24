@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="poster">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>M.U.S.C.L.E. — Collector Poster</title>
+<meta name="description" content="The M.U.S.C.L.E. collector poster — all 236 figures. Fill in the star as you catch each one.">
+<!-- Standalone: this page is a design surface for the poster view. It reads
+     the same catalog and the same collection store as the app, but is kept
+     separate so it can be iterated on without destabilising the shipped UI. -->
+<style>
+  :root {
+    --field: #633159;   /* the sheet — solid, no ramp */
+
+    --cell: #060607;         /* cell interior — near black   */
+    --keyline: #F2D98A;      /* gold/cream cell border       */
+    --keyline-hi: #FFF0BC;
+    --star-empty: #FFFFFF;   /* solid white until collected  */
+    --star-full: #FFD700;    /* logo yellow once owned       */
+
+    --cls-a: #FFD700;
+    --cls-b: #06B0FE;
+    --cls-c: #B9C4D6;
+
+    --ink: #FFFFFF;
+    --font: 'Barlow Semi Condensed', system-ui, -apple-system, sans-serif;
+    --disp: 'Anton', 'Arial Narrow', sans-serif;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+  /* html carries the foot colour so overscroll never flashes white; body is
+     the gradient and must be allowed to grow to the full document height. */
+  html { scroll-behavior: smooth; background: var(--field); }
+  body {
+    font-family: var(--font);
+    color: var(--ink);
+    position: relative;
+    min-height: 100vh;
+    background: var(--field);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* The field. A dedicated layer sized to the whole document rather than a
+     background on <body> — a body background maps to the viewport or to a
+     collapsed box depending on layout, which made the ramp repeat per
+     screenful. This paints once, top to bottom, however tall the sheet is. */
+  /* The field. A flat layer sized to the whole document. */
+  .field {
+    position: absolute; top: 0; left: 0; right: 0; height: 100%;
+    z-index: 0; pointer-events: none;
+    background: var(--field);
+  }
+
+  /* ── Starburst field ──────────────────────────────────────────────
+     The red and green bursts sit BEHIND the grid, scattered down the
+     page at irregular intervals, bleeding off the edges — as on the
+     printed sheet. Positions are generated once per load from a seeded
+     shuffle so the layout is varied but never lands on top of the logo. */
+  .bursts { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .burst { position: absolute; opacity: .55; filter: saturate(1.1); }
+  .burst img { width: 100%; height: auto; display: block; }
+
+  .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 10px 40px; overflow-x: clip; }
+
+  /* ── Masthead ─────────────────────────────────────────────────────
+     The wordmark sits centred at the very top, oversized, overlapping
+     the first rows of the grid exactly like the original. */
+  /* Overflow visible so the burst may bleed past the wrap padding. */
+  /* Backdrop: the wordmark sits BEHIND the grid so the first rows of
+     cells overlap it, exactly as they do on the printed sheet. */
+  .masthead {
+    position: relative; z-index: 1; padding: 10px 0 2px;
+    text-align: center; overflow: visible;
+    margin-bottom: 0;
+  }
+  .masthead img {
+    width: min(112vw, 1000px); height: auto; display: block;
+    /* The wordmark overhangs its flow box so the first rows of cells sit
+       over its lower points, as on the printed sheet. */
+    margin: 0 auto clamp(-34px, -4.5vw, -12px); max-width: none;
+    /* The wrap has 10px side padding; pull out of it so the burst's points
+       can bleed past the screen edge the way they do on the sheet. */
+    position: relative; left: 50%; transform: translateX(-50%);
+    /* White halo, not a black shadow — the wordmark sits on a dark violet
+       field and reads as printed-on rather than floating. */
+    filter: drop-shadow(0 0 14px rgba(255,255,255,.75))
+            drop-shadow(0 0 34px rgba(255,255,255,.45));
+  }
+
+  /* ── Progress ─────────────────────────────────────────────────── */
+  /* Counter pinned to the foot of the screen — it is a running tally, not a
+     masthead element, and the top of the sheet belongs to the wordmark. */
+  .progress {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: calc(12px + var(--safe-b)); z-index: 30;
+    width: min(92%, 440px);
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 16px; border-radius: 999px;
+    background: rgba(10, 6, 18, .78); border: 1px solid rgba(242, 217, 138, .45);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 22px rgba(0,0,0,.5);
+  }
+  .progress b { font-family: var(--disp); font-size: 20px; color: var(--star-full); letter-spacing: .5px; }
+  .progress .bar { flex: 1; height: 7px; border-radius: 99px; background: rgba(0,0,0,.5); overflow: hidden; }
+  .progress .bar i { display: block; height: 100%; background: linear-gradient(90deg, #FF6600, var(--star-full)); border-radius: 99px; transition: width .4s; }
+  .progress small { font-size: 12px; color: #E8DCC8; font-weight: 600; white-space: nowrap; }
+
+  /* ── The grid ─────────────────────────────────────────────────── */
+  .sheet { position: relative; z-index: 5; }
+  @media (min-width: 1001px) {
+    /* The wordmark stops growing at 1000px but the grid keeps widening, so
+       nudge the sheet up to keep the first row tucked under it. */
+    .sheet { margin-top: -56px; }
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: clamp(5px, 1.1vw, 11px);
+  }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(8, 1fr); } }
+  @media (max-width: 720px)  { .grid { grid-template-columns: repeat(6, 1fr); } }
+  @media (max-width: 460px)  { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+  /* A cell: black card, gold keyline, figure floating inside, number at the
+     lower left, star at the lower right, class chip at the upper right. */
+  .cell {
+    position: relative; aspect-ratio: 1 / 1.12;
+    background: var(--cell);
+    border: 2px solid var(--keyline);
+    border-radius: 5px;
+    padding: 0; overflow: hidden; display: block; width: 100%;
+    box-shadow: 0 2px 7px rgba(0,0,0,.5), inset 0 0 0 1px rgba(0,0,0,.6);
+    cursor: pointer;
+    transition: transform .12s, box-shadow .15s, border-color .15s;
+  }
+  .cell:hover { border-color: var(--keyline-hi); box-shadow: 0 3px 12px rgba(0,0,0,.6), 0 0 0 2px rgba(255,215,0,.25); }
+  .cell:active { transform: scale(.96); }
+  .cell.owned { border-color: var(--star-full); box-shadow: 0 0 11px rgba(255,215,0,.45), inset 0 0 22px rgba(255,215,0,.09); }
+
+  .fig { position: absolute; inset: 6% 5% 20% 5%; display: grid; place-items: center; }
+  .fig img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .fig .ghost {
+    width: 46%; aspect-ratio: 1/1.6; border-radius: 40% 40% 34% 34%;
+    background: repeating-linear-gradient(135deg, #1B1B20 0 5px, #141418 5px 10px);
+    opacity: .85;
+  }
+
+  .num {
+    position: absolute; left: 4px; bottom: 2px; z-index: 3;
+    font-family: var(--disp); font-size: clamp(9px, 1.9vw, 13px);
+    line-height: 1.25; color: #FFFFFF; letter-spacing: .5px;
+    text-shadow: 0 1px 2px #000;
+  }
+  .star {
+    position: absolute; right: 4px; bottom: 3px; z-index: 3;
+    width: clamp(11px, 2.4vw, 16px); height: clamp(11px, 2.4vw, 16px);
+    line-height: 0;
+  }
+  .star svg { width: 100%; height: 100%; display: block; }
+  .star svg path { fill: var(--star-empty); transition: fill .18s; }
+  .cell.owned .star svg path { fill: var(--star-full); }
+  .cell.owned .star { filter: drop-shadow(0 0 4px rgba(255,215,0,.85)); }
+
+  .cls {
+    position: absolute; top: 3px; right: 3px; z-index: 3;
+    min-width: 14px; height: 14px; padding: 0 3px; border-radius: 3px;
+    font-family: var(--disp); font-size: 10px; line-height: 14px;
+    text-align: center; color: #10131A; letter-spacing: .5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.6);
+  }
+  .cls.a { background: var(--cls-a); }
+  .cls.b { background: var(--cls-b); }
+  .cls.c { background: var(--cls-c); }
+
+  /* ── Footer link to the list view ─────────────────────────────── */
+  .footer { position: relative; z-index: 3; text-align: center; padding: 30px 10px calc(96px + var(--safe-b)); }
+  .listlink {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 13px 24px; border-radius: 999px;
+    font-family: var(--disp); font-size: 16px; letter-spacing: .6px;
+    color: #14100D; background: linear-gradient(180deg, #FFE961, #FFD700 60%, #C9A800);
+    border: 2px solid #8A6E00; text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,.4);
+  }
+  .listlink:active { transform: scale(.97); }
+  .credit { margin-top: 14px; font-size: 12px; color: rgba(255,255,255,.72); font-weight: 600; }
+
+  /* ── List view ────────────────────────────────────────────────── */
+  .listview { display: none; position: relative; z-index: 2; }
+  body.list-mode .sheet { display: none; }
+  /* Rows sit on a busy field; fade the art under them so the detail
+     boxes stay legible. */
+  body.list-mode .bursts { opacity: .45; }
+  body.list-mode .listview { display: block; }
+
+  .lrow {
+    display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    padding: 8px 11px; margin-bottom: 5px; border-radius: 10px;
+    background: rgba(6, 4, 10, .88); border: 1px solid rgba(242, 217, 138, .28);
+    color: var(--ink); cursor: pointer;
+  }
+  .lrow:hover { border-color: var(--keyline); }
+  .lrow.owned { border-color: var(--star-full); background: rgba(32, 24, 3, .9); }
+  .lnum { font-family: var(--disp); font-size: 17px; min-width: 38px; text-align: center; color: #D8C79B; }
+  .lthumb { width: 42px; height: 42px; flex: none; border-radius: 6px; background: #050508; border: 1px solid rgba(242,217,138,.35); display: grid; place-items: center; overflow: hidden; }
+  .lthumb img { width: 100%; height: 100%; object-fit: contain; }
+  .lmain { flex: 1; min-width: 0; }
+  .lname { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lname .dim { color: #A99C8A; font-weight: 500; font-style: italic; }
+  .ljp { font-size: 12px; color: #C9B8E0; margin-top: 1px;
+         font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif; }
+  /* Colours shown inline on the row, like the editor list. */
+  .ldots { display: flex; gap: 3px; flex-wrap: wrap; max-width: 128px; justify-content: flex-end; }
+  .ldots i { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.45); position: relative; }
+  .ldots i.have { box-shadow: inset 0 0 0 1px rgba(0,0,0,.45), 0 0 0 2px var(--star-full); }
+  .lstar { width: 17px; flex: none; line-height: 0; }
+  .lstar svg path { fill: rgba(255,255,255,.32); }
+  .lrow.owned .lstar svg path { fill: var(--star-full); }
+
+  .toolbar { position: relative; z-index: 3; display: flex; gap: 8px; margin: 0 0 12px; }
+  .toolbar input {
+    flex: 1; padding: 11px 14px; border-radius: 10px; font-family: var(--font); font-size: 15px;
+    background: rgba(8,6,12,.6); border: 1px solid rgba(242,217,138,.35); color: var(--ink); outline: none;
+  }
+  .toolbar input:focus { border-color: var(--keyline); }
+  .toolbar input::placeholder { color: rgba(255,255,255,.45); }
+
+  .loading { text-align: center; padding: 60px 20px; color: rgba(255,255,255,.8); font-weight: 600; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+  <div class="field" id="field" aria-hidden="true"></div>
+  <div class="bursts" id="bursts" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header class="masthead">
+      <img src="https://raw.githubusercontent.com/shkankin/muscle-images/main/images/muscle_burst.png"
+           alt="M.U.S.C.L.E. — Millions of Unusual Small Creatures Lurking Everywhere!">
+    </header>
+
+    <div class="progress" id="progress">
+      <b id="pCount">0</b>
+      <div class="bar"><i id="pBar" style="width:0%"></i></div>
+      <small id="pText">of 236</small>
+    </div>
+
+    <main class="sheet" id="sheet">
+      <div class="loading" id="loading">Loading the set…</div>
+      <div class="grid" id="grid"></div>
+    </main>
+
+    <section class="listview" id="listview">
+      <div class="toolbar"><input type="search" id="search" placeholder="Search # or name…" aria-label="Search figures"></div>
+      <div id="rows"></div>
+    </section>
+
+    <footer class="footer">
+      <a class="listlink" id="toggleView" href="#">▤ Switch to list view</a>
+      <div class="credit">All 236 figures · tap a cell to fill in its star</div>
+    </footer>
+  </div>
+
+<script>
+const REPO = 'shkankin/muscle-images';
+const RAW  = `https://raw.githubusercontent.com/${REPO}/main`;
+const IMG  = `${RAW}/images`;
+const TOTAL = 236;
+// Same storage key as the app, so ownership is shared between the two.
+const COLL_KEY = 'muscle-collection';
+
+const COLORS = [
+  {key:'Flesh',hex:'#E5A594'},{key:'Dark Blue',hex:'#31508C'},{key:'Light Blue',hex:'#6FA9C9'},
+  {key:'Red',hex:'#C6413A'},{key:'Green',hex:'#5E9E62'},{key:'Neon Orange',hex:'#F2571E'},
+  {key:'Salmon',hex:'#DD8A78'},{key:'Purple',hex:'#7C5AA6'},{key:'Magenta',hex:'#B54A83'},
+];
+const HEX = Object.fromEntries(COLORS.map(c => [c.key, c.hex]));
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// The poster's five-point star: solid white, filling yellow once owned.
+const STAR = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.4l2.95 6.1 6.65.92-4.85 4.63 1.2 6.6L12 17.5 6.05 20.65l1.2-6.6L2.4 9.42l6.65-.92z"/></svg>`;
+
+let figs = [];
+let coll = {};
+
+// ── collection storage (shared with the app) ───────────────────────
+function loadColl() {
+  try { coll = JSON.parse(localStorage.getItem(COLL_KEY) || '{}') || {}; }
+  catch { coll = {}; }
+}
+function saveColl() {
+  try { localStorage.setItem(COLL_KEY, JSON.stringify(coll)); } catch {}
+}
+const isOwned = id => !!(coll[id] && (coll[id].owned || (coll[id].colors || []).length));
+const ownedColors = id => (coll[id] && coll[id].colors) || [];
+
+function toggleOwned(id) {
+  const e = coll[id] || (coll[id] = { owned:false, colors:[], want:false, want_colors:[], notes:'' });
+  if (isOwned(id)) { e.owned = false; e.colors = []; }
+  else { e.owned = true; if (!e.colors.length) e.colors = ['Flesh']; }
+  e.ts = Date.now();
+  saveColl();
+}
+
+// The rarest class recorded for a sculpt, across all its colours.
+const RANK = { C:0, B:1, A:2 };
+function topClass(f) {
+  const cls = f.cls || {};
+  let best = null;
+  for (const v of Object.values(cls)) {
+    if (!(v in RANK)) continue;
+    if (!best || RANK[v] > RANK[best]) best = v;
+  }
+  return best;
+}
+
+// ── catalog ────────────────────────────────────────────────────────
+async function loadFigs() {
+  try {
+    const r = await fetch(`${RAW}/figures.json`, { cache: 'no-cache' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const rows = await r.json();
+    figs = rows.map(f => ({
+      id: f.id || String(f.num).padStart(3,'0'),
+      num: f.num != null ? Number(f.num) : Number(f.id),
+      name: f.name || '', aka: f.aka || '', jp: f.jp || '',
+      colors: Array.isArray(f.colors) && f.colors.length ? f.colors : ['Flesh'],
+      cls: (f.cls && typeof f.cls === 'object') ? f.cls : {},
+    })).sort((a,b) => a.num - b.num);
+  } catch (e) {
+    // Fall back to numbered placeholders so the sheet still renders.
+    figs = Array.from({length: TOTAL}, (_, i) => ({
+      id: String(i+1).padStart(3,'0'), num: i+1, name:'', aka:'', jp:'', colors:['Flesh'], cls:{}
+    }));
+  }
+}
+
+// US release name leads; the original name is the fallback.
+const displayName = f => f.aka || f.name || `Figure ${f.num}`;
+
+// ── render: the poster ─────────────────────────────────────────────
+function cell(f) {
+  const owned = isOwned(f.id);
+  const k = topClass(f);
+  const src = `${IMG}/MUSCLEFigure${f.id}f_poster.png`;
+  const alt = `${IMG}/MUSCLEFigure${f.id}ft.jpg`;
+  return `<button class="cell ${owned ? 'owned' : ''}" data-id="${esc(f.id)}"
+      aria-pressed="${owned}" aria-label="No. ${f.num} ${esc(displayName(f))}${owned ? ', collected' : ''}">
+    <span class="fig">
+      <img src="${src}" alt="" loading="lazy" decoding="async" data-alt="${alt}"
+           onerror="this.dataset.tried?this.replaceWith(Object.assign(document.createElement('span'),{className:'ghost'})):(this.dataset.tried=1,this.src=this.dataset.alt)">
+    </span>
+    ${k ? `<span class="cls ${k.toLowerCase()}">${k}</span>` : ''}
+    <span class="num">${f.num}</span>
+    <span class="star">${STAR}</span>
+  </button>`;
+}
+
+function renderGrid() {
+  $('loading').style.display = 'none';
+  $('grid').innerHTML = figs.map(cell).join('');
+  renderProgress();
+}
+
+function renderProgress() {
+  const n = figs.filter(f => isOwned(f.id)).length;
+  $('pCount').textContent = n;
+  $('pBar').style.width = (n / TOTAL * 100).toFixed(1) + '%';
+  $('pText').textContent = `of ${TOTAL} · ${TOTAL - n} to find`;
+}
+
+// ── render: the list ───────────────────────────────────────────────
+function listRow(f) {
+  const owned = isOwned(f.id);
+  const mine = ownedColors(f.id);
+  const dots = f.colors.map(c =>
+    `<i class="${mine.includes(c) ? 'have' : ''}" style="background:${HEX[c] || '#888'}" title="${esc(c)}${mine.includes(c) ? ' — owned' : ''}"></i>`
+  ).join('');
+  return `<button class="lrow ${owned ? 'owned' : ''}" data-id="${esc(f.id)}">
+    <span class="lnum">${f.num}</span>
+    <span class="lthumb"><img src="${IMG}/MUSCLEFigure${f.id}ft.jpg" alt="" loading="lazy" decoding="async"
+      onerror="this.style.display='none'"></span>
+    <span class="lmain">
+      <span class="lname">${f.name || f.aka ? esc(displayName(f)) : '<span class="dim">unnamed</span>'}</span>
+      ${f.jp ? `<span class="ljp" lang="ja">${esc(f.jp)}</span>` : ''}
+    </span>
+    <span class="ldots">${dots}</span>
+    <span class="lstar">${STAR}</span>
+  </button>`;
+}
+
+function renderList() {
+  const q = ($('search').value || '').trim().toLowerCase();
+  const rows = figs.filter(f => !q ||
+    String(f.num).includes(q) ||
+    f.name.toLowerCase().includes(q) ||
+    f.aka.toLowerCase().includes(q));
+  $('rows').innerHTML = rows.length ? rows.map(listRow).join('')
+    : `<div class="loading">No matches.</div>`;
+}
+
+// ── starburst field ────────────────────────────────────────────────
+// Scattered down the page at irregular intervals, behind the grid, bleeding
+// off alternate edges. Kept clear of the masthead so the logo stays clean.
+function renderBursts() {
+  const h = document.body.scrollHeight || 3000;
+  const W = window.innerWidth || 430;
+  const out = [];
+  const imgs = ['red_star.png', 'green_star.png'];
+
+  // One HERO burst: a red star large enough to fill roughly half the screen,
+  // sitting low on the sheet the way the original poster does. Drawn first so
+  // the smaller scatter layers over it.
+  const heroSize = Math.round(W * 1.45);
+  out.push(`<div class="burst hero" style="
+      top:${Math.round(h * 0.62)}px;
+      left:${Math.round(-heroSize * 0.05)}px;
+      width:${heroSize}px;
+      opacity:.5;
+      transform:rotate(-12deg);">
+    <img src="${IMG}/red_star.png" alt="">
+  </div>`);
+
+  // Scatter: irregular intervals, alternating edges, bleeding off-screen.
+  let y = 620;
+  let i = 0;
+  while (y < h - 200) {
+    // Leave room around the hero so it stays readable as one shape.
+    const nearHero = Math.abs(y - h * 0.62) < heroSize * 0.42;
+    if (!nearHero) {
+      const src = imgs[i % 2];
+      const left = i % 2 === 0;
+      const size = 190 + ((i * 67) % 220);
+      // Bleed ~5% of the burst's own width past the edge.
+    const off  = -(size * (0.05 + ((i * 31) % 6) / 100));
+      out.push(`<div class="burst" style="
+          top:${Math.round(y)}px;
+          ${left ? 'left' : 'right'}:${Math.round(off)}px;
+          width:${size}px;
+          opacity:${(0.38 + ((i * 13) % 22) / 100).toFixed(2)};
+          transform:rotate(${((i * 47) % 60) - 30}deg);">
+        <img src="${IMG}/${src}" alt="">
+      </div>`);
+    }
+    y += 420 + ((i * 97) % 320);
+    i++;
+  }
+
+  $('bursts').innerHTML = out.join('');
+  $('bursts').style.height = h + 'px';
+  $('field').style.height = h + 'px';
+}
+
+// ── events ─────────────────────────────────────────────────────────
+document.addEventListener('click', e => {
+  const c = e.target.closest('.cell, .lrow');
+  if (c) {
+    toggleOwned(c.dataset.id);
+    const owned = isOwned(c.dataset.id);
+    c.classList.toggle('owned', owned);
+    if (c.classList.contains('cell')) c.setAttribute('aria-pressed', String(owned));
+    renderProgress();
+    try { navigator.vibrate?.(8); } catch {}
+    return;
+  }
+  const t = e.target.closest('#toggleView');
+  if (t) {
+    e.preventDefault();
+    const list = document.body.classList.toggle('list-mode');
+    t.textContent = list ? '▦ Back to the poster' : '▤ Switch to list view';
+    if (list) renderList();
+    else { renderGrid(); requestAnimationFrame(renderBursts); }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+$('search').addEventListener('input', renderList);
+
+// Keep the burst field covering the page as it reflows.
+let rt;
+window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(renderBursts, 200); });
+
+(async function init() {
+  loadColl();
+  await loadFigs();
+  renderGrid();
+  // Wait a frame so scrollHeight reflects the rendered grid.
+  requestAnimationFrame(() => setTimeout(renderBursts, 60));
+})();
+</script>
+</body>
+</html>
