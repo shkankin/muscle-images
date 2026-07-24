@@ -11,7 +11,7 @@
 // level data-action delegate for all events (CSP-safe, no inline JS).
 // ════════════════════════════════════════════════════════════════════
 
-export const APP_VERSION = '1.3';
+export const APP_VERSION = '1.4';
 
 // § REPO / NETWORK ─────────────────────────────────────────────────
 // The catalog (figures.json) and figure images live in the same GitHub
@@ -48,6 +48,15 @@ export const IMG_SUFFIX = {
 // Build a URL. kind: 'group' | a color name | 'back'. thumb → the 't' variant.
 // Always returns a URL (we don't know ahead of time what's uploaded); the
 // <img> hides itself if the file 404s, revealing the keshi behind it.
+// The poster view has its own dedicated set: flesh front, background removed,
+// on solid black, as PNG — MUSCLEFigure###f_poster.png. These exist for all
+// 236, so the poster asks for them directly instead of walking a fallback
+// chain (which was causing cells to resolve at different times and flash).
+export function posterImgFor(fig) {
+  if (!fig) return '';
+  return `${IMG}/MUSCLEFigure${fig.id}f_poster.png`;
+}
+
 export function imgFor(fig, kind = 'group', thumb = false) {
   if (!fig) return '';
   const suffix = kind === 'group' ? '' : kind === 'back' ? 'fb' : (IMG_SUFFIX[kind] || '');
@@ -223,8 +232,9 @@ export const S = {
   syncStatus: 'idle',  // idle | syncing | ok | err
   syncTs: null,
 
-  tab: 'set',          // set | search | collection | stats
-  setView: (v => v === 'poster' ? 'poster' : 'grid')(store.get('muscle-setview')),  // grid | poster
+  tab: 'set',          // set | collection
+  setView: (v => ['poster','list'].includes(v) ? v : 'grid')(store.get('muscle-setview')),  // grid | poster | list
+  mineView: (v => v === 'poster' ? 'poster' : 'list')(store.get('muscle-mineview')), // poster | list
   screen: 'main',      // main | figure
   activeFig: null,     // id when screen === 'figure'
   detailTab: 'own',        // detail: 'own' | 'want' — which variant list is showing

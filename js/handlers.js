@@ -41,6 +41,7 @@ onClick('recover', () => location.reload());
 // ── Filters / search ───────────────────────────────────────────────
 onClick('filter-own', el => { S.filterOwn = el.dataset.val; render(); });
 onClick('set-view', el => { S.setView = el.dataset.view; store.set('muscle-setview', S.setView); render(); });
+onClick('mine-view', el => { S.mineView = el.dataset.view; store.set('muscle-mineview', S.mineView); render(); });
 onClick('filter-color', el => { S.filterColor = el.dataset.val; render(); });
 onClick('filter-class', el => { S.filterClass = el.dataset.val; render(); });
 onClick('search-clear', () => { S.search = ''; render(); focusSearch(); });

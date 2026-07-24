@@ -32,17 +32,23 @@
 
 /* Arena — sumi ink night, hinomaru red, belt gold, keshi salmon */
 [data-theme="arena"] {
-  --bg: #14100D; --bg2: #1E1813; --bg3: #2A211A; --bd: #3A2E24;
-  --acc: #E23B2E; --acc-d: #A81E1E;
-  --gold: #E3A93C; --gold-d: #B9822A; --gold-l: #F4CD73;
+  /* The 1980s packaging palette: cosmic deep blue field, bright yellow
+     wordmark with an orange extrusion, starburst red accents, and the
+     bright blue that dominated the card art. Replaces the earlier sumi-ink
+     brown scheme — the line was known for loud colour, not muted earth. */
+  --bg: #0A1128; --bg2: #101B3D; --bg3: #17264F; --bd: #24386B;
+  --acc: #E60000; --acc-d: #A80000;
+  --blue: #06B0FE; --blue-d: #0487C4; --blue-l: #5FCBFF;
+  --gold: #FFD700; --gold-d: #C9A800; --gold-l: #FFE961;
+  --orange: #FF6600; --orange-d: #C24E00;
   --flesh: #E7A794; --flesh-d: #C77E6A;
-  --fg: #F7EEE6; --fg2: #C6B3A6; --fg3: #8A7869;
+  --fg: #F4F8FF; --fg2: #B7C6E4; --fg3: #7B8DB5;
   --owned: var(--gold);
-  --scrim: rgba(8, 5, 3, .68);
-  --tile-bg: #241C16;
-  --ghost-line: rgba(231, 167, 148, .16);
-  --plate-1: #F4CD73; --plate-2: #D79E33; --plate-3: #A9781F;
-  --leather: #241713;
+  --scrim: rgba(4, 7, 20, .72);
+  --tile-bg: #14224A;
+  --ghost-line: rgba(6, 176, 254, .18);
+  --plate-1: #FFE961; --plate-2: #FFD700; --plate-3: #C9A800;
+  --leather: #0A1128;
   color-scheme: dark;
 }
 
@@ -856,3 +862,11 @@ img { max-width: 100%; }
 }
 .detail-jp:not(:has(.jp-kana)) .jp-kana,
 .jp-kana:first-child { margin-left: 0; padding-left: 0; border-left: 0; }
+
+/* Stats now live inside the Settings sheet rather than a bottom-bar tab —
+   they are reference material, not a primary destination. Tighten the
+   spacing so the embedded section doesn't read as a separate screen. */
+.settings-stats { margin: 0 0 6px; }
+.settings-stats .sec-h { font-size: 13px; margin: 14px 0 8px; }
+.settings-stats .belt { margin: 0 0 12px; }
+.settings-stats > *:first-child { margin-top: 0; }

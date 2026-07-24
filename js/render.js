@@ -8,7 +8,7 @@
 
 import {
   S, ICO, icon, esc, APP_VERSION, THEMES, COLORS, COLOR_HEX,
-  PACKS, CONDITIONS, RARITY, SET_TOTAL, BASE_COLOR, imgFor, shotsFor,
+  PACKS, CONDITIONS, RARITY, SET_TOTAL, BASE_COLOR, imgFor, posterImgFor, shotsFor,
   CLASSES, CLASS_ORDER, classOf,
 } from './state.js';
 import {
@@ -91,18 +91,16 @@ function tabbar() {
     </button>`;
   return `<nav class="tabbar">
     ${tab('set', ICO.grid, 'The Set')}
-    ${tab('search', ICO.search, 'Browse')}
     ${tab('collection', ICO.owned, 'Mine')}
-    ${tab('stats', ICO.trophy, 'Stats')}
   </nav>`;
 }
 
 function tabBody() {
   switch (S.tab) {
     case 'set':        return viewSet();
-    case 'search':     return viewSearch();
+    case 'search':     return viewSet();        // retired tab → The Set
     case 'collection': return viewCollection();
-    case 'stats':      return viewStats();
+    case 'stats':      return viewCollection();  // retired tab → Mine
     default:           return viewSet();
   }
 }
@@ -161,12 +159,27 @@ function facets() {
 // § SET (poster wall — the signature) ───────────────────────────────
 function viewSet() {
   const figs = visibleFigs();
+  // Search lives here now that Browse is gone — it was never a separate
+  // destination, just the same set filtered by a text box.
+  const search = `<div class="searchbar">
+      <span class="search-ico">${icon(ICO.search, 18)}</span>
+      <input class="search-input" type="search" inputmode="search" placeholder="Search # or name…"
+             value="${esc(S.search)}" data-action="search-input" aria-label="Search figures">
+      ${S.search ? `<button class="search-clear" data-action="search-clear" aria-label="Clear">${icon(ICO.x, 16)}</button>` : ''}
+    </div>`;
   const modes = `<div class="viewtog" role="group" aria-label="View mode">
     <button class="vt ${S.setView !== 'poster' ? 'on' : ''}" data-action="set-view" data-view="grid">Grid</button>
     <button class="vt ${S.setView === 'poster' ? 'on' : ''}" data-action="set-view" data-view="poster">Poster</button>
+    <button class="vt ${S.setView === 'list' ? 'on' : ''}" data-action="set-view" data-view="list">List</button>
   </div>`;
-  if (S.setView === 'poster') return belt() + facets() + modes + posterSheet(figs);
-  return belt() + facets() + modes + posterWall(figs, 'The set poster');
+  const count = S.search ? `<div class="result-count">${figs.length} figure${figs.length === 1 ? '' : 's'}</div>` : '';
+
+  if (S.setView === 'poster') return belt() + search + facets() + modes + count + posterSheet(figs);
+  if (S.setView === 'list') {
+    return belt() + search + facets() + modes + count +
+      (figs.length ? `<div class="rows">${figs.map(row).join('')}</div>` : emptyState('No matches'));
+  }
+  return belt() + search + facets() + modes + count + posterWall(figs, 'The set poster');
 }
 
 // ── The collection poster ───────────────────────────────────────────
@@ -189,13 +202,10 @@ function posterSheet(figs) {
 function posterCell(f) {
   const owned = isOwned(f.id);
   const want = isWanted(f.id);
-  // The original poster shows one figure per box, so use the flesh FRONT
-  // shot rather than the group photo. Order matters here: the FULL-SIZE
-  // front shot is tried first because that is where background-removed
-  // cutouts live (solid black, so they blend into the cell). If that isn't
-  // up yet we fall back to the 't' thumbnail, then the group shot, then the
-  // keshi silhouette — so the poster fills in as files are uploaded.
-  const thumb = imgFor(f, 'Flesh', false);
+  // Dedicated poster art: background removed, on solid black, all 236 present.
+  // Falls back to the flesh thumbnail then the group shot only if one is ever
+  // missing; normally the first request succeeds, so cells paint together.
+  const thumb = posterImgFor(f);
   const fallback = [imgFor(f, 'Flesh', true), imgFor(f, 'group', true)].filter(Boolean).join('|');
   const ptc = topClass(f);
   return `<button class="pcell ${owned ? 'owned' : ''} ${want ? 'want' : ''}" data-action="open-fig" data-id="${esc(f.id)}"
@@ -288,14 +298,27 @@ function viewCollection() {
   const owned = S.figs.filter(f => isOwned(f.id));
   const want = S.figs.filter(f => isWanted(f.id));
   const st = stats();
-  let out = `<section class="mine-head">
+  const head = `<section class="mine-head">
       <div class="mine-stat"><b>${st.ownedSculpts}</b><span>owned</span></div>
       <div class="mine-stat"><b>${st.colorVariants}</b><span>color variants</span></div>
       <div class="mine-stat"><b>${st.wanted}</b><span>wanted</span></div>
     </section>`;
-  if (!owned.length && !want.length) {
-    return out + emptyState('Nothing tracked yet — tap a figure in The Set to mark it owned.');
+  const modes = `<div class="viewtog" role="group" aria-label="View mode">
+    <button class="vt ${S.mineView === 'poster' ? 'on' : ''}" data-action="mine-view" data-view="poster">Poster</button>
+    <button class="vt ${S.mineView !== 'poster' ? 'on' : ''}" data-action="mine-view" data-view="list">List</button>
+  </div>`;
+
+  // Poster mode shows the WHOLE set with your stars filled in — the point of
+  // the original sheet was seeing the gaps, so hiding unowned figures would
+  // defeat it.
+  if (S.mineView === 'poster') {
+    return head + modes + posterSheet(S.figs);
   }
+
+  if (!owned.length && !want.length) {
+    return head + modes + emptyState('Nothing tracked yet — tap a figure in The Set to mark it owned.');
+  }
+  let out = head + modes;
   if (owned.length) {
     out += `<h2 class="sec-h">Owned <span>${owned.length}</span></h2>`;
     out += `<div class="poster">${owned.map(tile).join('')}</div>`;
@@ -598,6 +621,9 @@ function sheetSettings() {
   return sheetHead('Settings') + `<div class="sheet-scroll">
     <div class="field-label">Theme</div>
     <div class="theme-row">${Object.entries(THEMES).map(([k, t]) => themeBtn(k, t)).join('')}</div>
+
+    <div class="field-label">Collection stats</div>
+    <div class="settings-stats">${viewStats()}</div>
 
     <div class="field-label">Data</div>
     <button class="list-btn" data-action="open-sheet" data-sheet="data">${icon(ICO.export, 18)} Back up or restore collection</button>
