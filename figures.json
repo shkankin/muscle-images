@@ -1265,7 +1265,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1282,7 +1286,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -1299,7 +1309,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1316,7 +1332,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1333,7 +1355,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1350,7 +1378,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1367,7 +1399,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1384,7 +1422,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1401,7 +1443,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1413,12 +1462,19 @@
   "num": 61,
   "slug": "061",
   "name": "Kinnikuman (A)",
-  "aka": "",
+  "aka": "Kinniku-race, Mohawk, Two open hands",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1435,7 +1491,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Dark Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -1452,7 +1512,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1469,7 +1533,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -1486,7 +1556,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1503,7 +1577,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1520,7 +1598,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1537,7 +1621,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1554,7 +1645,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1571,7 +1666,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -1928,7 +2029,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -1945,7 +2052,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -1962,7 +2074,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -1979,7 +2097,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Light Blue",
+   "Dark Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -1996,7 +2118,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -2013,7 +2141,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -2030,7 +2164,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -2047,7 +2186,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -2064,7 +2207,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -2081,7 +2228,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
