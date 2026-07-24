@@ -676,7 +676,15 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C"
+  },
   "jp": "アシュラマン",
   "notes": ""
  },
@@ -814,7 +822,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Light Blue": "A",
+   "Salmon": "B",
+   "Neon Orange": "B",
+   "Purple": "B",
+   "Magenta": "B",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -861,7 +878,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Light Blue": "A",
+   "Salmon": "B",
+   "Purple": "B",
+   "Magenta": "B",
+   "Neon Orange": "C",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "ウォーズマン",
   "notes": ""
  },
@@ -906,7 +932,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C",
+   "Green": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -929,7 +961,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C"
+  },
   "jp": "タイルマン",
   "notes": ""
  },
@@ -1068,7 +1108,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "ベンキマン",
   "notes": ""
  },
@@ -1166,7 +1214,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Light Blue": "B",
+   "Neon Orange": "C",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "ティーパックマン",
   "notes": ""
  },
@@ -1272,7 +1328,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "C",
+   "Flesh": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -1295,7 +1357,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Light Blue": "B",
+   "Neon Orange": "C",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "ジャンクマン",
   "notes": ""
  },
@@ -1318,7 +1388,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -1341,7 +1419,15 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Dark Blue": "B",
+   "Light Blue": "B",
+   "Salmon": "B",
+   "Red": "C",
+   "Flesh": "C",
+   "Green": "C"
+  },
   "jp": "スカイマン",
   "notes": ""
  },
@@ -1364,7 +1450,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Magenta": "B",
+   "Dark Blue": "B",
+   "Green": "C",
+   "Salmon": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "ネプチューン・キング",
   "notes": ""
  },
@@ -1385,7 +1479,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Light Blue": "C"
+  },
   "jp": "キン肉マングレート",
   "notes": ""
  },
@@ -1408,7 +1508,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Light Blue": "B",
+   "Dark Blue": "B",
+   "Salmon": "B",
+   "Flesh": "C",
+   "Neon Orange": "C",
+   "Magenta": "C"
+  },
   "jp": "バッファローマン",
   "notes": ""
  },
@@ -1429,7 +1537,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Light Blue": "C"
+  },
   "jp": "ウォーズマン",
   "notes": ""
  },
@@ -1453,7 +1567,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Light Blue": "A",
+   "Salmon": "A",
+   "Magenta": "B",
+   "Neon Orange": "B",
+   "Red": "C",
+   "Flesh": "C",
+   "Green": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -1740,10 +1863,20 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Green",
+   "Light Blue",
+   "Red"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -1757,10 +1890,22 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Salmon",
+   "Red",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Dark Blue": "A",
+   "Salmon": "B",
+   "Light Blue": "B",
+   "Neon Orange": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "アブドーラ",
   "notes": ""
  },
@@ -1791,10 +1936,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Green",
+   "Neon Orange",
+   "Magenta",
+   "Red",
+   "Dark Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Salmon": "A",
+   "Green": "B",
+   "Magenta": "B",
+   "Neon Orange": "B",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2038,7 +2199,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Salmon": "B",
+   "Purple": "C",
+   "Neon Orange": "C",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2193,7 +2362,13 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Magenta": "C",
+   "Neon Orange": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2302,10 +2477,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Magenta",
+   "Red",
+   "Purple",
+   "Neon Orange",
+   "Dark Blue",
+   "Light Blue",
+   "Salmon"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Magenta": "A",
+   "Purple": "B",
+   "Flesh": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Salmon": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2811,10 +3002,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Red",
+   "Neon Orange",
+   "Magenta",
+   "Purple",
+   "Salmon"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Light Blue": "B",
+   "Magenta": "B",
+   "Salmon": "B",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Neon Orange": "C",
+   "Purple": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2828,10 +3035,24 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Red",
+   "Salmon",
+   "Purple",
+   "Magenta",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "C",
+   "Neon Orange": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Salmon": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "スクリュー・キッド",
   "notes": ""
  },
@@ -2845,10 +3066,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta",
+   "Purple",
+   "Salmon",
+   "Red"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Purple": "B",
+   "Light Blue": "B",
+   "Magenta": "B",
+   "Neon Orange": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Salmon": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2862,10 +3099,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta",
+   "Purple",
+   "Salmon",
+   "Red"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Magenta": "A",
+   "Purple": "B",
+   "Neon Orange": "C",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Salmon": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2879,10 +3132,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta",
+   "Purple",
+   "Salmon",
+   "Red"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Magenta": "A",
+   "Purple": "B",
+   "Salmon": "C",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C",
+   "Neon Orange": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2896,10 +3165,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta",
+   "Purple",
+   "Salmon",
+   "Red"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Magenta": "A",
+   "Purple": "B",
+   "Salmon": "C",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C",
+   "Neon Orange": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2913,10 +3198,20 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Red",
+   "Salmon",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Neon Orange": "C",
+   "Purple": "C",
+   "Salmon": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2930,10 +3225,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Green",
+   "Red",
+   "Salmon",
+   "Purple"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Salmon": "B",
+   "Red": "B",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Green": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -2947,10 +3258,26 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta",
+   "Purple",
+   "Salmon",
+   "Red"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Purple": "B",
+   "Magenta": "B",
+   "Neon Orange": "C",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Salmon": "C"
+  },
   "jp": "",
   "notes": ""
  },
