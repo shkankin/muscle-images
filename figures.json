@@ -598,7 +598,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -615,7 +621,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -632,7 +644,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -649,7 +667,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -661,12 +685,18 @@
   "num": 28,
   "slug": "028",
   "name": "John Stimboard",
-  "aka": "",
+  "aka": "Jean Steamboard",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -683,7 +713,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Green",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -700,7 +736,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -717,7 +759,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -729,12 +778,16 @@
   "num": 32,
   "slug": "032",
   "name": "Kington",
-  "aka": "",
+  "aka": "King Ton",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -751,7 +804,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -763,12 +823,18 @@
   "num": 34,
   "slug": "034",
   "name": "Nokogira Man",
-  "aka": "",
+  "aka": "Sawkillerman",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -785,7 +851,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -802,7 +875,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -819,7 +899,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Salmon",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -836,7 +920,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -853,7 +943,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -870,7 +966,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -887,7 +989,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -899,12 +1007,19 @@
   "num": 42,
   "slug": "042",
   "name": "Goremuman",
-  "aka": "",
+  "aka": "Golemman",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -921,7 +1036,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -933,12 +1054,18 @@
   "num": 44,
   "slug": "044",
   "name": "Benkiman (A)",
-  "aka": "",
+  "aka": "Urinalman (A)",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -955,7 +1082,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -972,7 +1104,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -983,8 +1122,8 @@
   "id": "047",
   "num": 47,
   "slug": "047",
-  "name": "Iinchou",
-  "aka": "",
+  "name": "Linchou",
+  "aka": "The Chairman",
   "origin": "",
   "poster": true,
   "rarity": "common",
@@ -1018,7 +1157,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -1060,13 +1205,19 @@
   "id": "050",
   "num": 50,
   "slug": "050",
-  "name": "The Hawkman (A)",
-  "aka": "",
+  "name": "Hawkman (A)",
+  "aka": "The Hawkman (A)",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
