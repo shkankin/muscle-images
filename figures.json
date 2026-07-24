@@ -4057,7 +4057,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4074,7 +4078,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Dark Blue",
+   "Purple",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4091,7 +4099,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4108,7 +4120,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4125,7 +4142,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4136,13 +4157,19 @@
   "id": "206",
   "num": 206,
   "slug": "206",
-  "name": "Kinnikuman",
+  "name": "Kinnikuman (I)",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
    "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta",
    "Light Blue"
   ],
   "img": {
@@ -4162,7 +4189,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Neon Orange",
+   "Salmon",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4179,7 +4211,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4190,13 +4228,18 @@
   "id": "209",
   "num": 209,
   "slug": "209",
-  "name": "Mixer Taite",
+  "name": "Mixer Taite (B)",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4207,13 +4250,19 @@
   "id": "210",
   "num": 210,
   "slug": "210",
-  "name": "Kinnikuman Soldier",
+  "name": "Kinnikuman Soldier (B)",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Neon Orange",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4224,13 +4273,17 @@
   "id": "211",
   "num": 211,
   "slug": "211",
-  "name": "Buffaloman",
+  "name": "Buffaloman (E)",
   "aka": "",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4247,7 +4300,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4264,7 +4322,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4281,7 +4345,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4298,7 +4367,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4315,7 +4388,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4332,7 +4409,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4349,7 +4432,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4366,7 +4454,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4383,7 +4477,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -4564,13 +4664,19 @@
   "id": "231",
   "num": 231,
   "slug": "231",
-  "name": "Warsman",
+  "name": "Warsman (D)",
   "aka": "",
   "origin": "Robot Chojin with the deadly claw",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Green",
+   "Salmon",
+   "Dark Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -4587,7 +4693,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -4604,7 +4716,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -4638,7 +4754,8 @@
   "poster": false,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green"
   ],
   "img": {},
   "cls": {},
