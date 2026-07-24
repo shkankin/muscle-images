@@ -2591,7 +2591,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -2608,7 +2612,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Dark Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -2625,7 +2633,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -2642,7 +2656,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -2659,7 +2679,14 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -2676,7 +2703,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -2693,7 +2726,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -2710,7 +2747,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue"
   ],
   "img": {},
   "cls": {},
@@ -2727,7 +2768,11 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue"
   ],
   "img": {},
   "cls": {},
@@ -2744,7 +2789,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -3271,7 +3321,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -3282,13 +3338,17 @@
   "id": "162",
   "num": 162,
   "slug": "162",
-  "name": "The Announcer",
-  "aka": "",
+  "name": "Nakano-San",
+  "aka": "The Announcer",
   "origin": "",
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Neon Orange",
+   "Light Blue"
   ],
   "img": {},
   "cls": {},
@@ -3305,7 +3365,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -3322,7 +3388,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -3339,7 +3411,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -3356,7 +3434,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -3373,7 +3457,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Neon Orange",
+   "Magenta"
   ],
   "img": {},
   "cls": {},
@@ -3390,7 +3480,13 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -3407,7 +3503,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
@@ -3424,7 +3525,12 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
   "cls": {},
