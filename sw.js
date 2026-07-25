@@ -2,15 +2,15 @@
 // M.U.S.C.L.E. Collector — sw.js  (service worker)
 // ────────────────────────────────────────────────────────────────────
 // Offline-first PWA cache. Bump CACHE on every release (keep it in step
-// with APP_VERSION in js/state.js). Strategy:
+// with APP_VERSION in js/app.js). Strategy:
 //   • app shell + local assets → cache-first, populated on install
 //   • figure images (raw.githubusercontent) → stale-while-revalidate
-//   • fonts (googleapis/gstatic) → stale-while-revalidate
+//   • figure art (raw.githubusercontent) → stale-while-revalidate
 //   • navigations → serve cached index.html (SPA shell)
 // A new worker signals clients (UPDATE_AVAILABLE) so the app can refresh.
 // ════════════════════════════════════════════════════════════════════
 
-const VERSION = '1.4';
+const VERSION = '2.0';
 const CACHE = `muscle-v${VERSION}`;
 const RUNTIME = `muscle-runtime-v${VERSION}`;
 
@@ -28,14 +28,12 @@ const CORE = [
   'fonts/barlow-600.woff2',
   'fonts/barlow-700.woff2',
   'js/app.js',
-  'js/state.js',
-  'js/data.js',
-  'js/render.js',
-  'js/handlers.js',
-  'js/delegate.js',
-  'js/idb-store.js',
   'images/icon-192.png',
   'images/icon-512.png',
+  // Poster furniture — the sheet looks broken without these offline.
+  'images/muscle_burst.png',
+  'images/red_star.png',
+  'images/green_star.png',
 ];
 
 self.addEventListener('install', event => {
