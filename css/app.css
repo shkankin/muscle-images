@@ -12,6 +12,7 @@
     --cls-a: #FFD700; --cls-b: #06B0FE; --cls-c: #B9C4D6;
     --ink: #FFFFFF; --ink-2: #E2D3DC; --ink-3: #B49BAA;
     --topbar: rgba(46, 22, 42, .95);
+    --detail-bg: #2A1426;
     --panel: rgba(10, 5, 14, .88);
     --panel-2: rgba(18, 10, 24, .97);
     --line: rgba(242, 217, 138, .30);
@@ -39,7 +40,7 @@
      for the poster's plum. */
   body.v-list .count,
   body.v-list .empty { color: #06283D; font-weight: 700; }
-  body.v-list { --topbar: rgba(4, 52, 82, .95); }
+  body.v-list { --topbar: rgba(4, 52, 82, .95); --detail-bg: #04263C; }
 
   /* Starbursts sit behind the grid; poster view only. */
   .bursts { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
@@ -124,6 +125,18 @@
           padding: 8px 11px; margin-bottom: 5px; border-radius: 10px; cursor: pointer;
           background: rgba(6,4,10,.88); border: 1px solid rgba(242,217,138,.28); color: var(--ink); }
   .lrow.owned { border-color: var(--star-full); background: rgba(32,24,3,.9); }
+  /* Coming back from the detail screen — especially after swiping through a
+     few figures — you land somewhere you never scrolled to. This points out
+     where you were, then fades. */
+  .lrow.just-seen { animation: seen 2.6s ease-out 1; }
+  @keyframes seen {
+      0% { box-shadow: 0 0 0 3px #FFD700, 0 0 18px rgba(255,215,0,.75); }
+     55% { box-shadow: 0 0 0 3px #FFD700, 0 0 18px rgba(255,215,0,.75); }
+    100% { box-shadow: 0 0 0 0 rgba(255,215,0,0), 0 0 0 rgba(255,215,0,0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lrow.just-seen { animation: none; box-shadow: 0 0 0 3px #FFD700; }
+  }
   /* Figure number in the logo's drop-shadow orange; kana in its yellow.
      Both sit on the near-black row, so they carry plenty of contrast. */
   .lnum { font-family: var(--disp); font-size: 17px; min-width: 38px; text-align: center;
@@ -172,7 +185,10 @@
   .cbar .tr i { display: block; height: 100%; border-radius: 99px; }
   .cbar .vl { width: 52px; text-align: right; font-size: 12px; color: var(--ink-3); font-weight: 600; flex: none; }
 
-  .detail { position: fixed; inset: 0; z-index: 60; overflow-y: auto; background: var(--field);
+  .detail { position: fixed; inset: 0; z-index: 60; overflow-y: auto;
+            background: var(--detail-bg);
+            overscroll-behavior: contain;   /* don't chain scroll to the page */
+            -webkit-overflow-scrolling: touch;
             padding-bottom: calc(30px + var(--safe-b)); }
   /* The detail screen inherits --field, so its header has to follow suit —
      a fixed plum bar looked wrong sitting on the blue list. */
@@ -185,7 +201,8 @@
   .dtitle { flex: 1; min-width: 0; }
   .dtitle b { display: block; font-family: var(--disp); font-size: 19px; letter-spacing: .4px;
               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dtitle span { font-size: 12px; color: var(--ink-3); }
+  .dtitle span { font-size: 12.5px; color: #D8C2D2; }
+  body.v-list .dtitle span { color: #BBD6EA; }
   .dbody { max-width: 620px; margin: 0 auto; padding: 12px; }
   .hero { position: relative; background: #000; border: 2px solid var(--keyline); border-radius: 12px;
           aspect-ratio: 1/1; display: grid; place-items: center; overflow: hidden; }
@@ -195,7 +212,8 @@
   .dmeta { margin: 12px 0 4px; }
   .dmeta .orig { font-size: 15px; color: var(--ink-2); font-weight: 600; }
   .dmeta .kana { font-family: var(--jp); font-size: 16px; color: #E6C9F2; margin-top: 3px; }
-  .dmeta .note { font-size: 14px; color: var(--ink-3); margin-top: 8px; line-height: 1.45; }
+  .dmeta .note { font-size: 14px; color: #C9B4C2; margin-top: 8px; line-height: 1.45; }
+  body.v-list .dmeta .note { color: #A9C6DC; }
   .film { display: flex; gap: 7px; overflow-x: auto; padding: 10px 0 4px; }
   .film button { flex: none; width: 46px; height: 46px; border-radius: 8px; cursor: pointer;
                  background: #000; border: 1px solid var(--line); overflow: hidden; padding: 0; }
@@ -204,20 +222,25 @@
   .tabs { display: flex; gap: 6px; margin: 16px 0 10px; }
   .tabs button { flex: 1; padding: 10px; border-radius: 10px; cursor: pointer;
                  font-family: var(--disp); font-size: 14px; letter-spacing: .6px;
-                 background: var(--panel); border: 1px solid var(--line); color: var(--ink-2); }
+                 background: rgba(0,0,0,.42); border: 1px solid var(--line); color: #F2E7EE; }
   .tabs button.on { background: var(--star-full); border-color: var(--star-full); color: #1A1206; }
   .chips { display: flex; flex-wrap: wrap; gap: 7px; }
   .chip { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 99px;
-          cursor: pointer; font-size: 13px; font-weight: 600; background: var(--panel);
-          border: 1px solid var(--line); color: var(--ink-2); }
+          cursor: pointer; font-size: 13px; font-weight: 600; background: rgba(0,0,0,.42);
+          border: 1px solid var(--line); color: #F2E7EE; }
   .chip i { width: 13px; height: 13px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.45); }
   .chip.on { border-color: var(--star-full); background: rgba(255,215,0,.16); color: #fff; }
   .chip.dim { opacity: .5; }
   .chip .k { font-family: var(--disp); font-size: 11px; padding: 0 4px; border-radius: 3px; color: #10131A; }
-  .hint { font-size: 12px; color: var(--ink-3); margin-top: 9px; line-height: 1.4; }
+  .hint { font-size: 12.5px; color: #C0A9BA; margin-top: 9px; line-height: 1.4; }
+  body.v-list .hint { color: #9FBED6; }
 
-  .scrim { position: fixed; inset: 0; z-index: 70; background: rgba(6,3,10,.72); backdrop-filter: blur(3px); }
-  .sheet-p { position: fixed; left: 0; right: 0; bottom: 0; z-index: 71; max-height: 82vh; overflow-y: auto;
+  /* Set by lockScroll(); the inline top offset keeps the visual position. */
+  body.locked { overflow: hidden; }
+  .scrim { position: fixed; inset: 0; z-index: 70; background: rgba(6,3,10,.72);
+           backdrop-filter: blur(3px); overscroll-behavior: contain; }
+  .sheet-p { position: fixed; left: 0; right: 0; bottom: 0; z-index: 71; max-height: 82vh;
+             overflow-y: auto; overscroll-behavior: contain;
              background: var(--panel-2); border-top: 2px solid var(--keyline);
              border-radius: 18px 18px 0 0; padding: 16px 16px calc(22px + var(--safe-b)); }
   .grab { width: 40px; height: 4px; border-radius: 99px; background: rgba(255,255,255,.3); margin: 0 auto 14px; }

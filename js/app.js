@@ -5,13 +5,12 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.2';
+const APP_VERSION='2.3';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
 const TOTAL=236;
 const COLL_KEY='muscle-collection';
-const VIEW_KEY='muscle-view';
 
 const COLORS=[
   {k:'Flesh',hex:'#E5A594',s:'f'},{k:'Dark Blue',hex:'#31508C',s:'db'},
@@ -206,26 +205,65 @@ function shotsFor(f){
   }
   return out;
 }
-let returnScroll=0;
+// Overlay scroll lock. Pinning the body with position:fixed is the only
+// approach that reliably stops scroll chaining on iOS Safari and Android
+// Chrome both; the saved offset makes the restore exact rather than
+// approximate, which is what the old rAF-and-hope restore was doing.
+let lockY=0, lockDepth=0;
+function lockScroll(){
+  if(lockDepth++) return;
+  lockY=window.scrollY||document.documentElement.scrollTop||0;
+  const b=document.body;
+  b.style.position='fixed'; b.style.top=(-lockY)+'px';
+  b.style.left='0'; b.style.right='0'; b.style.width='100%';
+  b.classList.add('locked');
+}
+function unlockScroll(){
+  if(lockDepth===0) return;
+  if(--lockDepth) return;
+  const b=document.body;
+  b.style.position=''; b.style.top=''; b.style.left='';
+  b.style.right=''; b.style.width='';
+  b.classList.remove('locked');
+  window.scrollTo(0,lockY);
+}
+
+// The figure you were last looking at, so the list can point it out when you
+// come back — after swiping through a few, you land somewhere you never
+// scrolled to, and finding your place again is otherwise guesswork.
+let lastSeenId=null;
+
 function openDetail(id){
   activeFig=null;
   for(let i=0;i<figs.length;i++) if(figs[i].id===id) activeFig=figs[i];
   if(!activeFig) return;
-  // Remember where the list was so closing puts you back on the same row
-  // instead of dumping you at the top of 236 figures.
-  returnScroll=window.scrollY||document.documentElement.scrollTop||0;
+  lockScroll();
   detailColor='Flesh';detailTab='own';
   history.pushState({detail:id},'');
   renderDetail();
 }
 function closeDetail(){
+  lastSeenId=activeFig?activeFig.id:null;
   activeFig=null;
   const d=$('detail'); if(d) d.remove();
+  unlockScroll();
   renderCurrent();
-  // Restore after the re-render has laid out, or the scroll lands nowhere.
-  const y=returnScroll;
-  requestAnimationFrame(function(){ window.scrollTo(0,y);
-    setTimeout(function(){ window.scrollTo(0,y); },60); });
+  revealLastSeen();
+}
+
+// Mark the row you just came from and, if it's off-screen (because you swiped
+// to a different figure), bring it into view.
+function revealLastSeen(){
+  if(!lastSeenId||view!=='list') return;
+  const row=document.querySelector('.lrow[data-row="'+lastSeenId+'"]');
+  if(!row) return;
+  row.classList.add('just-seen');
+  const r=row.getBoundingClientRect();
+  const pad=90;
+  if(r.top<pad||r.bottom>window.innerHeight-pad){
+    row.scrollIntoView({block:'center',behavior:'auto'});
+  }
+  setTimeout(function(){ row.classList.remove('just-seen'); },2600);
 }
 
 // Step to the next/previous figure. Follows the list you came from, so a
@@ -288,8 +326,13 @@ function renderDetail(){
   document.body.insertAdjacentHTML('beforeend',html);
 }
 
-function closeSheet(){const s=$('scrim');if(s)s.remove();const p=$('sheetp');if(p)p.remove();}
+function closeSheet(){
+  const s=$('scrim');if(s)s.remove();
+  const p=$('sheetp');if(p)p.remove();
+  unlockScroll();
+}
 function openFilters(){
+  lockScroll();
   function seg(name,val,label){
     return '<button class="chip '+(filters[name]===val?'on':'')+'" data-f="'+name+'" data-v="'+esc(val)+'">'+esc(label)+'</button>';
   }
@@ -307,6 +350,7 @@ function openFilters(){
     +'<button class="btn gold" id="doneF">Done</button></div>');
 }
 function openSettings(){
+  lockScroll();
   document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div>'
     +'<div class="sheet-p" id="sheetp"><div class="grab"></div><div class="sh-h">Settings</div>'
     +'<div class="fld">Your collection</div>'
@@ -365,8 +409,7 @@ function setView(v,skipStore){
   if(v==='stats') renderStats();
   if(v==='poster'){renderPoster();requestAnimationFrame(function(){setTimeout(renderBursts,50);});}
   else renderBursts();   // clears the burst layer AND the stretched field
-  if(!skipStore){try{localStorage.setItem(VIEW_KEY,v);}catch(e){}}
-  window.scrollTo({top:0});
+  window.scrollTo(0,0);
 }
 function renderCurrent(){
   if(view==='poster'){renderPoster();renderBursts();}
@@ -406,6 +449,7 @@ document.addEventListener('click',function(e){
   if(e.target.closest('#gear')){openSettings();return;}
   const fx=e.target.closest('[data-f]');
   if(fx){filters[fx.dataset.f]=fx.dataset.v;closeSheet();openFilters();renderList();return;}
+  
   if(e.target.closest('#clearF')){filters={own:'all',color:'',cls:''};closeSheet();renderList();return;}
   if(e.target.closest('#doneF')||e.target.closest('#doneS')||e.target.id==='scrim'){closeSheet();return;}
 
@@ -501,10 +545,9 @@ if('serviceWorker' in navigator){
 (async function init(){
   loadColl();
   await loadFigs();
-  // Desktop opens on the list: the poster is a phone-shaped artifact, and a
-  // wide screen shows far more per screenful in list form.
-  let start=null;
-  try{start=localStorage.getItem(VIEW_KEY);}catch(e){}
-  if(!start) start=window.innerWidth>=1001?'list':'poster';
-  setView(start,true);
+  // The poster is the app's face, so it always opens there. Desktop is the
+  // one exception: the poster is a phone-shaped artifact and a wide screen
+  // carries far more in list form. Deliberately NOT remembered — a single tap
+  // on List used to pin the app to it permanently.
+  setView(window.innerWidth>=1001?'list':'poster',true);
 })();
