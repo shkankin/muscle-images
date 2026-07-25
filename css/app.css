@@ -11,6 +11,7 @@
     --star-full: #FFD700;
     --cls-a: #FFD700; --cls-b: #06B0FE; --cls-c: #B9C4D6;
     --ink: #FFFFFF; --ink-2: #E2D3DC; --ink-3: #B49BAA;
+    --topbar: rgba(46, 22, 42, .95);
     --panel: rgba(10, 5, 14, .88);
     --panel-2: rgba(18, 10, 24, .97);
     --line: rgba(242, 217, 138, .30);
@@ -34,6 +35,11 @@
   /* The list is its own room — brand blue rather than the poster's plum.
      Both body and the field layer read --field, so one override does it. */
   body.v-list { --field: #06B0FE; }
+  /* Anything sitting on the open blue needs dark ink, not the mauve tuned
+     for the poster's plum. */
+  body.v-list .count,
+  body.v-list .empty { color: #06283D; font-weight: 700; }
+  body.v-list { --topbar: rgba(4, 52, 82, .95); }
 
   /* Starbursts sit behind the grid; poster view only. */
   .bursts { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
@@ -118,7 +124,11 @@
           padding: 8px 11px; margin-bottom: 5px; border-radius: 10px; cursor: pointer;
           background: rgba(6,4,10,.88); border: 1px solid rgba(242,217,138,.28); color: var(--ink); }
   .lrow.owned { border-color: var(--star-full); background: rgba(32,24,3,.9); }
-  .lnum { font-family: var(--disp); font-size: 17px; min-width: 38px; text-align: center; color: #D8C79B; }
+  /* Figure number in the logo's drop-shadow orange; kana in its yellow.
+     Both sit on the near-black row, so they carry plenty of contrast. */
+  .lnum { font-family: var(--disp); font-size: 17px; min-width: 38px; text-align: center;
+          color: #FF6600; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+  .lrow.owned .lnum { color: #FFD700; }
   .lthumb { width: 42px; height: 42px; flex: none; border-radius: 6px; background: #050508;
             border: 1px solid rgba(242,217,138,.35); display: grid; place-items: center; overflow: hidden; }
   .lthumb img { width: 100%; height: 100%; object-fit: contain; }
@@ -126,7 +136,7 @@
   .lname { font-weight: 700; font-size: 15px; line-height: 1.25;
            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .lname .dim { color: #A99C8A; font-weight: 500; font-style: italic; }
-  .ljp { display: block; font-size: 12.5px; color: #CBB6E8; margin-top: 2px;
+  .ljp { display: block; font-size: 12.5px; color: #FFD700; margin-top: 2px;
          font-family: var(--jp); line-height: 1.3;
          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ldots {
@@ -164,8 +174,11 @@
 
   .detail { position: fixed; inset: 0; z-index: 60; overflow-y: auto; background: var(--field);
             padding-bottom: calc(30px + var(--safe-b)); }
+  /* The detail screen inherits --field, so its header has to follow suit —
+     a fixed plum bar looked wrong sitting on the blue list. */
   .dtop { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; gap: 10px;
-          padding: calc(10px + var(--safe-t)) 12px 10px; background: rgba(46,22,42,.95); backdrop-filter: blur(8px); }
+          padding: calc(10px + var(--safe-t)) 12px 10px;
+          background: var(--topbar); backdrop-filter: blur(8px); }
   .back { width: 38px; height: 38px; border-radius: 50%; flex: none; cursor: pointer;
           background: rgba(8,4,12,.6); border: 1px solid var(--line); color: var(--keyline);
           display: grid; place-items: center; }
