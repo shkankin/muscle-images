@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.0';
+const APP_VERSION='2.1';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -200,13 +200,20 @@ function shotsFor(f){
     if(seen[c]||!SUF[c]) continue;
     seen[c]=1;
     out.push({k:c,label:c,url:IMG+'/MUSCLEFigure'+f.id+SUF[c]+'t.jpg'});
+    // The flesh BACK shot sits right beside the flesh front — they are a pair,
+    // and it's the only reverse view that exists for most figures.
+    if(c==='Flesh') out.push({k:'back',label:'Flesh \u2014 back',url:IMG+'/MUSCLEFigure'+f.id+'fbt.jpg'});
   }
   return out;
 }
+let returnScroll=0;
 function openDetail(id){
   activeFig=null;
   for(let i=0;i<figs.length;i++) if(figs[i].id===id) activeFig=figs[i];
   if(!activeFig) return;
+  // Remember where the list was so closing puts you back on the same row
+  // instead of dumping you at the top of 236 figures.
+  returnScroll=window.scrollY||document.documentElement.scrollTop||0;
   detailColor='Flesh';detailTab='own';
   history.pushState({detail:id},'');
   renderDetail();
@@ -215,6 +222,29 @@ function closeDetail(){
   activeFig=null;
   const d=$('detail'); if(d) d.remove();
   renderCurrent();
+  // Restore after the re-render has laid out, or the scroll lands nowhere.
+  const y=returnScroll;
+  requestAnimationFrame(function(){ window.scrollTo(0,y);
+    setTimeout(function(){ window.scrollTo(0,y); },60); });
+}
+
+// Step to the next/previous figure. Follows the list you came from, so a
+// filtered or searched list steps within those results rather than jumping
+// to figures you've filtered out.
+function stepFigure(dir){
+  if(!activeFig) return;
+  let pool=(view==='list')?visible():figs;
+  if(!pool.length) pool=figs;
+  let i=-1;
+  for(let n=0;n<pool.length;n++) if(pool[n].id===activeFig.id) i=n;
+  if(i<0){ pool=figs; for(let n=0;n<pool.length;n++) if(pool[n].id===activeFig.id) i=n; }
+  const j=i+dir;
+  if(j<0||j>=pool.length) return;
+  activeFig=pool[j];
+  detailColor='Flesh';detailTab='own';
+  history.replaceState({detail:activeFig.id},'');
+  renderDetail();
+  const d=$('detail'); if(d) d.scrollTop=0;
 }
 function renderDetail(){
   const f=activeFig; if(!f) return;
@@ -284,9 +314,13 @@ function openSettings(){
     +'<button class="btn" id="impBtn">Import collection</button>'
     +'<input type="file" id="impFile" accept="application/json" hidden>'
     +'<div class="fld">Catalog</div><button class="btn" id="reloadBtn">Reload catalog</button>'
+    +'<div class="fld">Support</div>'
+    +'<a class="btn coffee" href="https://buymeacoffee.com/btring" target="_blank" rel="noopener noreferrer">'
+    +'Buy me a coffee</a>'
     +'<div class="fld">About</div><div style="font-size:13px;color:var(--ink-3);line-height:1.5">'
     +'All 236 figures of the first-generation M.U.S.C.L.E. line. '
-    +'A free, non-commercial fan project. Catalog data from community sources.</div>'
+    +'A free, non-commercial fan project. Catalog data from community sources.'
+    +'<br><span style="opacity:.7">Version '+APP_VERSION+'</span></div>'
     +'<button class="btn gold" id="doneS" style="margin-top:16px">Done</button></div>');
 }
 function toast(msg){
@@ -295,7 +329,12 @@ function toast(msg){
 }
 
 function renderBursts(){
-  if(!document.body.classList.contains('v-poster')){$('bursts').innerHTML='';return;}
+  if(!document.body.classList.contains('v-poster')){
+    $('bursts').innerHTML='';
+    $('bursts').style.height='';
+    $('field').style.height='';   // else the tall poster field pads the page
+    return;
+  }
   const h=document.body.scrollHeight||3000,W=window.innerWidth||430;
   const out=[],imgs=['red_star.png','green_star.png'];
   const heroSize=Math.round(W*1.45);
@@ -325,7 +364,7 @@ function setView(v,skipStore){
   if(v==='list') renderList();
   if(v==='stats') renderStats();
   if(v==='poster'){renderPoster();requestAnimationFrame(function(){setTimeout(renderBursts,50);});}
-  else $('bursts').innerHTML='';
+  else renderBursts();   // clears the burst layer AND the stretched field
   if(!skipStore){try{localStorage.setItem(VIEW_KEY,v);}catch(e){}}
   window.scrollTo({top:0});
 }
@@ -388,6 +427,34 @@ document.addEventListener('change',async function(e){
     }catch(err){toast('Could not read that file');}
   }
 });
+// Swipe across the detail screen to walk the set. Ignored on the filmstrip
+// (it scrolls horizontally itself) and on anything that scrolls sideways.
+let swx=0,swy=0,swt=0,swok=false;
+document.addEventListener('touchstart',function(e){
+  if(!activeFig||!e.changedTouches.length){swok=false;return;}
+  if(e.target.closest('.film')){swok=false;return;}
+  const t=e.changedTouches[0];
+  swx=t.clientX;swy=t.clientY;swt=Date.now();swok=true;
+},{passive:true});
+document.addEventListener('touchend',function(e){
+  if(!swok||!activeFig||!e.changedTouches.length) return;
+  swok=false;
+  const t=e.changedTouches[0];
+  const dx=t.clientX-swx, dy=t.clientY-swy;
+  if(Date.now()-swt>700) return;                 // a slow drag isn't a swipe
+  if(Math.abs(dx)<60) return;                    // too short to be deliberate
+  if(Math.abs(dx)<Math.abs(dy)*1.5) return;      // that was a scroll
+  stepFigure(dx<0?1:-1);
+},{passive:true});
+
+// Arrow keys do the same thing on a desktop.
+document.addEventListener('keydown',function(e){
+  if(!activeFig) return;
+  if(e.key==='ArrowRight') stepFigure(1);
+  else if(e.key==='ArrowLeft') stepFigure(-1);
+  else if(e.key==='Escape') history.back();
+});
+
 $('search').addEventListener('input',renderList);
 window.addEventListener('popstate',function(){if(activeFig) closeDetail();});
 let rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(renderBursts,200);});

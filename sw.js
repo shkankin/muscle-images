@@ -10,7 +10,7 @@
 // A new worker signals clients (UPDATE_AVAILABLE) so the app can refresh.
 // ════════════════════════════════════════════════════════════════════
 
-const VERSION = '2.0';
+const VERSION = '2.1';
 const CACHE = `muscle-v${VERSION}`;
 const RUNTIME = `muscle-runtime-v${VERSION}`;
 
@@ -32,6 +32,7 @@ const CORE = [
   'images/icon-512.png',
   // Poster furniture — the sheet looks broken without these offline.
   'images/muscle_burst.png',
+  'images/muscle_logo.png',
   'images/red_star.png',
   'images/green_star.png',
 ];
