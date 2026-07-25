@@ -224,12 +224,16 @@
                  font-family: var(--disp); font-size: 14px; letter-spacing: .6px;
                  background: rgba(0,0,0,.42); border: 1px solid var(--line); color: #F2E7EE; }
   .tabs button.on { background: var(--star-full); border-color: var(--star-full); color: #1A1206; }
+  .tabs button.want.on { background: var(--cls-b); border-color: var(--cls-b); color: #04121C; }
   .chips { display: flex; flex-wrap: wrap; gap: 7px; }
   .chip { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 99px;
           cursor: pointer; font-size: 13px; font-weight: 600; background: rgba(0,0,0,.42);
           border: 1px solid var(--line); color: #F2E7EE; }
   .chip i { width: 13px; height: 13px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.45); }
   .chip.on { border-color: var(--star-full); background: rgba(255,215,0,.16); color: #fff; }
+  /* In want mode the chips match the WANT tab, so what you're editing is
+     obvious at the point of the tap, not just in the header. */
+  .chips.want-mode .chip.on { border-color: var(--cls-b); background: rgba(6,176,254,.20); }
   .chip.dim { opacity: .5; }
   .chip .k { font-family: var(--disp); font-size: 11px; padding: 0 4px; border-radius: 3px; color: #10131A; }
   .hint { font-size: 12.5px; color: #C0A9BA; margin-top: 9px; line-height: 1.4; }

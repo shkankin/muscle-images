@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.3';
+const APP_VERSION='2.4';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -209,6 +209,15 @@ function shotsFor(f){
 // approach that reliably stops scroll chaining on iOS Safari and Android
 // Chrome both; the saved offset makes the restore exact rather than
 // approximate, which is what the old rAF-and-hope restore was doing.
+// Programmatic jumps must not inherit the page's smooth scrolling — the
+// restore-on-close would otherwise sail down from the top every time.
+function jumpTo(y){
+  const r=document.documentElement, prev=r.style.scrollBehavior;
+  r.style.scrollBehavior='auto';
+  window.scrollTo(0,y);
+  requestAnimationFrame(function(){ r.style.scrollBehavior=prev; });
+}
+
 let lockY=0, lockDepth=0;
 function lockScroll(){
   if(lockDepth++) return;
@@ -225,7 +234,7 @@ function unlockScroll(){
   b.style.position=''; b.style.top=''; b.style.left='';
   b.style.right=''; b.style.width='';
   b.classList.remove('locked');
-  window.scrollTo(0,lockY);
+  jumpTo(lockY);
 }
 
 // The figure you were last looking at, so the list can point it out when you
@@ -238,7 +247,10 @@ function openDetail(id){
   for(let i=0;i<figs.length;i++) if(figs[i].id===id) activeFig=figs[i];
   if(!activeFig) return;
   lockScroll();
-  detailColor='Flesh';detailTab='own';
+  // detailTab persists on purpose. It is a working mode ("I'm marking wants
+  // right now"), and silently snapping it back to OWN meant a tap intended
+  // as a want was recorded as ownership.
+  detailColor='Flesh';
   history.pushState({detail:id},'');
   renderDetail();
 }
@@ -261,7 +273,10 @@ function revealLastSeen(){
   const r=row.getBoundingClientRect();
   const pad=90;
   if(r.top<pad||r.bottom>window.innerHeight-pad){
-    row.scrollIntoView({block:'center',behavior:'auto'});
+    const r2=document.documentElement, prev=r2.style.scrollBehavior;
+    r2.style.scrollBehavior='auto';
+    row.scrollIntoView({block:'center'});
+    requestAnimationFrame(function(){ r2.style.scrollBehavior=prev; });
   }
   setTimeout(function(){ row.classList.remove('just-seen'); },2600);
 }
@@ -279,7 +294,7 @@ function stepFigure(dir){
   const j=i+dir;
   if(j<0||j>=pool.length) return;
   activeFig=pool[j];
-  detailColor='Flesh';detailTab='own';
+  detailColor='Flesh';   // the tab is deliberately NOT reset — see openDetail
   history.replaceState({detail:activeFig.id},'');
   renderDetail();
   const d=$('detail'); if(d) d.scrollTop=0;
@@ -317,8 +332,8 @@ function renderDetail(){
     +(f.notes?'<div class="note">'+esc(f.notes)+'</div>':'')
     +'</div><div class="tabs">'
     +'<button class="'+(detailTab==='own'?'on':'')+'" data-dtab="own">OWN'+(mine.length?' ('+mine.length+')':'')+'</button>'
-    +'<button class="'+(detailTab==='want'?'on':'')+'" data-dtab="want">WANT'+(want.length?' ('+want.length+')':'')+'</button>'
-    +'</div><div class="chips">'+chips+'</div>'
+    +'<button class="want '+(detailTab==='want'?'on':'')+'" data-dtab="want">WANT'+(want.length?' ('+want.length+')':'')+'</button>'
+    +'</div><div class="chips '+(detailTab==='want'?'want-mode':'')+'">'+chips+'</div>'
     +'<div class="hint">'+(detailTab==='own'
       ?'Tap each color you own. Owning any color fills the poster star.'
       :'Tap the colors you are still hunting.')+'</div></div></div>';
@@ -409,7 +424,7 @@ function setView(v,skipStore){
   if(v==='stats') renderStats();
   if(v==='poster'){renderPoster();requestAnimationFrame(function(){setTimeout(renderBursts,50);});}
   else renderBursts();   // clears the burst layer AND the stretched field
-  window.scrollTo(0,0);
+  jumpTo(0);
 }
 function renderCurrent(){
   if(view==='poster'){renderPoster();renderBursts();}
