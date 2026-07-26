@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.4';
+const APP_VERSION='2.5';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -299,11 +299,14 @@ function stepFigure(dir){
   renderDetail();
   const d=$('detail'); if(d) d.scrollTop=0;
 }
-function renderDetail(){
-  const f=activeFig; if(!f) return;
-  const shots=shotsFor(f),mine=ownedColors(f.id),want=wantColors(f.id);
+// ── the parts of the detail screen that change without changing figure ──
+// Switching tab, logging a color and picking a shot all repaint these. They
+// live in their own builders so renderDetail() (full build) and syncDetail()
+// (in-place repaint) can never drift apart.
+function chipsHTML(f){
+  const mine=ownedColors(f.id),want=wantColors(f.id);
   const list=detailTab==='own'?mine:want;
-  const chips=f.colors.map(function(c){
+  return f.colors.map(function(c){
     const on=list.indexOf(c)>=0;
     const alsoOwned=detailTab==='want'&&mine.indexOf(c)>=0;
     const k=(f.cls||{})[c];
@@ -312,8 +315,58 @@ function renderDetail(){
       +(k?'<span class="k" style="background:'+CLS_HEX[k]+'">'+k+'</span>':'')
       +(alsoOwned?'<span style="font-size:11px">\u2713 owned</span>':'')+'</button>';
   }).join('');
-  let active=shots[0];
-  for(let i=0;i<shots.length;i++) if(shots[i].k===detailColor) active=shots[i];
+}
+function hintText(){
+  return detailTab==='own'
+    ?'Tap each color you own. Owning any color fills the poster star.'
+    :'Tap the colors you are still hunting.';
+}
+function tabLabel(which,f){
+  const n=(which==='own'?ownedColors(f.id):wantColors(f.id)).length;
+  return (which==='own'?'OWN':'WANT')+(n?' ('+n+')':'');
+}
+function activeShot(f){
+  const shots=shotsFor(f);
+  let a=shots[0];
+  for(let i=0;i<shots.length;i++) if(shots[i].k===detailColor) a=shots[i];
+  return a;
+}
+
+// Repaint the tab, the chips and the hero WITHOUT rebuilding the overlay.
+// Rebuilding drops #detail and re-inserts it, which resets its scrollTop —
+// so switching to WANT, or logging a colour from halfway down the screen,
+// threw you back to the top. The scroll position is the user's place in the
+// screen and nothing they didn't ask for should move it.
+function syncDetail(){
+  const f=activeFig,d=$('detail');
+  if(!f||!d) return;
+  const shot=activeShot(f);
+  const img=d.querySelector('.hero img');
+  if(img&&img.getAttribute('src')!==shot.url){
+    // A previous shot may have 404'd and been hidden by the fallback
+    // listener; clear that state or the slot stays blank for a good image.
+    img.dataset.upper=''; delete img.dataset.tried; img.style.display='';
+    img.setAttribute('src',shot.url); img.alt=dispName(f);
+  }
+  const hn=d.querySelector('.heroname'); if(hn) hn.textContent=shot.label;
+  const fb=d.querySelectorAll('.film button');
+  for(let i=0;i<fb.length;i++) fb[i].classList.toggle('on',fb[i].dataset.shot===detailColor);
+  ['own','want'].forEach(function(t){
+    const b=d.querySelector('[data-dtab="'+t+'"]');
+    if(!b) return;
+    b.classList.toggle('on',detailTab===t);
+    b.textContent=tabLabel(t,f);
+  });
+  const cw=d.querySelector('.chips');
+  if(cw){cw.className='chips '+(detailTab==='want'?'want-mode':'');cw.innerHTML=chipsHTML(f);}
+  const h=d.querySelector('.hint'); if(h) h.textContent=hintText();
+}
+
+function renderDetail(){
+  const f=activeFig; if(!f) return;
+  const shots=shotsFor(f);
+  const chips=chipsHTML(f);
+  const active=activeShot(f);
   const html='<div class="detail" id="detail"><div class="dtop">'
     +'<button class="back" id="dback" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>'
     +'<div class="dtitle"><b>'+esc(dispName(f))+'</b><span>No. '+f.num
@@ -325,18 +378,21 @@ function renderDetail(){
       return '<button class="'+(s.k===detailColor?'on':'')+'" data-shot="'+esc(s.k)+'">'
         +'<img src="'+esc(s.url)+'" alt="'+esc(s.label)+'" loading="lazy" data-fallback="dim"></button>';
     }).join('')+'</div>'
+    // The original name and the kana line are ALWAYS emitted, empty or not.
+    // Only 114 of 236 figures carry a Japanese name and 24 a US release name,
+    // so letting those lines appear and disappear moved the OWN/WANT buttons
+    // up and down on every swipe. The slots are reserved in CSS instead and
+    // fill in as the catalog does.
     +'<div class="dmeta">'
-    +(subName(f)?'<div class="orig">'+esc(subName(f))+'</div>':'')
-    +(f.jp?'<div class="kana" lang="ja">'+esc(f.jp)+'</div>':'')
+    +'<div class="orig">'+esc(subName(f))+'</div>'
+    +'<div class="kana" lang="ja">'+esc(f.jp)+'</div>'
     +(f.origin?'<div class="note">'+esc(f.origin)+'</div>':'')
     +(f.notes?'<div class="note">'+esc(f.notes)+'</div>':'')
     +'</div><div class="tabs">'
-    +'<button class="'+(detailTab==='own'?'on':'')+'" data-dtab="own">OWN'+(mine.length?' ('+mine.length+')':'')+'</button>'
-    +'<button class="want '+(detailTab==='want'?'on':'')+'" data-dtab="want">WANT'+(want.length?' ('+want.length+')':'')+'</button>'
+    +'<button class="'+(detailTab==='own'?'on':'')+'" data-dtab="own">'+tabLabel('own',f)+'</button>'
+    +'<button class="want '+(detailTab==='want'?'on':'')+'" data-dtab="want">'+tabLabel('want',f)+'</button>'
     +'</div><div class="chips '+(detailTab==='want'?'want-mode':'')+'">'+chips+'</div>'
-    +'<div class="hint">'+(detailTab==='own'
-      ?'Tap each color you own. Owning any color fills the poster star.'
-      :'Tap the colors you are still hunting.')+'</div></div></div>';
+    +'<div class="hint">'+hintText()+'</div></div></div>';
   const old=$('detail'); if(old) old.remove();
   document.body.insertAdjacentHTML('beforeend',html);
 }
@@ -449,15 +505,17 @@ document.addEventListener('click',function(e){
   if(r){openDetail(r.dataset.row);return;}
 
   if(e.target.closest('#dback')){history.back();return;}
+  // These three repaint in place — a full renderDetail() would reset the
+  // overlay's scrollTop and bounce you to the top of the screen mid-task.
   const dt=e.target.closest('[data-dtab]');
-  if(dt){detailTab=dt.dataset.dtab;renderDetail();return;}
+  if(dt){detailTab=dt.dataset.dtab;syncDetail();return;}
   const sh=e.target.closest('[data-shot]');
-  if(sh){detailColor=sh.dataset.shot;renderDetail();return;}
+  if(sh){detailColor=sh.dataset.shot;syncDetail();return;}
   const ch=e.target.closest('[data-chip]');
   if(ch&&activeFig){
     const col=ch.dataset.chip;
     if(detailTab==='own') toggleOwnColor(activeFig.id,col); else toggleWantColor(activeFig.id,col);
-    renderDetail();return;
+    syncDetail();return;
   }
 
   if(e.target.closest('#filterBtn')){openFilters();return;}

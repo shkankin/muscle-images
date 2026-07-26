@@ -7,6 +7,9 @@
     --field: #633159;
     --cell: #060607;
     --keyline: #F2D98A;
+    /* Dim keyline for an uncollected cell — the same relationship the list
+       rows already use between .lrow and .lrow.owned. */
+    --keyline-off: rgba(242, 217, 138, .26);
     --star-empty: #FFFFFF;
     --star-full: #FFD700;
     --cls-a: #FFD700; --cls-b: #06B0FE; --cls-c: #B9C4D6;
@@ -73,8 +76,12 @@
   @media (max-width: 720px)  { .grid { grid-template-columns: repeat(6, 1fr); } }
   @media (max-width: 460px)  { .grid { grid-template-columns: repeat(4, 1fr); } }
 
+  /* Owned and unowned used to differ only by #F2D98A vs #FFD700 — two bright
+     yellows, indistinguishable at arm's length across a sheet of 236. Unowned
+     now sits back on a dim keyline with no glow, the way the list rows do,
+     so a gold cell reads as collected without having to look at the star. */
   .cell { position: relative; aspect-ratio: 1 / 1.12; background: var(--cell);
-          border: 2px solid var(--keyline); border-radius: 5px; padding: 0; overflow: hidden;
+          border: 2px solid var(--keyline-off); border-radius: 5px; padding: 0; overflow: hidden;
           display: block; width: 100%; cursor: pointer;
           box-shadow: 0 2px 7px rgba(0,0,0,.5), inset 0 0 0 1px rgba(0,0,0,.6);
           transition: transform .12s, box-shadow .15s, border-color .15s; }
@@ -88,12 +95,18 @@
   .num { position: absolute; left: 4px; bottom: 2px; z-index: 3; font-family: var(--disp);
          font-size: clamp(9px,1.9vw,13px); line-height: 1.25; color: #fff;
          letter-spacing: .5px; text-shadow: 0 1px 2px #000; }
+  /* The printed collector poster has a solid white star in every slot — you
+     inked one in as you found the figure. So empty stays solid white; the
+     collected one is gold, glowing, and a size up. The owned/unowned read is
+     carried by the border and the size step, not by hollowing anything out. */
   .star { position: absolute; right: 4px; bottom: 3px; z-index: 3;
-          width: clamp(11px,2.4vw,16px); height: clamp(11px,2.4vw,16px); line-height: 0; }
+          width: clamp(11px,2.4vw,16px); height: clamp(11px,2.4vw,16px); line-height: 0;
+          transition: width .15s, height .15s; }
   .star svg { width: 100%; height: 100%; display: block; }
   .star svg path { fill: var(--star-empty); transition: fill .18s; }
+  .cell.owned .star { width: clamp(15px,3.3vw,21px); height: clamp(15px,3.3vw,21px);
+                      filter: drop-shadow(0 0 4px rgba(255,215,0,.85)); }
   .cell.owned .star svg path { fill: var(--star-full); }
-  .cell.owned .star { filter: drop-shadow(0 0 4px rgba(255,215,0,.85)); }
   .cls { position: absolute; top: 3px; right: 3px; z-index: 3; min-width: 14px; height: 14px;
          padding: 0 3px; border-radius: 3px; font-family: var(--disp); font-size: 10px;
          line-height: 14px; text-align: center; color: #10131A; letter-spacing: .5px;
@@ -209,9 +222,16 @@
   .hero img { width: 100%; height: 100%; object-fit: contain; }
   .heroname { position: absolute; right: 8px; bottom: 8px; padding: 3px 9px; border-radius: 99px;
               background: rgba(0,0,0,.7); border: 1px solid var(--line); font-size: 12px; font-weight: 700; }
+  /* Both identity lines are rendered whether or not the figure has the data,
+     and both carry an explicit line-height — the JP fallback font differs per
+     platform, so leaving it at `normal` would reserve a different amount of
+     room on Android than on iOS. Fixed slots keep the OWN/WANT buttons at the
+     same height on every figure as you swipe the set. */
   .dmeta { margin: 12px 0 4px; }
-  .dmeta .orig { font-size: 15px; color: var(--ink-2); font-weight: 600; }
-  .dmeta .kana { font-family: var(--jp); font-size: 16px; color: #E6C9F2; margin-top: 3px; }
+  .dmeta .orig { font-size: 15px; color: var(--ink-2); font-weight: 600;
+                 line-height: 1.25; min-height: 19px; }
+  .dmeta .kana { font-family: var(--jp); font-size: 16px; color: #E6C9F2; margin-top: 3px;
+                 line-height: 1.4; min-height: 23px; }
   .dmeta .note { font-size: 14px; color: #C9B4C2; margin-top: 8px; line-height: 1.45; }
   body.v-list .dmeta .note { color: #A9C6DC; }
   .film { display: flex; gap: 7px; overflow-x: auto; padding: 10px 0 4px; }
