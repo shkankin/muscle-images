@@ -125,7 +125,11 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
  await pg.locator('#dback').click();await pg.waitForTimeout(600);
 
  // 7. scroll position remembered
- await pg.evaluate(()=>window.scrollTo(0,1400));
+ // scroll-behavior:smooth means a bare scrollTo is still animating when the
+ // sample below is taken, so yBefore reads short and the exact restore looks
+ // wrong. Jump instantly, the way the app's own jumpTo() does.
+ await pg.evaluate(()=>{const r=document.documentElement,b=r.style.scrollBehavior;
+   r.style.scrollBehavior='auto';window.scrollTo(0,1400);r.style.scrollBehavior=b;});
  await pg.waitForTimeout(400);
  const yBefore=await pg.evaluate(()=>Math.round(window.scrollY));
  const target=await pg.evaluate(()=>{

@@ -62,7 +62,13 @@ async function boot(w,h){
 
  // ── 3. scroll lock while detail is open ──
  await pg.locator('#dback').click();await pg.waitForTimeout(700);
- await pg.evaluate(()=>window.scrollTo(0,2000));await pg.waitForTimeout(400);
+ // The page sets scroll-behavior:smooth, so a bare scrollTo animates and the
+ // sample below lands mid-flight — yPre reads short, the detail then locks at
+ // the real position, and the restore looks wrong when it is exact. Same trick
+ // the app's own jumpTo() uses.
+ await pg.evaluate(()=>{const r=document.documentElement,p=r.style.scrollBehavior;
+   r.style.scrollBehavior='auto';window.scrollTo(0,2000);r.style.scrollBehavior=p;});
+ await pg.waitForTimeout(400);
  const yPre=await pg.evaluate(()=>Math.round(window.scrollY));
  await pg.evaluate(()=>{
    const rows=[...document.querySelectorAll('.lrow')];

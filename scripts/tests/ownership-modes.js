@@ -73,7 +73,12 @@ const swipe=async(pg,dir)=>{await pg.evaluate(d=>{
  await pg.locator('#dback').click();await pg.waitForTimeout(700);
 
  // ── scroll restore is a jump, not a smooth ride from the top ──
- await pg.evaluate(()=>window.scrollTo(0,2400));await pg.waitForTimeout(500);
+ // scroll-behavior:smooth means a bare scrollTo is still animating when the
+ // sample below is taken, so yBefore reads short and the exact restore looks
+ // wrong. Jump instantly, the way the app's own jumpTo() does.
+ await pg.evaluate(()=>{const r=document.documentElement,b=r.style.scrollBehavior;
+   r.style.scrollBehavior='auto';window.scrollTo(0,2400);r.style.scrollBehavior=b;});
+ await pg.waitForTimeout(500);
  const yPre=await pg.evaluate(()=>Math.round(window.scrollY));
  await pg.evaluate(()=>{
    const rows=[...document.querySelectorAll('.lrow')];
