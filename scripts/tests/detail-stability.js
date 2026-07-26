@@ -13,7 +13,8 @@ const http=require('http'),fs=require('fs'),path=require('path');
 const ROOT=path.resolve(__dirname,'../..'),PORT=8627;
 const MIME={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json',
             '.woff2':'font/woff2','.png':'image/png','.jpg':'image/jpeg'};
-const cat=fs.readFileSync(path.join(ROOT,'figures.json'),'utf8');
+const catRaw=fs.readFileSync(path.join(ROOT,'figures.json'),'utf8');
+const cat=catRaw;   // served to the page as-is; parsed separately where the rows are needed
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]);if(p==='/')p='/index.html';
  const f=path.join(ROOT,p);
  if(!fs.existsSync(f)||fs.statSync(f).isDirectory()){r.writeHead(404);r.end();return;}
@@ -173,34 +174,50 @@ const openRow=async(pg,id)=>{
  await pg.locator('#dback').click();await pg.waitForTimeout(600);
 
  // ── 3. the buttons sit at the same height on every figure ──
- // 131 Ukon has no Japanese name, 132 Screw Kid does — adjacent in the set,
- // so swiping between them is exactly the case that used to shove the
- // buttons down a line.
- const tabsY=()=>pg.evaluate(()=>{
-   const t=document.querySelector('.tabs');
-   const d=document.querySelector('.detail');
-   return Math.round(t.getBoundingClientRect().top-d.getBoundingClientRect().top+d.scrollTop);});
- const kana=()=>pg.evaluate(()=>document.querySelector('.dmeta .kana').textContent.trim());
+ // The pair is chosen FROM THE CATALOG at runtime: we need three consecutive
+ // figures where the kana line appears and disappears, which is the case that
+ // used to shove the OWN/WANT buttons down a line. Hard-coding ids here broke
+ // the moment a Japanese name was filled in for one of them — and filling
+ // those in is ongoing work, so the test has to follow the data.
+ const rows=JSON.parse(catRaw);
+ let pick=null;
+ for(let i=0;i<rows.length-2;i++){
+   const a=rows[i],b=rows[i+1],c=rows[i+2];
+   const heavy=r=>!!(r.origin||r.notes);          // prose lines shift things independently
+   if(heavy(a)||heavy(b)||heavy(c)) continue;
+   const k=r=>!!(r.jp&&r.jp.trim());
+   if(k(a)!==k(b)||k(b)!==k(c)){pick=[a.id,b.id,c.id,[k(a),k(b),k(c)]];break;}
+ }
+ if(!pick){
+   console.log('  (every remaining run of three figures agrees on kana — skipping the pair check)');
+ } else {
+   const [i1,i2,i3,kflags]=pick;
+   const tabsY=()=>pg.evaluate(()=>{
+     const t=document.querySelector('.tabs'),d=document.querySelector('.detail');
+     return Math.round(t.getBoundingClientRect().top-d.getBoundingClientRect().top+d.scrollTop);});
+   const kana=()=>pg.evaluate(()=>document.querySelector('.dmeta .kana').textContent.trim());
 
- await openRow(pg,'131');
- const y131=await tabsY(), k131=await kana();
- await swipe(pg,1);
- const y132=await tabsY(), k132=await kana();
- await swipe(pg,1);
- const y133=await tabsY(), k133=await kana();
+   await openRow(pg,i1);
+   const y1=await tabsY(), k1=await kana();
+   await swipe(pg,1);
+   const y2=await tabsY(), k2=await kana();
+   await swipe(pg,1);
+   const y3=await tabsY(), k3=await kana();
 
- ok('131 has no kana, 132 does',k131===''&&k132.length>0,`"${k131}" / "${k132}"`);
- ok('kana line is present even when empty',
-    await pg.evaluate(()=>!!document.querySelector('.dmeta .kana')));
- ok('buttons hold their place 131 -> 132',y131===y132,`${y131} vs ${y132}`);
- ok('buttons hold their place 132 -> 133',y132===y133,`${y132} vs ${y133}`);
- console.log(`      tabs offset ${y131} / ${y132} / ${y133}`);
+   ok(`kana differs across ${i1}/${i2}/${i3}`,
+      (k1!=='')===kflags[0]&&(k2!=='')===kflags[1]&&(k3!=='')===kflags[2],
+      `"${k1}" / "${k2}" / "${k3}" vs catalog ${JSON.stringify(kflags)}`);
+   ok('kana line is present even when empty',
+      await pg.evaluate(()=>!!document.querySelector('.dmeta .kana')));
+   ok(`buttons hold their place ${i1} -> ${i2}`,y1===y2,`${y1} vs ${y2}`);
+   ok(`buttons hold their place ${i2} -> ${i3}`,y2===y3,`${y2} vs ${y3}`);
+   console.log(`      tabs offset ${y1} / ${y2} / ${y3}  (kana ${JSON.stringify(kflags)})`);
 
- // and the reserved slots must not have collapsed to nothing
- const slots=await pg.evaluate(()=>({
-   orig:document.querySelector('.dmeta .orig').getBoundingClientRect().height,
-   kana:document.querySelector('.dmeta .kana').getBoundingClientRect().height}));
- ok('empty identity lines still reserve room',slots.orig>=18&&slots.kana>=22,JSON.stringify(slots));
+   const slots=await pg.evaluate(()=>({
+     orig:document.querySelector('.dmeta .orig').getBoundingClientRect().height,
+     kana:document.querySelector('.dmeta .kana').getBoundingClientRect().height}));
+   ok('empty identity lines still reserve room',slots.orig>=18&&slots.kana>=22,JSON.stringify(slots));
+ }
 
  // ── 4. the mode itself still survives a swipe (v2.4's data-corrupting bug) ──
  await pg.locator('[data-dtab="want"]').click();await pg.waitForTimeout(300);
