@@ -47,6 +47,8 @@
 
   /* Starbursts sit behind the grid; poster view only. */
   .bursts { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  /* Decoration only: never give anything in here a background, a border or a
+     non-absolute position, or it paints a visible box over the poster field. */
   .burst { position: absolute; opacity: .55; }
   .burst img { width: 100%; height: auto; display: block; }
   body:not(.v-poster) .bursts { display: none; }
@@ -225,9 +227,12 @@
   .dtitle span { font-size: 12.5px; color: #D8C2D2; }
   body.v-list .dtitle span { color: #BBD6EA; }
   .dbody { max-width: 620px; margin: 0 auto; padding: 12px; }
-  .hero { position: relative; background: #000; border: 2px solid var(--keyline); border-radius: 12px;
+  /* Scoped to the detail body on purpose. As a bare .hero this leaked onto the
+     poster's starburst layer, which used the same class name. */
+  .dbody .hero { position: relative; background: #000; border: 2px solid var(--keyline);
+          border-radius: 12px;
           aspect-ratio: 1/1; display: grid; place-items: center; overflow: hidden; }
-  .hero img { width: 100%; height: 100%; object-fit: contain; }
+  .dbody .hero img { width: 100%; height: 100%; object-fit: contain; }
   .heroname { position: absolute; right: 8px; bottom: 8px; padding: 3px 9px; border-radius: 99px;
               background: rgba(0,0,0,.7); border: 1px solid var(--line); font-size: 12px; font-weight: 700; }
   /* Both identity lines are rendered whether or not the figure has the data,

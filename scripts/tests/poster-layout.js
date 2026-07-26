@@ -67,6 +67,25 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
   ok(`w${w}: grid overlaps logo`,g.overlap>0,JSON.stringify(g));
   ok(`w${w}: cells above logo`,g.onTop);
   ok(`w${w}: field solid #633159`,g.fieldSolid==='rgb(99, 49, 89)',g.fieldSolid);
+  // ── the starburst layer must be decoration and nothing else ──
+  // .burst.hero once collided with the detail screen's .hero, inheriting a
+  // black background, a cream border, aspect-ratio:1/1 and position:relative —
+  // a rotated dark square painted across the poster field, which read as an
+  // inexplicable seam between two purples.
+  const bl=await pg.evaluate(()=>[...document.querySelectorAll('#bursts *')].map(e=>{
+    const c=getComputedStyle(e);
+    return {cls:e.className,tag:e.tagName,pos:c.position,bg:c.backgroundColor,
+            bw:parseFloat(c.borderTopWidth)||0,ar:c.aspectRatio,
+            top:Math.round(e.offsetTop),declared:parseInt(e.style.top||'-1')};}));
+  const opaque=bl.filter(e=>e.bg!=='rgba(0, 0, 0, 0)'&&e.bg!=='transparent');
+  const bordered=bl.filter(e=>e.bw>0);
+  const misplaced=bl.filter(e=>e.tag==='DIV'&&e.pos!=='absolute');
+  ok(`w${w}: no burst paints a background`,opaque.length===0,JSON.stringify(opaque.slice(0,2)));
+  ok(`w${w}: no burst draws a border`,bordered.length===0,JSON.stringify(bordered.slice(0,2)));
+  ok(`w${w}: every burst is absolutely positioned`,misplaced.length===0,JSON.stringify(misplaced.slice(0,2)));
+  const heroB=bl.find(e=>/burst-hero/.test(e.cls));
+  ok(`w${w}: hero burst lands where it was placed`,
+     !!heroB&&Math.abs(heroB.top-heroB.declared)<=2,JSON.stringify(heroB));
   await ctx.close();
  }
  await b.close();console.log(`\n=== ${pass} passed, ${fail} failed ===`);process.exit(fail?1:0);

@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.6';
+const APP_VERSION='2.7';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -470,7 +470,10 @@ function renderBursts(){
   const h=document.body.scrollHeight||3000,W=window.innerWidth||430;
   const out=[],imgs=['red_star.png','green_star.png'];
   const heroSize=Math.round(W*1.45);
-  out.push('<div class="burst hero" style="top:'+Math.round(h*0.62)+'px;left:'+Math.round(-heroSize*0.05)
+  // NOT class "hero" — that is the detail screen's image frame, and this layer
+  // would inherit its black background, cream border, 1:1 aspect-ratio and
+  // position:relative, painting a rotated dark square across the poster field.
+  out.push('<div class="burst burst-hero" style="top:'+Math.round(h*0.62)+'px;left:'+Math.round(-heroSize*0.05)
     +'px;width:'+heroSize+'px;opacity:.5;transform:rotate(-12deg)"><img src="'+IMG+'/red_star.png" alt=""></div>');
   let y=620,i=0;
   while(y<h-200){
