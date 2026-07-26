@@ -40,6 +40,26 @@ async function boot(w,h){
  ok('no remembered-view key written',
     await pg.evaluate(()=>localStorage.getItem('muscle-view')===null));
 
+ // ── switching view must SNAP to the top, not glide ──
+ // Straight off a fresh load, which is where this reproduces. jumpTo() used to
+ // flip the inline scroll-behavior and hope; that change isn't recalculated
+ // before scrollTo reads it, so the jump inherited `smooth` and every view
+ // switch glided up from wherever you were. Sample immediately — a smooth
+ // scroll is still most of the way up the page at 60ms.
+ for(const target of ['list','stats']){
+   await pg.reload({waitUntil:'domcontentloaded'});
+   await pg.waitForSelector('.cell',{timeout:12000});await pg.waitForTimeout(1200);
+   await pg.evaluate(()=>window.scrollTo({top:3000,behavior:'instant'}));
+   await pg.waitForTimeout(300);
+   const from=await pg.evaluate(()=>Math.round(window.scrollY));
+   await pg.locator(`#nav button[data-view="${target}"]`).click();
+   await pg.waitForTimeout(60);
+   const y=await pg.evaluate(()=>Math.round(window.scrollY));
+   ok(`poster -> ${target} snaps to the top`,y<40,`from ${from}, still at ${y} after 60ms`);
+ }
+ await pg.reload({waitUntil:'domcontentloaded'});
+ await pg.waitForSelector('.cell',{timeout:12000});await pg.waitForTimeout(1200);
+
  // ── 2. detail screen readability ──
  await pg.locator('#nav button[data-view="list"]').click();await pg.waitForTimeout(700);
  await pg.locator('.lrow[data-row="001"]').click();await pg.waitForTimeout(700);

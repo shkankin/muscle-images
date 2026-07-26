@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.5';
+const APP_VERSION='2.6';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -211,10 +211,30 @@ function shotsFor(f){
 // approximate, which is what the old rAF-and-hope restore was doing.
 // Programmatic jumps must not inherit the page's smooth scrolling — the
 // restore-on-close would otherwise sail down from the top every time.
+//
+// Flipping the inline scroll-behavior is NOT enough on its own: the property
+// is read when the scroll is initiated, and an inline style change hasn't been
+// recalculated yet at that point, so scrollTo saw the stale 'smooth' and
+// animated anyway. That silently defeated every jump in the app — most
+// visibly, switching poster -> list glided up from wherever you were. The
+// behavior argument is honoured immediately, so it does the real work; the
+// inline flip stays as the fallback path for engines that reject the argument.
 function jumpTo(y){
   const r=document.documentElement, prev=r.style.scrollBehavior;
   r.style.scrollBehavior='auto';
-  window.scrollTo(0,y);
+  try{ window.scrollTo({top:y,left:0,behavior:'instant'}); }
+  catch(e){ window.scrollTo(0,y); }
+  requestAnimationFrame(function(){ r.style.scrollBehavior=prev; });
+}
+// Same story for scrollIntoView — it takes the same argument.
+function jumpIntoView(el,opts){
+  const o={};
+  for(const k in opts) o[k]=opts[k];
+  const r=document.documentElement, prev=r.style.scrollBehavior;
+  r.style.scrollBehavior='auto';
+  o.behavior='instant';
+  try{ el.scrollIntoView(o); }
+  catch(e){ delete o.behavior; el.scrollIntoView(o); }
   requestAnimationFrame(function(){ r.style.scrollBehavior=prev; });
 }
 
@@ -273,10 +293,7 @@ function revealLastSeen(){
   const r=row.getBoundingClientRect();
   const pad=90;
   if(r.top<pad||r.bottom>window.innerHeight-pad){
-    const r2=document.documentElement, prev=r2.style.scrollBehavior;
-    r2.style.scrollBehavior='auto';
-    row.scrollIntoView({block:'center'});
-    requestAnimationFrame(function(){ r2.style.scrollBehavior=prev; });
+    jumpIntoView(row,{block:'center'});
   }
   setTimeout(function(){ row.classList.remove('just-seen'); },2600);
 }
@@ -575,6 +592,11 @@ document.addEventListener('keydown',function(e){
 $('search').addEventListener('input',renderList);
 window.addEventListener('popstate',function(){if(activeFig) closeDetail();});
 let rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(renderBursts,200);});
+// The burst layer is sized from the document height, so anything that lands
+// late (art, a font swap) has to re-trigger it. The wordmark's height is
+// reserved in CSS so this should be a no-op — it is here so a future asset
+// without a reserved box can't quietly reintroduce the seam.
+window.addEventListener('load',function(){renderBursts();});
 
 // ── image fallbacks ───────────────────────────────────────────────
 // The CSP blocks inline handlers, and 'error' does not bubble, so this

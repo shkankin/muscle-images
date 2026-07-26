@@ -62,8 +62,14 @@
   .gear svg { width: 20px; height: 20px; }
 
   .masthead { position: relative; z-index: 1; padding: 10px 0 2px; text-align: center; overflow: visible; }
+  /* aspect-ratio reserves the wordmark's height BEFORE the file arrives. Without
+     it the image is 0px tall until it loads and then shoves the whole sheet down
+     — that pop is the desktop jank, and it also meant renderBursts() sized the
+     starburst layer ~217px shorter than the finished page, leaving a visible
+     seam where the bursts stop. 1924x943 is the natural size of muscle_burst.png. */
   .masthead img {
     width: min(112vw, 1000px); height: auto; display: block; max-width: none;
+    aspect-ratio: 1924 / 943;
     margin: 0 auto clamp(-34px, -4.5vw, -12px);
     position: relative; left: 50%; transform: translateX(-50%);
     filter: drop-shadow(0 0 14px rgba(255,255,255,.75)) drop-shadow(0 0 34px rgba(255,255,255,.45));
@@ -113,8 +119,10 @@
          box-shadow: 0 1px 3px rgba(0,0,0,.6); }
   .cls.a { background: var(--cls-a); } .cls.b { background: var(--cls-b); } .cls.c { background: var(--cls-c); }
 
+  /* muscle_logo.png is 1200x305 — reserved for the same reason as the wordmark. */
   .listlogo {
     display: block; width: min(78%, 400px); height: auto;
+    aspect-ratio: 1200 / 305;
     margin: 2px auto 14px;
     filter: drop-shadow(0 3px 10px rgba(0,0,0,.35));
   }
