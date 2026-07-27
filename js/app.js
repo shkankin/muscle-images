@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.8';
+const APP_VERSION='2.9';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -130,12 +130,17 @@ function listRow(f){
   const dots=f.colors.map(function(c){
     return '<i class="'+(mine.indexOf(c)>=0?'have':'')+'" style="background:'+(HEX[c]||'#888')+'" title="'+esc(c)+'"></i>';
   }).join('');
+  // The dot grid reserves one column per color, up to 4 (it wraps to a second
+  // row beyond that). It used to declare 4 columns unconditionally, so the 75
+  // single-color figures reserved 60px to show one dot — 48px of dead space
+  // taken straight out of the name.
+  const cols=Math.min(4,Math.max(1,f.colors.length));
   return '<button class="lrow '+(owned?'owned':'')+'" data-row="'+esc(f.id)+'">'
     +'<span class="lnum">'+f.num+'</span>'
     +'<span class="lthumb"><img src="'+IMG+'/MUSCLEFigure'+f.id+'ft.jpg" alt="" loading="lazy" decoding="async" data-fallback="hide"></span>'
     +'<span class="lmain"><span class="lname">'+((f.name||f.aka)?esc(dispName(f)):'<span class="dim">unnamed</span>')+'</span>'
     +(f.jp?'<span class="ljp" lang="ja">'+esc(f.jp)+'</span>':'')+'</span>'
-    +'<span class="ldots">'+dots+'</span><span class="lstar">'+STAR+'</span></button>';
+    +'<span class="ldots" style="--dot-cols:'+cols+'">'+dots+'</span></button>';
 }
 function renderList(){
   const rows=visible(),n=activeFilterCount(),fb=$('filterBtn');

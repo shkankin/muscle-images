@@ -154,6 +154,62 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
  await pg.locator('#doneS').click();await pg.waitForTimeout(300);
 
  ok('no CSP violations',csp.length===0,csp.slice(0,2).join(' | '));
+ // ── the list row: border carries ownership, no star ──
+ // The star was dropped in v2.9 — it repeated what the border already said and
+ // cost the name ~28px. That makes the border load-bearing, so its separation
+ // is asserted numerically here, composited over the row's OWN background
+ // (the translucent keyline sits on the row fill, not on the blue field —
+ // measuring against the field gives a wrong and much worse number).
+ const rgba=t=>{const m=t.match(/[\d.]+/g).map(Number);return[m[0],m[1],m[2],m.length>3?m[3]:1];};
+ const over=(f,b)=>[0,1,2].map(i=>f[i]*f[3]+b[i]*(1-f[3]));
+ const lum=c=>{const f=c.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});
+   return .2126*f[0]+.7152*f[1]+.0722*f[2];};
+ const ratio=(a,b)=>{const l1=lum(a),l2=lum(b);return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);};
+
+ ok('list rows carry no star',await pg.evaluate(()=>document.querySelectorAll('.lrow .lstar').length===0));
+ const geom=async()=>await pg.evaluate(()=>{const r=document.querySelector('.lrow');
+   const c=getComputedStyle(r);
+   return {bdr:c.borderTopColor,bw:parseFloat(c.borderTopWidth),bg:c.backgroundColor,
+           h:Math.round(r.getBoundingClientRect().height),
+           field:getComputedStyle(document.getElementById('field')).backgroundColor};});
+ const g0=await geom();
+ ok('row keyline is at least 2px',g0.bw>=2,`${g0.bw}px`);
+ await pg.locator('.lrow').first().click();await pg.waitForTimeout(450);
+ await pg.locator('[data-dtab="own"]').click();await pg.waitForTimeout(200);
+ await pg.locator('[data-chip]').first().click();await pg.waitForTimeout(250);
+ await pg.locator('#dback').click();await pg.waitForTimeout(700);
+ const g1=await geom();
+ ok('owning a figure changes the row border',g0.bdr!==g1.bdr,`${g0.bdr} -> ${g1.bdr}`);
+ ok('border width identical either way — no reflow',g0.bw===g1.bw&&g0.h===g1.h,
+    `${g0.bw}/${g0.h} vs ${g1.bw}/${g1.h}`);
+ const fieldC=rgba(g0.field);
+ const rowBg=over(rgba(g0.bg),fieldC);          // row fill over the blue field
+ const offBdr=over(rgba(g0.bdr),rowBg);         // dim keyline over the row fill
+ const onBdr=rgba(g1.bdr).slice(0,3);
+ const sep=ratio(offBdr,onBdr);
+ console.log(`      row border separation ${sep.toFixed(2)}:1 (no star to fall back on)`);
+ ok('owned/unowned border separation >=4.5:1',sep>=4.5,`${sep.toFixed(2)}:1`);
+ ok('unowned keyline still visible on the row',ratio(offBdr,rowBg)>=1.5,
+    `${ratio(offBdr,rowBg).toFixed(2)}:1`);
+
+ // ── the name must actually get the space, and actually ellipsize ──
+ // .lname was `display:inline` for several releases, which makes overflow and
+ // text-overflow inert: long names ran past the row edge and printed under the
+ // color dots instead of truncating.
+ const nm=await pg.evaluate(()=>{
+   const e=document.querySelector('.lname');
+   const cs=getComputedStyle(e);
+   let overflowing=0;
+   document.querySelectorAll('.lrow').forEach(r=>{
+     const n=r.querySelector('.lname'),m=r.querySelector('.lmain');
+     if(n.getBoundingClientRect().width>m.getBoundingClientRect().width+1) overflowing++;});
+   return {display:cs.display,overflowing,
+     dotCols:[...document.querySelectorAll('.ldots')].map(d=>d.style.getPropertyValue('--dot-cols'))};});
+ ok('name is a block so the ellipsis applies',nm.display!=='inline',nm.display);
+ ok('no name overflows its column',nm.overflowing===0,`${nm.overflowing} rows overflow`);
+ ok('dot grid is sized per figure',new Set(nm.dotCols).size>1,
+    `--dot-cols values: ${[...new Set(nm.dotCols)].join(',')}`);
+
  ok('no JS errors',errs.length===0,errs.join(' | '));
  await b.close();console.log(`\n=== ${pass} passed, ${fail} failed ===`);process.exit(fail?1:0);
 })().catch(e=>{console.error(e);process.exit(1);});
