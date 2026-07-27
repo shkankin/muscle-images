@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='2.9';
+const APP_VERSION='3.0';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -169,9 +169,12 @@ function renderStats(){
     }).length;
     return {L:L,made:made,have:have};
   }
-  $('v-stats').innerHTML=
-    '<div class="sec">Completion</div>'
-    +'<div class="bigstat"><div class="pct">'+pct+'%</div>'
+  // Targets #statsBody, NOT #v-stats — the ring hero above it is static markup
+  // in index.html and would be wiped by a re-render.
+  // No "Completion" heading here: the hero already titles the page, and the
+  // completion card is what overlaps the artwork, so it has to come first.
+  $('statsBody').innerHTML=
+    '<div class="bigstat"><div class="pct">'+pct+'%</div>'
     +'<div class="sub">'+owned.length+' of '+TOTAL+' sculpts \u00b7 '+(TOTAL-owned.length)+' to find</div>'
     +'<div class="meter"><i style="width:'+pct+'%"></i></div></div>'
     +'<div class="sec">Collection</div><div class="cards">'

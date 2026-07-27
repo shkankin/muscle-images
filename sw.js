@@ -10,7 +10,7 @@
 // A new worker signals clients (UPDATE_AVAILABLE) so the app can refresh.
 // ════════════════════════════════════════════════════════════════════
 
-const VERSION = '2.9';
+const VERSION = '3.0';
 const CACHE = `muscle-v${VERSION}`;
 const RUNTIME = `muscle-runtime-v${VERSION}`;
 
@@ -35,6 +35,9 @@ const CORE = [
   'images/muscle_logo.png',
   'images/red_star.png',
   'images/green_star.png',
+  // Stats furniture. 439KB, in line with the rest, and the stats page has a
+  // hole at the top without it.
+  'images/kinnikuman.png',
 ];
 
 self.addEventListener('install', event => {

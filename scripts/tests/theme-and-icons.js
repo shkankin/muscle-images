@@ -9,6 +9,7 @@ const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]
  if(!fs.existsSync(f)||fs.statSync(f).isDirectory()){r.writeHead(404);r.end();return;}
  r.writeHead(200,{'Content-Type':MIME[path.extname(f)]||'application/octet-stream'});
  fs.createReadStream(f).pipe(r);});
+const HERO=fs.readFileSync(path.join(ROOT,'images/kinnikuman.png'));
 const PNG=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==','base64');
 let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'FAIL ')+n+(x&&!c?' — '+x:''));};
 // WCAG relative luminance → contrast ratio
@@ -21,8 +22,15 @@ const rgb=s=>s.match(/\d+/g).slice(0,3).map(Number);
  await new Promise(r=>srv.listen(PORT,r));
  const b=await chromium.launch();
  const ctx=await b.newContext({viewport:{width:430,height:932},isMobile:true,hasTouch:true});
- await ctx.route(/raw\.githubusercontent\.com/,rt=>{const u=rt.request().url();
+ // The stats hero is served late and at its real size: its box must already be
+ // reserved when the stats view is painted, or the whole page shifts on load.
+ await ctx.addInitScript(()=>{window.__cls=0;
+   new PerformanceObserver(l=>{for(const e of l.getEntries())
+     if(!e.hadRecentInput) window.__cls+=e.value;}).observe({type:'layout-shift',buffered:true});});
+ await ctx.route(/raw\.githubusercontent\.com/,async rt=>{const u=rt.request().url();
    if(/figures\.json/.test(u))return rt.fulfill({status:200,contentType:'application/json; charset=utf-8',body:cat});
+   if(/kinnikuman/.test(u)){await new Promise(r=>setTimeout(r,700));
+     return rt.fulfill({status:200,contentType:'image/png',body:HERO});}
    return rt.fulfill({status:200,contentType:'image/png',body:PNG});});
  const pg=await ctx.newPage();const errs=[],csp=[];
  pg.on('pageerror',e=>errs.push(e.message));
@@ -85,6 +93,70 @@ const rgb=s=>s.match(/\d+/g).slice(0,3).map(Number);
  await pg.locator('#nav button[data-view="poster"]').click();await pg.waitForTimeout(700);
  const posterBar=await pg.evaluate(()=>getComputedStyle(document.body).getPropertyValue('--topbar').trim());
  ok('poster keeps the plum header',/46, 22, 42/.test(posterBar),posterBar);
+
+ // ── the stats hero ────────────────────────────────────────────────────
+ // The artwork is only usable because its clear corner is predictable: the
+ // top third is empty out to 60% of the width, and the ropes cross everything
+ // below the halfway line. The caption has to stay inside that corner at every
+ // width, and the stats have to climb back over the bottom without landing on
+ // bare rope. All of it asserted in percentages, so it holds as the box scales.
+ await pg.locator('#nav button[data-view="stats"]').click();
+ await pg.waitForTimeout(300);
+ // Guarded: on a tree without the hero this must report a clean FAIL below, not
+ // throw and abandon the rest of the suite.
+ const earlyTop=await pg.evaluate(()=>{const b=document.getElementById('statsBody');
+   const c=b&&b.firstElementChild;
+   return c?Math.round(c.getBoundingClientRect().top+scrollY):-1;});
+ await pg.waitForTimeout(1400);
+ const hero=await pg.evaluate(()=>{
+   const h=document.querySelector('.shero'); if(!h) return null;
+   const img=h.querySelector('img'),cap=document.querySelector('.sherocap');
+   const k=document.querySelector('.sherocap .k'),t=document.querySelector('.sherocap .t');
+   const body=document.getElementById('statsBody'),card=body&&body.firstElementChild;
+   if(!img||!cap||!k||!t||!card) return {broken:true};
+   const hb=h.getBoundingClientRect(),cb=cap.getBoundingClientRect(),kb=card.getBoundingClientRect();
+   const alpha=s=>{const m=s.match(/[\d.]+/g).map(Number);return m.length>3?m[3]:1;};
+   return {cls:+window.__cls.toFixed(4),
+     cardTop:Math.round(kb.top+scrollY),
+     ar:getComputedStyle(img).aspectRatio, natural:img.naturalWidth+'x'+img.naturalHeight,
+     overflow:getComputedStyle(h).overflow,
+     bleedL:Math.round(hb.left),bleedR:Math.round(innerWidth-hb.right),
+     capRightPct:+(100*(cb.right-hb.left)/hb.width).toFixed(1),
+     capBotPct:+(100*(cb.bottom-hb.top)/hb.height).toFixed(1),
+     overlapPct:+(100*(hb.bottom-kb.top)/hb.height).toFixed(1),
+     kColor:getComputedStyle(k).color,tColor:getComputedStyle(t).color,
+     cardBg:getComputedStyle(card).backgroundColor,cardAlpha:alpha(getComputedStyle(card).backgroundColor),
+     cardIs:card.className,
+     bodyExists:!!body, heroFirst:h.previousElementSibling===null};});
+ ok('stats view has the ring hero',!!hero&&!hero.broken,hero&&hero.broken?'hero markup incomplete':'no .shero');
+ if(hero&&!hero.broken){
+   ok('hero reserves its box before the art lands',hero.cls<0.01&&earlyTop===hero.cardTop,
+      `CLS ${hero.cls}, card top ${earlyTop} -> ${hero.cardTop}`);
+   ok('hero declares the art\u2019s true aspect-ratio',/1694/.test(hero.ar)&&hero.natural==='1694x796',
+      `${hero.ar} vs natural ${hero.natural}`);
+   ok('hero bleeds to both screen edges',hero.bleedL===0&&hero.bleedR===0,
+      `left ${hero.bleedL} right ${hero.bleedR}`);
+   ok('caption stays clear of the wrestler',hero.capRightPct<=55,`reaches ${hero.capRightPct}% of width`);
+   ok('caption stays in the clear upper band',hero.capBotPct<=38,`reaches ${hero.capBotPct}% of height`);
+   ok('stats overlap the artwork',hero.overlapPct>=5,`${hero.overlapPct}%`);
+   ok('overlap does not swallow the ring',hero.overlapPct<=25,`${hero.overlapPct}%`);
+   ok('the overlapping element is the completion card',/bigstat/.test(hero.cardIs),hero.cardIs);
+   ok('overlapping card is fully opaque over the ropes',hero.cardAlpha===1,
+      `${hero.cardBg} alpha ${hero.cardAlpha}`);
+   ok('hero clips its caption if the art fails',hero.overflow==='hidden',hero.overflow);
+   ok('renderStats has its own container',hero.bodyExists);
+   const field=rgb(await pg.evaluate(()=>getComputedStyle(document.getElementById('field')).backgroundColor));
+   const rk=ratio(rgb(hero.kColor),field), rt2=ratio(rgb(hero.tColor),field);
+   console.log(`      caption contrast on the field: ${rk.toFixed(2)}:1 / ${rt2.toFixed(2)}:1`);
+   ok('caption label readable on the field',rk>=4.5,`${rk.toFixed(2)}:1`);
+   ok('caption title readable on the field',rt2>=4.5,`${rt2.toFixed(2)}:1`);
+ }
+ // a re-render must not wipe the static hero
+ await pg.locator('#nav button[data-view="poster"]').click();await pg.waitForTimeout(400);
+ await pg.locator('#nav button[data-view="stats"]').click();await pg.waitForTimeout(600);
+ ok('hero survives a re-render',await pg.evaluate(()=>!!document.querySelector('.shero img')));
+ ok('stats still render below it',await pg.evaluate(()=>
+   !!document.querySelector('#statsBody .bigstat .pct')||!!document.querySelector('#v-stats .bigstat .pct')));
 
  ok('no CSP violations',csp.length===0,csp.slice(0,2).join(' | '));
  ok('no JS errors',errs.length===0,errs.join(' | '));
