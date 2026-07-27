@@ -10,7 +10,7 @@
 // A new worker signals clients (UPDATE_AVAILABLE) so the app can refresh.
 // ════════════════════════════════════════════════════════════════════
 
-const VERSION = '3.0';
+const VERSION = '3.1';
 const CACHE = `muscle-v${VERSION}`;
 const RUNTIME = `muscle-runtime-v${VERSION}`;
 

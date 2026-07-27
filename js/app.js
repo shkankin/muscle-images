@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='3.0';
+const APP_VERSION='3.1';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -445,6 +445,20 @@ function openFilters(){
     +'<button class="btn" id="clearF" style="margin-top:18px">Clear all filters</button>'
     +'<button class="btn gold" id="doneF">Done</button></div>');
 }
+// Small outbound-link glyph. Inline rather than an <img> so it inherits
+// currentColor and costs no request — the settings sheet is opened rarely and
+// should not wait on the network to look finished.
+const EXT='<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+  +'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+  +'<path d="M14 4h6v6M20 4l-8.5 8.5"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+// Every outbound link goes through here so none can ship without
+// rel="noopener noreferrer" — target="_blank" without it hands the opened page
+// a handle back to this one.
+function extLink(href,title,sub){
+  return '<a class="lnk" href="'+href+'" target="_blank" rel="noopener noreferrer">'
+    +'<span class="lnkt"><b>'+title+'</b><i>'+sub+'</i></span>'+EXT+'</a>';
+}
+
 function openSettings(){
   lockScroll();
   document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div>'
@@ -454,12 +468,26 @@ function openSettings(){
     +'<button class="btn" id="impBtn">Import collection</button>'
     +'<input type="file" id="impFile" accept="application/json" hidden>'
     +'<div class="fld">Catalog</div><button class="btn" id="reloadBtn">Reload catalog</button>'
+    +'<div class="fld">Links</div><div class="lnks">'
+    +extLink('https://github.com/shkankin/muscle-images','Source on GitHub',
+             'The app and every image live in this repo')
+    +extLink('https://github.com/shkankin/muscle-images/issues/new','Report a bug',
+             'Open an issue \u2014 a GitHub account is needed')
+    +extLink('https://www.wingkongtoyexchange.com','Wing Kong Toy Exchange',
+             'Buying and selling vintage toys')
+    +'</div>'
+    +'<div class="fld">Credits</div><div class="creds">'
+    +'<p>Catalog data is based on the <b>Master Checklist</b> compiled by '
+    +'<b>Brian Bonanno</b>.</p>'
+    +'<p>Figure photography came from <b>University of M.U.S.C.L.E.</b>, '
+    +'now defunct \u2014 thanks to everyone who documented this line before the '
+    +'sites went dark.</p></div>'
     +'<div class="fld">Support</div>'
     +'<a class="btn coffee" href="https://buymeacoffee.com/btring" target="_blank" rel="noopener noreferrer">'
     +'Buy me a coffee</a>'
-    +'<div class="fld">About</div><div style="font-size:13px;color:var(--ink-3);line-height:1.5">'
+    +'<div class="fld">About</div><div class="abt">'
     +'All 236 figures of the first-generation M.U.S.C.L.E. line. '
-    +'A free, non-commercial fan project. Catalog data from community sources.'
+    +'A free, non-commercial fan project, not affiliated with Mattel or Bandai.'
     +'<br><span style="opacity:.7">Version '+APP_VERSION+'</span></div>'
     +'<button class="btn gold" id="doneS" style="margin-top:16px">Done</button></div>');
 }

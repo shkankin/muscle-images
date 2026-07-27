@@ -10,6 +10,14 @@ const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]
  r.writeHead(200,{'Content-Type':MIME[path.extname(f)]||'application/octet-stream'});
  fs.createReadStream(f).pipe(r);});
 const PNG=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==','base64');
+// WCAG contrast helpers, at module scope so every check can reach them —
+// declared inline further down they sat in the temporal dead zone for anything
+// earlier in the run.
+const rgba=t=>{const m=t.match(/[\d.]+/g).map(Number);return[m[0],m[1],m[2],m.length>3?m[3]:1];};
+const over=(f,b)=>[0,1,2].map(i=>f[i]*f[3]+b[i]*(1-f[3]));
+const lum=c=>{const f=c.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});
+  return .2126*f[0]+.7152*f[1]+.0722*f[2];};
+const ratio=(a,b)=>{const l1=lum(a),l2=lum(b);return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);};
 let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'FAIL ')+n+(x&&!c?' — '+x:''));};
 (async()=>{
  await new Promise(r=>srv.listen(PORT,r));
@@ -143,7 +151,7 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
  const yAfter=await pg.evaluate(()=>Math.round(window.scrollY));
  ok('returns to the same scroll spot',Math.abs(yAfter-yBefore)<60,`${yBefore} -> ${yAfter}`);
 
- // 8. coffee link in settings
+ // 8. settings sheet — links, credits, version
  await pg.locator('#gear').click();await pg.waitForTimeout(500);
  const coffee=await pg.locator('.btn.coffee').getAttribute('href');
  ok('buy me a coffee link',coffee==='https://buymeacoffee.com/btring',coffee);
@@ -151,6 +159,70 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
  ok('coffee link is safe',/noopener/.test(rel||''),rel);
  const ver=await pg.locator('#sheetp').textContent();
  ok('settings shows a version',/\d+\.\d+/.test(ver),ver.slice(0,80));
+
+ // Every outbound link, checked as a set. target="_blank" without
+ // rel="noopener" hands the opened page a handle back to this one, so the rule
+ // is asserted across ALL of them rather than per link — a new link added
+ // without it should fail here, not sit unnoticed.
+ const anchors=await pg.evaluate(()=>[...document.querySelectorAll('#sheetp a')].map(a=>({
+   href:a.getAttribute('href'),target:a.getAttribute('target'),rel:a.getAttribute('rel')||''})));
+ const want=['https://github.com/shkankin/muscle-images',
+             'https://github.com/shkankin/muscle-images/issues/new',
+             'https://www.wingkongtoyexchange.com'];
+ want.forEach(u=>ok('links to '+u.replace(/^https:\/\//,''),
+   anchors.some(a=>a.href===u),anchors.map(a=>a.href).join(' | ')));
+ ok('every outbound link opens in a new tab',
+    anchors.every(a=>a.target==='_blank'),
+    anchors.filter(a=>a.target!=='_blank').map(a=>a.href).join(' | '));
+ ok('every outbound link is rel-safe',
+    anchors.every(a=>/noopener/.test(a.rel)&&/noreferrer/.test(a.rel)),
+    anchors.filter(a=>!/noopener/.test(a.rel)).map(a=>a.href).join(' | '));
+ ok('no link left as a bare placeholder',
+    anchors.every(a=>/^https:\/\//.test(a.href||'')),
+    anchors.map(a=>a.href).join(' | '));
+
+ // Credits must name the sources. These are people's contributions, not
+ // decoration — if a refactor drops them the app is taking credit it is not due.
+ const cred=await pg.evaluate(()=>{const c=document.querySelector('.creds');
+   return c?c.textContent.replace(/\s+/g,' ').trim():'';});
+ ok('credits the Master Checklist compiler',/Brian Bonanno/.test(cred)&&/Master Checklist/i.test(cred),cred.slice(0,90));
+ ok('credits the image source',/University of M\.?U\.?S\.?C\.?L\.?E/i.test(cred),cred.slice(0,90));
+
+ // --ink-3 is the colour that has shipped invisible twice. Here it sits on the
+ // link panel over the dark sheet, so it has to be measured on THAT stack, not
+ // on whichever view is behind the sheet.
+ // Guarded: on a tree without the link list this must report clean failures,
+ // not throw and abandon the rest of the suite.
+ const linkC=await pg.evaluate(()=>{
+   const t=document.querySelector('.lnkt b'),i=document.querySelector('.lnkt i');
+   const panel=document.querySelector('.lnks'),sheet=document.getElementById('sheetp');
+   const row=document.querySelector('.lnk');
+   if(!t||!i||!panel||!sheet||!row) return null;
+   return {title:getComputedStyle(t).color,sub:getComputedStyle(i).color,
+           panel:getComputedStyle(panel).backgroundColor,
+           sheet:getComputedStyle(sheet).backgroundColor,
+           tap:Math.round(row.getBoundingClientRect().height)};});
+ if(!linkC){
+   ok('link title readable',false,'no .lnk markup');
+   ok('link subtitle readable',false,'no .lnk markup');
+   ok('link rows are a comfortable tap target',false,'no .lnk markup');
+ } else {
+   const sheetOn=over(rgba(linkC.sheet),[26,14,24]);
+   const panelOn=over(rgba(linkC.panel),sheetOn);
+   const rTitle=ratio(rgba(linkC.title).slice(0,3),panelOn);
+   const rSub=ratio(rgba(linkC.sub).slice(0,3),panelOn);
+   console.log(`      link contrast: title ${rTitle.toFixed(2)}:1, subtitle ${rSub.toFixed(2)}:1`);
+   ok('link title readable',rTitle>=4.5,`${rTitle.toFixed(2)}:1`);
+   ok('link subtitle readable',rSub>=4.5,`${rSub.toFixed(2)}:1`);
+   ok('link rows are a comfortable tap target',linkC.tap>=44,`${linkC.tap}px`);
+ }
+
+ // The sheet grew; Done has to still be reachable by scrolling it.
+ await pg.evaluate(()=>{const s=document.getElementById('sheetp');s.scrollTop=s.scrollHeight;});
+ await pg.waitForTimeout(300);
+ const doneVis=await pg.evaluate(()=>{const d=document.getElementById('doneS').getBoundingClientRect();
+   return d.top>=0&&d.bottom<=innerHeight+1;});
+ ok('Done stays reachable in the longer sheet',doneVis);
  await pg.locator('#doneS').click();await pg.waitForTimeout(300);
 
  ok('no CSP violations',csp.length===0,csp.slice(0,2).join(' | '));
@@ -160,11 +232,6 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
  // is asserted numerically here, composited over the row's OWN background
  // (the translucent keyline sits on the row fill, not on the blue field —
  // measuring against the field gives a wrong and much worse number).
- const rgba=t=>{const m=t.match(/[\d.]+/g).map(Number);return[m[0],m[1],m[2],m.length>3?m[3]:1];};
- const over=(f,b)=>[0,1,2].map(i=>f[i]*f[3]+b[i]*(1-f[3]));
- const lum=c=>{const f=c.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});
-   return .2126*f[0]+.7152*f[1]+.0722*f[2];};
- const ratio=(a,b)=>{const l1=lum(a),l2=lum(b);return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);};
 
  ok('list rows carry no star',await pg.evaluate(()=>document.querySelectorAll('.lrow .lstar').length===0));
  const geom=async()=>await pg.evaluate(()=>{const r=document.querySelector('.lrow');
