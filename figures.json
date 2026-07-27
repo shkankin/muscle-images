@@ -127,7 +127,7 @@
   "id": "005",
   "num": 5,
   "slug": "005",
-  "name": "Planet Man (A)",
+  "name": "Planet Man",
   "aka": "",
   "origin": "",
   "poster": true,
@@ -208,7 +208,7 @@
   "id": "008",
   "num": 8,
   "slug": "008",
-  "name": "Shishikababa",
+  "name": "Shishikababu",
   "aka": "Shishkeba Boo",
   "origin": "",
   "poster": true,
@@ -308,7 +308,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Green": "B",
+   "Neon Orange": "B",
+   "Magenta": "B",
+   "Dark Blue": "A",
+   "Flesh": "C",
+   "Salmon": "C",
+   "Purple": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -329,7 +337,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Light Blue": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "オイルマン",
   "notes": ""
  },
@@ -352,7 +366,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C"
+  },
   "jp": "キングコブラ",
   "notes": ""
  },
@@ -375,7 +397,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Dark Blue": "B",
+   "Flesh": "C",
+   "Light Blue": "C",
+   "Neon Orange": "C",
+   "Magenta": "C"
+  },
   "jp": "ロビンマスク",
   "notes": ""
  },
@@ -398,7 +428,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Magenta": "B",
+   "Dark Blue": "B",
+   "Green": "C",
+   "Salmon": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "サンシャイン",
   "notes": ""
  },
@@ -421,7 +459,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Magenta": "A",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "ネプチューンマン",
   "notes": ""
  },
@@ -444,7 +490,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "キン肉マン",
   "notes": ""
  },
@@ -466,7 +520,14 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Dark Blue": "A",
+   "Neon Orange": "C",
+   "Magenta": "C",
+   "Purple": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -490,7 +551,16 @@
    "Salmon"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Light Blue": "A",
+   "Salmon": "B",
+   "Dark Blue": "B",
+   "Flesh": "C",
+   "Red": "C",
+   "Neon Orange": "C",
+   "Magenta": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -514,7 +584,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Light Blue": "A",
+   "Neon Orange": "B",
+   "Magenta": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C"
+  },
   "jp": "キン肉大王",
   "notes": ""
  },
@@ -537,7 +616,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "悪魔将軍",
   "notes": ""
  },
@@ -560,7 +647,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Green": "B",
+   "Magenta": "B",
+   "Dark Blue": "A",
+   "Neon Orange": "C",
+   "Purple": "C",
+   "Salmon": "C",
+   "Flesh": "C"
+  },
   "jp": "マンリキ",
   "notes": ""
  },
@@ -584,7 +679,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Light Blue": "A",
+   "Neon Orange": "B",
+   "Magenta": "C",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "イワオ",
   "notes": ""
  },
@@ -607,7 +711,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C"
+  },
   "jp": "キューブマン",
   "notes": ""
  },
@@ -630,7 +742,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C"
+  },
   "jp": "カメハメ",
   "notes": ""
  },
@@ -653,7 +773,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "ザ・ニンジャ",
   "notes": ""
  },
@@ -707,7 +835,15 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Red": "C",
+   "Green": "C",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "ジョン・スティムボード",
   "notes": ""
  },
@@ -730,7 +866,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Magenta": "B",
+   "Dark Blue": "B",
+   "Green": "C",
+   "Red": "C",
+   "Salmon": "C",
+   "Flesh": "C"
+  },
   "jp": "テリーマン",
   "notes": ""
  },
@@ -753,7 +897,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Salmon": "B",
+   "Purple": "B",
+   "Light Blue": "B",
+   "Neon Orange": "C",
+   "Magenta": "C",
+   "Dark Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -777,7 +929,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Light Blue": "A",
+   "Neon Orange": "C",
+   "Magenta": "C",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "テリーマン",
   "notes": ""
  },
@@ -798,7 +959,13 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Salmon": "B",
+   "Purple": "C",
+   "Neon Orange": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -854,7 +1021,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Light Blue": "B",
+   "Neon Orange": "C",
+   "Magenta": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Salmon": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -911,7 +1086,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Green": "B",
+   "Purple": "B",
+   "Salmon": "B",
+   "Light Blue": "A",
+   "Neon Orange": "B",
+   "Magenta": "B",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "キンコツマン",
   "notes": ""
  },
@@ -989,10 +1173,18 @@
    "Purple",
    "Dark Blue",
    "Light Blue",
-   "Neon Orange"
+   "Salmon"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Salmon": "B",
+   "Purple": "B",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C"
+  },
   "jp": "サンシャイン",
   "notes": ""
  },
@@ -1015,7 +1207,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Magenta": "B",
+   "Dark Blue": "A",
+   "Green": "C",
+   "Salmon": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "ケンダマン",
   "notes": ""
  },
@@ -1038,7 +1238,15 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "A",
+   "Salmon": "B",
+   "Red": "C",
+   "Green": "C",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C"
+  },
   "jp": "ビューティー・ローデス",
   "notes": ""
  },
@@ -1062,7 +1270,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Green": "A",
+   "Salmon": "B",
+   "Dark Blue": "B",
+   "Light Blue": "C",
+   "Magenta": "C",
+   "Purple": "C",
+   "Flesh": "C",
+   "Red": "C"
+  },
   "jp": "ゴーレムマン",
   "notes": ""
  },
@@ -1085,7 +1302,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "カレー・クック",
   "notes": ""
  },
@@ -1138,7 +1363,14 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C",
+   "Magenta": "C"
+  },
   "jp": "スプリングマン",
   "notes": ""
  },
@@ -1162,7 +1394,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Light Blue": "A",
+   "Neon Orange": "B",
+   "Magenta": "C",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "ロビンマスク",
   "notes": ""
  },
@@ -1276,7 +1517,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Green": "A",
+   "Dark Blue": "B",
+   "Light Blue": "B",
+   "Neon Orange": "B",
+   "Red": "C",
+   "Flesh": "C",
+   "Purple": "C"
+  },
   "jp": "ホークマン",
   "notes": ""
  },
@@ -1493,7 +1742,7 @@
   "id": "058",
   "num": 58,
   "slug": "058",
-  "name": "Buffaloman (C)",
+  "name": "Buffaloman",
   "aka": "",
   "origin": "",
   "poster": true,
@@ -1600,7 +1849,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "B",
+   "Light Blue": "A",
+   "Neon Orange": "C",
+   "Magenta": "C",
+   "Green": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "キン肉マン",
   "notes": ""
  },
@@ -1621,7 +1879,13 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Dark Blue": "B",
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Neon Orange": "C"
+  },
   "jp": "ザ・シーク",
   "notes": ""
  },
@@ -1642,7 +1906,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Red": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -1665,7 +1935,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Salmon": "A",
+   "Neon Orange": "B",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "サンシャイン",
   "notes": ""
  },
@@ -1686,7 +1964,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Salmon": "C"
+  },
   "jp": "クリスタルマン",
   "notes": ""
  },
@@ -1707,7 +1991,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "C",
+   "Flesh": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -1730,7 +2020,15 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "ペンタゴン",
   "notes": ""
  },
@@ -1754,7 +2052,16 @@
    "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Red": "A",
+   "Purple": "B",
+   "Salmon": "B",
+   "Magenta": "B",
+   "Neon Orange": "C",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "オクトバスドラゴン",
   "notes": ""
  },
@@ -1775,7 +2082,13 @@
    "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Flesh": "C",
+   "Salmon": "C",
+   "Purple": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C"
+  },
   "jp": "スペシャルマン",
   "notes": ""
  },
@@ -1798,7 +2111,15 @@
    "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Purple": "B",
+   "Salmon": "C",
+   "Red": "C",
+   "Green": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "アシュラマン",
   "notes": ""
  },
@@ -1812,10 +2133,18 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Neon Orange": "B",
+   "Dark Blue": "A"
+  },
   "jp": "ネプチューンマン",
   "notes": ""
  },
@@ -1829,10 +2158,24 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Neon Orange",
+   "Dark Blue",
+   "Light Blue"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Salmon": "A",
+   "Neon Orange": "B",
+   "Purple": "C",
+   "Green": "C",
+   "Dark Blue": "C",
+   "Light Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "スニゲーター",
   "notes": ""
  },
@@ -1846,10 +2189,22 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Dark Blue": "A",
+   "Neon Orange": "C",
+   "Light Blue": "C",
+   "Flesh": "C",
+   "Red": "C",
+   "Salmon": "C"
+  },
   "jp": "",
   "notes": ""
  },
@@ -1919,10 +2274,24 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Neon Orange": "B",
+   "Salmon": "A",
+   "Purple": "C",
+   "Green": "C",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "エラギネス",
   "notes": ""
  },
@@ -1969,10 +2338,24 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Salmon",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Salmon": "B",
+   "Purple": "C",
+   "Red": "C",
+   "Green": "C",
+   "Neon Orange": "C",
+   "Light Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "バイキングマン",
   "notes": ""
  },
@@ -1986,10 +2369,24 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Red",
+   "Green",
+   "Purple",
+   "Neon Orange",
+   "Salmon",
+   "Magenta"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Magenta": "C",
+   "Neon Orange": "C",
+   "Green": "C",
+   "Purple": "C",
+   "Salmon": "C",
+   "Red": "C",
+   "Flesh": "C"
+  },
   "jp": "ハンマーヘッド",
   "notes": ""
  },
@@ -2003,10 +2400,20 @@
   "poster": true,
   "rarity": "common",
   "colors": [
-   "Flesh"
+   "Flesh",
+   "Green",
+   "Dark Blue",
+   "Light Blue",
+   "Neon Orange"
   ],
   "img": {},
-  "cls": {},
+  "cls": {
+   "Neon Orange": "C",
+   "Green": "C",
+   "Light Blue": "C",
+   "Dark Blue": "C",
+   "Flesh": "C"
+  },
   "jp": "",
   "notes": ""
  },
