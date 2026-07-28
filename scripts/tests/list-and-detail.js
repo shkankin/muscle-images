@@ -153,10 +153,18 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
 
  // 8. settings sheet — links, credits, version
  await pg.locator('#gear').click();await pg.waitForTimeout(500);
- const coffee=await pg.locator('.btn.coffee').getAttribute('href');
- ok('buy me a coffee link',coffee==='https://buymeacoffee.com/btring',coffee);
- const rel=await pg.locator('.btn.coffee').getAttribute('rel');
- ok('coffee link is safe',/noopener/.test(rel||''),rel);
+ // Located by href, not by class: the coffee link moved from a standalone
+ // .btn.coffee into the .lnks group in v3.2, and a class-keyed locator HUNG for
+ // 30s instead of failing. Query the DOM directly so a miss is a clean FAIL.
+ const coffee=await pg.evaluate(()=>{
+   const a=document.querySelector('#sheetp a[href*="buymeacoffee"]');
+   return a?{href:a.getAttribute('href'),rel:a.getAttribute('rel')||'',
+             inLinks:!!a.closest('.lnks'),cls:a.className}:null;});
+ ok('buy me a coffee link',coffee&&coffee.href==='https://buymeacoffee.com/btring',
+    coffee?coffee.href:'no coffee link in the sheet');
+ ok('coffee link is safe',coffee&&/noopener/.test(coffee.rel),coffee?coffee.rel:'-');
+ ok('coffee sits with the other links',coffee&&coffee.inLinks,coffee?coffee.cls:'-');
+ ok('coffee is visually distinguished',coffee&&/coffee/.test(coffee.cls),coffee?coffee.cls:'-');
  const ver=await pg.locator('#sheetp').textContent();
  ok('settings shows a version',/\d+\.\d+/.test(ver),ver.slice(0,80));
 
@@ -222,6 +230,46 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
  await pg.waitForTimeout(300);
  const doneVis=await pg.evaluate(()=>{const d=document.getElementById('doneS').getBoundingClientRect();
    return d.top>=0&&d.bottom<=innerHeight+1;});
+ // ── v3.2 settings layout ──
+ const sheet=await pg.evaluate(()=>{
+   const sp=document.getElementById('sheetp'); if(!sp) return null;
+   const kids=[...sp.children];
+   const idx=c=>kids.findIndex(e=>e.classList.contains(c));
+   const x=document.getElementById('closeS');
+   const hdr=sp.querySelector('.sh-h');
+   return {hasX:!!x,
+     xInHeader:!!(x&&hdr&&hdr.contains(x)),
+     xBox:x?x.getBoundingClientRect().width:0,
+     credsIdx:idx('creds'), linksIdx:idx('lnks'),
+     doneIdx:kids.findIndex(e=>e.id==='doneS'),
+     credsCount:sp.querySelectorAll('.creds').length,
+     abtInCreds:!!sp.querySelector('.creds .abt'),
+     expCls:(document.getElementById('expBtn')||{}).className||'',
+     impCls:(document.getElementById('impBtn')||{}).className||'',
+     expBg:document.getElementById('expBtn')?getComputedStyle(document.getElementById('expBtn')).backgroundColor:'',
+     impBg:document.getElementById('impBtn')?getComputedStyle(document.getElementById('impBtn')).backgroundColor:''};});
+ ok('settings has a close X',sheet&&sheet.hasX&&sheet.xInHeader,JSON.stringify(sheet&&{x:sheet.hasX,h:sheet.xInHeader}));
+ ok('close X is a usable target',sheet&&sheet.xBox>=30,sheet?sheet.xBox+'px':'-');
+ ok('prose sits below the links',sheet&&sheet.credsIdx>sheet.linksIdx,
+    sheet?`creds@${sheet.credsIdx} links@${sheet.linksIdx}`:'-');
+ ok('prose sits above Done',sheet&&sheet.credsIdx<sheet.doneIdx,
+    sheet?`creds@${sheet.credsIdx} done@${sheet.doneIdx}`:'-');
+ ok('credits and about are one block',sheet&&sheet.credsCount===1&&sheet.abtInCreds,
+    sheet?`blocks=${sheet.credsCount} abtInside=${sheet.abtInCreds}`:'-');
+ ok('export and import are colored differently',
+    sheet&&sheet.expBg!==sheet.impBg&&sheet.expBg!=='rgba(0, 0, 0, 0)',
+    sheet?`${sheet.expBg} vs ${sheet.impBg}`:'-');
+ // The X must actually close it. Existence is checked first: clicking a locator
+ // that never appears BLOCKS for the full timeout and then aborts the run,
+ // which is useless when this suite is being used to prove the old build fails.
+ if(await pg.locator('#closeS').count()){
+   await pg.locator('#closeS').click();await pg.waitForTimeout(350);
+   ok('the X closes the sheet',await pg.evaluate(()=>!document.getElementById('sheetp')));
+   await pg.locator('#gear').click();await pg.waitForTimeout(400);
+ } else {
+   ok('the X closes the sheet',false,'no #closeS in the sheet');
+ }
+
  ok('Done stays reachable in the longer sheet',doneVis);
  await pg.locator('#doneS').click();await pg.waitForTimeout(300);
 

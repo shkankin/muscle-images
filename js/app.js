@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='3.1';
+const APP_VERSION='3.2';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -30,7 +30,7 @@ const esc=function(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(
 const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.4l2.95 6.1 6.65.92-4.85 4.63 1.2 6.6L12 17.5 6.05 20.65l1.2-6.6L2.4 9.42l6.65-.92z"/></svg>';
 
 let figs=[],coll={},activeFig=null,detailColor='Flesh',detailTab='own',view='poster';
-let filters={own:'all',color:'',cls:''};
+let filters={own:'all',color:'',cls:'',scope:'catalog'};
 
 function loadColl(){try{coll=JSON.parse(localStorage.getItem(COLL_KEY)||'{}')||{};}catch(e){coll={};}}
 function saveColl(){try{localStorage.setItem(COLL_KEY,JSON.stringify(coll));}catch(e){}}
@@ -103,7 +103,42 @@ function cell(f){
     +(k?'<span class="cls '+k.toLowerCase()+'">'+k+'</span>':'')
     +'<span class="num">'+f.num+'</span><span class="star">'+STAR+'</span></button>';
 }
-function renderPoster(){$('grid').innerHTML=figs.map(cell).join('');renderProgress();}
+// ── poster zoom ────────────────────────────────────────────────────────
+// The responsive default stands until the user chooses; after that the choice
+// wins at every width and is remembered, because re-picking it on every visit
+// would be worse than the media query it replaced.
+const ZOOMS=[4,6,8,10];
+let posterCols=0;                       // 0 = follow the media queries
+try{ const z=+localStorage.getItem('muscle-zoom'); if(ZOOMS.indexOf(z)>=0) posterCols=z; }catch(e){}
+
+function effectiveCols(){
+  if(posterCols) return posterCols;
+  const w=window.innerWidth;
+  return w<=460?4:w<=720?6:w<=1000?8:10;
+}
+function applyZoom(){
+  const g=$('grid'); if(!g) return;
+  if(posterCols) g.style.setProperty('--cols',posterCols);
+  else g.style.removeProperty('--cols');
+  const b=$('zoom');
+  if(b){
+    const n=effectiveCols();
+    b.textContent=n;
+    b.setAttribute('aria-label','Showing '+n+' per row \u2014 tap to change');
+  }
+}
+// Steps 4 -> 6 -> 8 -> 10 and wraps. One button rather than a pair: on a phone
+// two 44px targets in the corner is worse than one that cycles.
+function stepZoom(){
+  const cur=effectiveCols();
+  let i=ZOOMS.indexOf(cur); if(i<0) i=0;
+  posterCols=ZOOMS[(i+1)%ZOOMS.length];
+  try{ localStorage.setItem('muscle-zoom',String(posterCols)); }catch(e){}
+  applyZoom();
+  renderBursts();                       // cell size changed, so the sheet height did
+}
+
+function renderPoster(){$('grid').innerHTML=figs.map(cell).join('');applyZoom();renderProgress();}
 function renderProgress(){
   const n=figs.filter(function(f){return isOwned(f.id);}).length;
   $('pCount').textContent=n;
@@ -111,19 +146,61 @@ function renderProgress(){
   $('pText').textContent='of '+TOTAL+' \u00b7 '+(TOTAL-n)+' to find';
 }
 
+// Which numbers a search box entry selects, when it is a list or a range.
+// "1-34" and "1, 7, 43, 76" and "1-5, 20, 30-32" all work. A BARE number is
+// deliberately NOT treated this way — typing "13" keeps its old substring
+// behavior so the list narrows as you type. Only an explicit comma or dash
+// switches to exact matching.
+function parseNumSpec(q){
+  if(!/[,\-\u2013]/.test(q)) return null;
+  if(!/^[\d\s,\-\u2013]+$/.test(q)) return null;
+  const set=new Set(); let any=false;
+  q.split(',').forEach(function(part){
+    part=part.trim(); if(!part) return;
+    const m=part.match(/^(\d+)\s*[-\u2013]\s*(\d+)$/);
+    if(m){
+      let a=+m[1],b=+m[2];
+      if(a>b){const t=a;a=b;b=t;}
+      if(b-a>400) return;                 // a typo like 1-99999 shouldn't hang
+      for(let i=a;i<=b;i++) set.add(i);
+      any=true;
+    } else if(/^\d+$/.test(part)){ set.add(+part); any=true; }
+  });
+  return any?set:null;
+}
+
+// Color and class have to be answered TOGETHER, against one pool of colors.
+// Evaluated separately — which is what they used to be — "Red" plus "Class A"
+// returned every figure that was made in Red AND happened to be class A in
+// some other color, which reads as OR even though both filters are set.
+// The pool is either every color the sculpt was made in, or only the colors
+// you actually own; that is what the scope switch chooses. Scope is irrelevant
+// when neither filter is set, so it is not applied then.
+function colorClassOK(f){
+  if(!filters.color&&!filters.cls) return true;
+  let pool=filters.scope==='mine'?ownedColors(f.id):f.colors;
+  if(filters.color) pool=pool.filter(function(c){return c===filters.color;});
+  if(!pool.length) return false;
+  if(!filters.cls) return true;
+  const cls=f.cls||{};
+  return pool.some(function(c){return cls[c]===filters.cls;});
+}
+
 function visible(){
-  const q=($('search').value||'').trim().toLowerCase();
+  const raw=($('search').value||'').trim();
+  const q=raw.toLowerCase();
+  const nums=parseNumSpec(raw);
   return figs.filter(function(f){
-    if(q&&!(String(f.num).indexOf(q)>=0||f.name.toLowerCase().indexOf(q)>=0||f.aka.toLowerCase().indexOf(q)>=0)) return false;
+    if(nums){ if(!nums.has(f.num)) return false; }
+    else if(q&&!(String(f.num).indexOf(q)>=0||f.name.toLowerCase().indexOf(q)>=0||f.aka.toLowerCase().indexOf(q)>=0)) return false;
     if(filters.own==='owned'&&!isOwned(f.id)) return false;
     if(filters.own==='missing'&&isOwned(f.id)) return false;
     if(filters.own==='want'&&!isWanted(f.id)) return false;
-    if(filters.color&&f.colors.indexOf(filters.color)<0) return false;
-    if(filters.cls&&Object.values(f.cls||{}).indexOf(filters.cls)<0) return false;
+    if(!colorClassOK(f)) return false;
     return true;
   });
 }
-function activeFilterCount(){return (filters.own!=='all'?1:0)+(filters.color?1:0)+(filters.cls?1:0);}
+function activeFilterCount(){return (filters.own!=='all'?1:0)+(filters.color?1:0)+(filters.cls?1:0)+(filters.scope==='mine'?1:0);}
 
 function listRow(f){
   const owned=isOwned(f.id),mine=ownedColors(f.id);
@@ -427,6 +504,21 @@ function closeSheet(){
   const p=$('sheetp');if(p)p.remove();
   unlockScroll();
 }
+function scopeNote(){
+  return filters.scope==='mine'
+    ? 'Colors you have logged. "Green + Class B" finds figures where YOUR green one is a B.'
+    : 'Every color the figure was made in, owned or not.';
+}
+// Repaint the chips in place. Rebuilding the sheet resets its scrollTop, and
+// this sheet is long enough that tapping a class chip near the bottom would
+// throw you back to the top — the same fault fixed on the detail screen.
+function syncFilters(){
+  const sp=$('sheetp'); if(!sp) return;
+  const bs=sp.querySelectorAll('[data-f]');
+  for(let i=0;i<bs.length;i++) bs[i].classList.toggle('on',filters[bs[i].dataset.f]===bs[i].dataset.v);
+  const n=$('scopeNote'); if(n) n.textContent=scopeNote();
+}
+
 function openFilters(){
   lockScroll();
   function seg(name,val,label){
@@ -436,12 +528,17 @@ function openFilters(){
     +'<div class="sheet-p" id="sheetp"><div class="grab"></div><div class="sh-h">Filters</div>'
     +'<div class="fld">Ownership</div><div class="chips">'
     +seg('own','all','All')+seg('own','owned','Owned')+seg('own','missing','Missing')+seg('own','want','Want list')+'</div>'
-    +'<div class="fld">Made in color</div><div class="chips">'+seg('color','','Any')
+    +'<div class="fld">Color and class apply to</div><div class="chips">'
+    +seg('scope','catalog','The whole catalog')+seg('scope','mine','Only what I own')+'</div>'
+    +'<div class="fnote" id="scopeNote">'+scopeNote()+'</div>'
+    +'<div class="fld">Color</div><div class="chips">'+seg('color','','Any')
     +COLORS.map(function(c){return '<button class="chip '+(filters.color===c.k?'on':'')+'" data-f="color" data-v="'+esc(c.k)+'">'
       +'<i style="background:'+c.hex+'"></i>'+esc(c.k)+'</button>';}).join('')+'</div>'
     +'<div class="fld">Class</div><div class="chips">'+seg('cls','','Any')
     +['A','B','C'].map(function(L){return '<button class="chip '+(filters.cls===L?'on':'')+'" data-f="cls" data-v="'+L+'">'
       +'<span class="k" style="background:'+CLS_HEX[L]+'">'+L+'</span>Class '+L+'</button>';}).join('')+'</div>'
+    +'<div class="fnote">Color and class are answered together \u2014 both must be true of the '
+    +'SAME color, not of the figure in general.</div>'
     +'<button class="btn" id="clearF" style="margin-top:18px">Clear all filters</button>'
     +'<button class="btn gold" id="doneF">Done</button></div>');
 }
@@ -454,21 +551,28 @@ const EXT='<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor
 // Every outbound link goes through here so none can ship without
 // rel="noopener noreferrer" — target="_blank" without it hands the opened page
 // a handle back to this one.
-function extLink(href,title,sub){
-  return '<a class="lnk" href="'+href+'" target="_blank" rel="noopener noreferrer">'
+function extLink(href,title,sub,accent){
+  return '<a class="lnk '+(accent||'')+'" href="'+href+'" target="_blank" rel="noopener noreferrer">'
     +'<span class="lnkt"><b>'+title+'</b><i>'+sub+'</i></span>'+EXT+'</a>';
 }
 
 function openSettings(){
   lockScroll();
   document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div>'
-    +'<div class="sheet-p" id="sheetp"><div class="grab"></div><div class="sh-h">Settings</div>'
+    +'<div class="sheet-p" id="sheetp"><div class="grab"></div>'
+    +'<div class="sh-h">Settings<button class="sh-x" id="closeS" aria-label="Close">'
+    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" '
+    +'stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
     +'<div class="fld">Your collection</div>'
-    +'<button class="btn" id="expBtn">Export collection</button>'
-    +'<button class="btn" id="impBtn">Import collection</button>'
+    +'<button class="btn out" id="expBtn">Export collection</button>'
+    +'<button class="btn in" id="impBtn">Import collection</button>'
     +'<input type="file" id="impFile" accept="application/json" hidden>'
     +'<div class="fld">Catalog</div><button class="btn" id="reloadBtn">Reload catalog</button>'
+    // Coffee lives with the links now — it is a destination like the rest, and a
+    // lone solid yellow button below them read as a second "Done".
     +'<div class="fld">Links</div><div class="lnks">'
+    +extLink('https://buymeacoffee.com/btring','Buy me a coffee',
+             'Keeps this free and ad-free','coffee')
     +extLink('https://github.com/shkankin/muscle-images','Source on GitHub',
              'The app and every image live in this repo')
     +extLink('https://github.com/shkankin/muscle-images/issues/new','Report a bug',
@@ -476,19 +580,17 @@ function openSettings(){
     +extLink('https://www.wingkongtoyexchange.com','Wing Kong Toy Exchange',
              'Buying and selling vintage toys')
     +'</div>'
-    +'<div class="fld">Credits</div><div class="creds">'
+    // Every block of prose sits together at the foot of the sheet, so the
+    // things you can DO are all above the things you merely read.
+    +'<div class="fld">Credits &amp; about</div><div class="creds">'
     +'<p>Catalog data is based on the <b>Master Checklist</b> compiled by '
     +'<b>Brian Bonanno</b>.</p>'
     +'<p>Figure photography came from <b>University of M.U.S.C.L.E.</b>, '
     +'now defunct \u2014 thanks to everyone who documented this line before the '
-    +'sites went dark.</p></div>'
-    +'<div class="fld">Support</div>'
-    +'<a class="btn coffee" href="https://buymeacoffee.com/btring" target="_blank" rel="noopener noreferrer">'
-    +'Buy me a coffee</a>'
-    +'<div class="fld">About</div><div class="abt">'
-    +'All 236 figures of the first-generation M.U.S.C.L.E. line. '
+    +'sites went dark.</p>'
+    +'<p class="abt">All 236 figures of the first-generation M.U.S.C.L.E. line. '
     +'A free, non-commercial fan project, not affiliated with Mattel or Bandai.'
-    +'<br><span style="opacity:.7">Version '+APP_VERSION+'</span></div>'
+    +'<br><span style="opacity:.7">Version '+APP_VERSION+'</span></p></div>'
     +'<button class="btn gold" id="doneS" style="margin-top:16px">Done</button></div>');
 }
 function toast(msg){
@@ -575,12 +677,13 @@ document.addEventListener('click',function(e){
   }
 
   if(e.target.closest('#filterBtn')){openFilters();return;}
+  if(e.target.closest('#zoom')){stepZoom();return;}
   if(e.target.closest('#gear')){openSettings();return;}
   const fx=e.target.closest('[data-f]');
-  if(fx){filters[fx.dataset.f]=fx.dataset.v;closeSheet();openFilters();renderList();return;}
+  if(fx){filters[fx.dataset.f]=fx.dataset.v;syncFilters();renderList();return;}
   
-  if(e.target.closest('#clearF')){filters={own:'all',color:'',cls:''};closeSheet();renderList();return;}
-  if(e.target.closest('#doneF')||e.target.closest('#doneS')||e.target.id==='scrim'){closeSheet();return;}
+  if(e.target.closest('#clearF')){filters={own:'all',color:'',cls:'',scope:'catalog'};closeSheet();renderList();return;}
+  if(e.target.closest('#doneF')||e.target.closest('#doneS')||e.target.closest('#closeS')||e.target.id==='scrim'){closeSheet();return;}
 
   if(e.target.closest('#expBtn')){
     const blob=new Blob([JSON.stringify(coll,null,1)],{type:'application/json'});

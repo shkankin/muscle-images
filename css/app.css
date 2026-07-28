@@ -79,10 +79,26 @@
 
   .sheet { position: relative; z-index: 5; }
   @media (min-width: 1001px) { .sheet { margin-top: -56px; } }
-  .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: clamp(5px, 1.1vw, 11px); }
-  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(8, 1fr); } }
-  @media (max-width: 720px)  { .grid { grid-template-columns: repeat(6, 1fr); } }
-  @media (max-width: 460px)  { .grid { grid-template-columns: repeat(4, 1fr); } }
+  /* --cols carries the column count so the zoom button can override the
+     responsive default with one property set, instead of fighting media
+     queries with !important. */
+  .grid { display: grid; grid-template-columns: repeat(var(--cols, 10), 1fr);
+          gap: clamp(5px, 1.1vw, 11px); }
+  @media (max-width: 1000px) { .grid { --cols: 8; } }
+  @media (max-width: 720px)  { .grid { --cols: 6; } }
+  @media (max-width: 460px)  { .grid { --cols: 4; } }
+
+  /* Zoom sits opposite the gear so the two corner controls mirror each other.
+     Poster only — it means nothing on the list or stats. */
+  #zoom { position: fixed; top: calc(8px + var(--safe-t)); left: 10px; z-index: 40;
+          width: 44px; height: 44px; border-radius: 50%; display: none;
+          align-items: center; justify-content: center; gap: 1px;
+          background: rgba(8,4,12,.6); border: 1px solid var(--line);
+          color: var(--keyline); backdrop-filter: blur(6px);
+          font-family: var(--disp); font-size: 15px; letter-spacing: .5px; cursor: pointer; }
+  body.v-poster #zoom { display: flex; }
+  #zoom:active { transform: scale(.94); }
+  #zoom svg { width: 15px; height: 15px; }
 
   /* Owned and unowned used to differ only by #F2D98A vs #FFD700 — two bright
      yellows, indistinguishable at arm's length across a sheet of 236. Unowned
@@ -212,17 +228,17 @@
   .shero img { display: block; width: 100%; height: auto; aspect-ratio: 1694 / 796; }
   /* How far the stats climb back over the artwork. The bottom ~15% of the
      image is just the lowest rope trailing off, so this covers mostly air. */
-  .stats { --hero-lap: clamp(18px, 6vw, 48px); }
+  .stats { --hero-lap: clamp(30px, 10vw, 74px); }
   /* Kept inside the artwork's clear corner: it is empty out to 60% width for
      the top third, and the caption is capped well short of that so the
      wrestler's hand is never crowded, at any width. */
-  .sherocap { position: absolute; left: 14px; top: 6%; max-width: 52%;
+  .sherocap { position: absolute; left: 14px; top: 3.5%; max-width: 52%;
               line-height: 1; pointer-events: none; }
   .sherocap .k { display: block; font-family: var(--disp);
-                 font-size: clamp(11px, 3.1vw, 17px); letter-spacing: 1.2px;
+                 font-size: clamp(14px, 4.1vw, 22px); letter-spacing: 1.2px;
                  text-transform: uppercase; color: var(--keyline); }
   .sherocap .t { display: block; font-family: var(--disp);
-                 font-size: clamp(26px, 7.6vw, 46px); letter-spacing: .5px;
+                 font-size: clamp(34px, 9.8vw, 58px); letter-spacing: .5px;
                  text-transform: uppercase; color: var(--star-full);
                  text-shadow: 0 2px 0 #FF6600, 0 3px 10px rgba(0,0,0,.55); }
   /* Sits above the artwork so the completion card reads as resting on the
@@ -332,8 +348,33 @@
          font-family: var(--disp); font-size: 15px; letter-spacing: .5px; background: var(--panel);
          border: 1px solid var(--line); color: var(--ink); }
   .btn.gold { background: var(--star-full); border-color: var(--star-full); color: #1A1206; }
-  .btn.coffee { display: block; text-align: center; text-decoration: none;
-                background: #FFDD00; border-color: #C9A800; color: #1A1206; }
+  /* Export and import get their own colors: they do opposite things and one of
+     them overwrites your collection, so they should not look interchangeable.
+     Tinted rather than solid, so neither competes with the solid-yellow Done. */
+  .btn.out { border-color: rgba(255,215,0,.55); color: var(--star-full);
+             background: rgba(255,215,0,.10); }
+  .btn.in  { border-color: rgba(6,176,254,.55); color: #6FD2FF;
+             background: rgba(6,176,254,.12); }
+
+  /* Close X in the sheet header. The sheet already closes on Done and on the
+     scrim, but neither is obvious, and Done sits past a screenful of prose. */
+  .sh-h { position: relative; }
+  .sh-x { position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+          width: 38px; height: 38px; display: flex; align-items: center;
+          justify-content: center; border-radius: 50%; cursor: pointer;
+          background: rgba(255,255,255,.06); border: 1px solid var(--line);
+          color: var(--ink-2); }
+  .sh-x svg { width: 17px; height: 17px; }
+  .sh-x:active { transform: translateY(-50%) scale(.92); }
+
+  /* The coffee link keeps its identity inside the link group. */
+  .lnk.coffee { background: rgba(255,221,0,.10); }
+  .lnk.coffee .lnkt b { color: #FFDD00; }
+  .lnk.coffee .ext { color: #FFDD00; opacity: 1; }
+
+  /* Small print under a filter section, explaining what the choice above does. */
+  .fnote { font-size: 12px; color: var(--ink-3); line-height: 1.45;
+           margin: -2px 0 4px; }
 
   /* Outbound links. Lighter than .btn on purpose: these are destinations, not
      actions, and stacking four solid buttons would give the sheet no shape.
@@ -358,7 +399,7 @@
   .creds p { margin: 0 0 8px; }
   .creds p:last-child { margin-bottom: 0; }
   .creds b { color: var(--keyline); font-weight: 700; }
-  .abt { font-size: 13px; color: var(--ink-3); line-height: 1.5; }
+  .creds .abt { color: var(--ink-3); margin-top: 10px; }
 
   .nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
          height: calc(var(--bar-h) + var(--safe-b)); padding-bottom: var(--safe-b);

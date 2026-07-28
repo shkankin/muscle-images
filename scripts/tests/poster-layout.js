@@ -88,5 +88,71 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
      !!heroB&&Math.abs(heroB.top-heroB.declared)<=2,JSON.stringify(heroB));
   await ctx.close();
  }
+ // ── v3.2 poster zoom ─────────────────────────────────────────────────
+ // Its own context: the width loop above closes each one as it goes.
+ {
+  const ctx=await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  await ctx.route(/raw\.githubusercontent\.com/,rt=>{const u=rt.request().url();
+    if(/figures\.json/.test(u))return rt.fulfill({status:200,contentType:'application/json; charset=utf-8',body:cat});
+    if(/muscle_burst/.test(u))return rt.fulfill({status:200,contentType:'image/png',body:BURST});
+    return rt.fulfill({status:200,contentType:'image/png',body:PNG});});
+  const pg=await ctx.newPage();
+  await pg.goto(`http://localhost:${PORT}/`,{waitUntil:'domcontentloaded'});
+  await pg.waitForSelector('.cell',{timeout:12000});await pg.waitForTimeout(1200);
+  const colsNow=()=>pg.evaluate(()=>
+    getComputedStyle(document.getElementById('grid')).gridTemplateColumns.split(' ').length);
+  const zb=await pg.evaluate(()=>{const b=document.getElementById('zoom');
+    return b?{visible:getComputedStyle(b).display!=='none',label:b.textContent.trim(),
+              w:Math.round(b.getBoundingClientRect().width)}:null;});
+  ok('poster has a zoom button',!!zb&&zb.visible,JSON.stringify(zb));
+  if(zb&&zb.visible){
+    ok('zoom is a usable tap target',zb.w>=40,zb.w+'px');
+    ok('zoom shows the current count',/^\d+$/.test(zb.label),zb.label);
+    ok('narrow default is 4 across',(await colsNow())===4,String(await colsNow()));
+    const seq=[];
+    for(let i=0;i<4;i++){
+      await pg.locator('#zoom').click();await pg.waitForTimeout(280);
+      seq.push(await colsNow());
+    }
+    ok('zoom steps 6, 8, 10 then wraps to 4',seq.join()==='6,8,10,4',seq.join());
+    // step to the widest and check the cells still behave
+    await pg.locator('#zoom').click();await pg.locator('#zoom').click();
+    await pg.locator('#zoom').click();await pg.waitForTimeout(350);
+    const wide=await pg.evaluate(()=>{
+      const cs=[...document.querySelectorAll('.cell')].slice(0,10).map(c=>c.getBoundingClientRect());
+      const g=document.getElementById('grid').getBoundingClientRect();
+      return {cols:getComputedStyle(document.getElementById('grid')).gridTemplateColumns.split(' ').length,
+              minW:Math.min(...cs.map(r=>r.width)),
+              over:Math.max(...cs.map(r=>r.right))-g.right,
+              ratio:cs[0].height/cs[0].width,
+              star:document.querySelector('.cell .star').getBoundingClientRect().width};});
+    console.log(`      at ${wide.cols} across: cell ${wide.minW.toFixed(1)}px, star ${wide.star.toFixed(1)}px, ratio ${wide.ratio.toFixed(2)}`);
+    ok('cells stay inside the sheet at max zoom',wide.over<=1,wide.over.toFixed(1)+'px over');
+    ok('cells keep their aspect at max zoom',Math.abs(wide.ratio-1.12)<0.08,wide.ratio.toFixed(3));
+    ok('star is still visible at max zoom',wide.star>=8,wide.star.toFixed(1)+'px');
+    const want=wide.cols;
+    await pg.reload({waitUntil:'domcontentloaded'});
+    await pg.waitForSelector('.cell');await pg.waitForTimeout(1100);
+    ok('zoom choice survives a reload',(await colsNow())===want,`${await colsNow()} vs ${want}`);
+    // the burst layer is sized from the document height, which the zoom changes
+    const layer=await pg.evaluate(()=>({doc:document.body.scrollHeight,
+      bursts:parseInt(document.getElementById('bursts').style.height)||0}));
+    ok('burst layer still covers the sheet after zooming',Math.abs(layer.bursts-layer.doc)<=2,
+       `bursts ${layer.bursts} vs doc ${layer.doc}`);
+  }
+  // the zoom control belongs to the poster only
+  // Guarded: with no #zoom in the DOM this used to throw inside the timeout, so
+  // the promise never resolved and the whole suite died with "promise was
+  // garbage collected" instead of reporting a failure.
+  const onList=await pg.evaluate(()=>{
+    const lv=document.querySelector('#nav button[data-view="list"]');
+    if(lv) lv.click();
+    return new Promise(r=>setTimeout(()=>{
+      const z=document.getElementById('zoom');
+      r(z?getComputedStyle(z).display:'absent');},400));});
+  ok('zoom is hidden off the poster',onList==='none',onList);
+  await ctx.close();
+ }
+
  await b.close();console.log(`\n=== ${pass} passed, ${fail} failed ===`);process.exit(fail?1:0);
 })().catch(e=>{console.error(e);process.exit(1);});
