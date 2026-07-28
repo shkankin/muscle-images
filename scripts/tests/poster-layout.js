@@ -111,13 +111,14 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
     ok('narrow default is 4 across',(await colsNow())===4,String(await colsNow()));
     const seq=[];
     for(let i=0;i<4;i++){
-      await pg.locator('#zoom').click();await pg.waitForTimeout(280);
+      await pg.locator('#zoom').click();await pg.waitForTimeout(320);
       seq.push(await colsNow());
     }
-    ok('zoom steps 6, 8, 10 then wraps to 4',seq.join()==='6,8,10,4',seq.join());
-    // step to the widest and check the cells still behave
-    await pg.locator('#zoom').click();await pg.locator('#zoom').click();
-    await pg.locator('#zoom').click();await pg.waitForTimeout(350);
+    // 8 and 10 were dropped in v3.3 — too cramped to read on a phone.
+    ok('zoom toggles 4 and 6 only',seq.join()==='6,4,6,4',seq.join());
+    ok('zoom never goes past 6',Math.max(...seq)<=6,seq.join());
+    // sit on the wider step and check the cells still behave
+    if((await colsNow())!==6){ await pg.locator('#zoom').click();await pg.waitForTimeout(320); }
     const wide=await pg.evaluate(()=>{
       const cs=[...document.querySelectorAll('.cell')].slice(0,10).map(c=>c.getBoundingClientRect());
       const g=document.getElementById('grid').getBoundingClientRect();
@@ -127,6 +128,7 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
               ratio:cs[0].height/cs[0].width,
               star:document.querySelector('.cell .star').getBoundingClientRect().width};});
     console.log(`      at ${wide.cols} across: cell ${wide.minW.toFixed(1)}px, star ${wide.star.toFixed(1)}px, ratio ${wide.ratio.toFixed(2)}`);
+    ok('cells stay legible at the widest step',wide.minW>=46,wide.minW.toFixed(1)+'px');
     ok('cells stay inside the sheet at max zoom',wide.over<=1,wide.over.toFixed(1)+'px over');
     ok('cells keep their aspect at max zoom',Math.abs(wide.ratio-1.12)<0.08,wide.ratio.toFixed(3));
     ok('star is still visible at max zoom',wide.star>=8,wide.star.toFixed(1)+'px');
@@ -139,6 +141,35 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
       bursts:parseInt(document.getElementById('bursts').style.height)||0}));
     ok('burst layer still covers the sheet after zooming',Math.abs(layer.bursts-layer.doc)<=2,
        `bursts ${layer.bursts} vs doc ${layer.doc}`);
+
+    // ── the page must SHRINK when the grid does ──
+    // renderBursts() sizes .field from document height, but .field's own height
+    // counts toward that measurement. Reading it without clearing first meant
+    // the page could only ever grow: zooming out to a shorter grid left
+    // thousands of px of empty field below the last row.
+    const gap=async()=>await pg.evaluate(async()=>{
+      window.scrollTo({top:document.body.scrollHeight,behavior:'instant'});
+      await new Promise(r=>setTimeout(r,200));
+      const cells=document.querySelectorAll('.cell');
+      const last=cells[cells.length-1].getBoundingClientRect();
+      const bar=document.querySelector('.progress').getBoundingClientRect();
+      return {dead:Math.round(document.body.scrollHeight-(last.bottom+scrollY)),
+              clear:Math.round(bar.top-last.bottom),
+              doc:document.body.scrollHeight};});
+    // Start from 4 explicitly, so the direction of the change is known: 4 -> 6
+    // is FEWER rows and must make the document shorter.
+    if((await colsNow())!==4){ await pg.locator('#zoom').click();await pg.waitForTimeout(400); }
+    const at4=await gap();
+    await pg.locator('#zoom').click();await pg.waitForTimeout(450);
+    const at6=await gap();
+    console.log(`      4 across: doc ${at4.doc}, dead ${at4.dead}px, clears bar by ${at4.clear}px`);
+    console.log(`      6 across: doc ${at6.doc}, dead ${at6.dead}px, clears bar by ${at6.clear}px`);
+    ok('zooming out actually shortens the page',at6.doc<at4.doc-500,`${at4.doc} -> ${at6.doc}`);
+    ok('no runaway dead space at 6 across',at6.dead<400,`${at6.dead}px`);
+    ok('no runaway dead space at 4 across',at4.dead<400,`${at4.dead}px`);
+    // ── the floating progress pill must not sit on the last row ──
+    ok('last row clears the pill at 6 across',at6.clear>=12,`${at6.clear}px`);
+    ok('last row clears the pill at 4 across',at4.clear>=12,`${at4.clear}px`);
   }
   // the zoom control belongs to the poster only
   // Guarded: with no #zoom in the DOM this used to throw inside the timeout, so

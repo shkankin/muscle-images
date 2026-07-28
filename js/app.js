@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='3.2';
+const APP_VERSION='3.3';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -107,7 +107,7 @@ function cell(f){
 // The responsive default stands until the user chooses; after that the choice
 // wins at every width and is remembered, because re-picking it on every visit
 // would be worse than the media query it replaced.
-const ZOOMS=[4,6,8,10];
+const ZOOMS=[4,6];   // 8 and 10 were too cramped to read
 let posterCols=0;                       // 0 = follow the media queries
 try{ const z=+localStorage.getItem('muscle-zoom'); if(ZOOMS.indexOf(z)>=0) posterCols=z; }catch(e){}
 
@@ -135,7 +135,8 @@ function stepZoom(){
   posterCols=ZOOMS[(i+1)%ZOOMS.length];
   try{ localStorage.setItem('muscle-zoom',String(posterCols)); }catch(e){}
   applyZoom();
-  renderBursts();                       // cell size changed, so the sheet height did
+  // The grid reflows first; measuring in the same frame reads the old height.
+  requestAnimationFrame(function(){ renderBursts(); });
 }
 
 function renderPoster(){$('grid').innerHTML=figs.map(cell).join('');applyZoom();renderProgress();}
@@ -605,6 +606,13 @@ function renderBursts(){
     $('field').style.height='';   // else the tall poster field pads the page
     return;
   }
+  // Clear our own layers BEFORE measuring. They are absolutely positioned but
+  // their explicit heights still count toward document height, so measuring
+  // with last render's values left in place meant the page could only ever grow
+  // — zooming out to a shorter grid left thousands of px of dead space below it.
+  const bs=$('bursts'), fl=$('field');
+  bs.style.height=''; fl.style.height='';
+  void document.body.offsetHeight;            // force the reflow before reading
   const h=document.body.scrollHeight||3000,W=window.innerWidth||430;
   const out=[],imgs=['red_star.png','green_star.png'];
   const heroSize=Math.round(W*1.45);

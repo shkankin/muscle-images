@@ -55,6 +55,10 @@
 
   .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto;
           padding: 0 10px 30px; overflow-x: clip; }
+  /* The poster's progress pill floats over the sheet, so the last row needs room
+     to clear it: the pill is 46px tall and sits 10px above the nav bar. Without
+     this the bottom row sat 26px underneath it and could never be scrolled clear. */
+  body.v-poster .wrap { padding-bottom: calc(var(--bar-h) + var(--safe-b) + 78px); }
 
   .gear { position: fixed; top: calc(10px + var(--safe-t)); right: 12px; z-index: 40;
           width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
