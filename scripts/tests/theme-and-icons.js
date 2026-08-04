@@ -114,15 +114,20 @@ const rgb=s=>s.match(/\d+/g).slice(0,3).map(Number);
    const k=document.querySelector('.sherocap .k'),t=document.querySelector('.sherocap .t');
    const body=document.getElementById('statsBody'),card=body&&body.firstElementChild;
    if(!img||!cap||!k||!t||!card) return {broken:true};
-   const hb=h.getBoundingClientRect(),cb=cap.getBoundingClientRect(),kb=card.getBoundingClientRect();
+   const hb=h.getBoundingClientRect(),ib=img.getBoundingClientRect(),
+         cb=cap.getBoundingClientRect(),kb=card.getBoundingClientRect();
    const alpha=s=>{const m=s.match(/[\d.]+/g).map(Number);return m.length>3?m[3]:1;};
    return {cls:+window.__cls.toFixed(4),
      cardTop:Math.round(kb.top+scrollY),
      ar:getComputedStyle(img).aspectRatio, natural:img.naturalWidth+'x'+img.naturalHeight,
      overflow:getComputedStyle(h).overflow,
      bleedL:Math.round(hb.left),bleedR:Math.round(innerWidth-hb.right),
-     capRightPct:+(100*(cb.right-hb.left)/hb.width).toFixed(1),
-     capBotPct:+(100*(cb.bottom-hb.top)/hb.height).toFixed(1),
+     // Measured against the RENDERED ART, not the box: v3.4 scales the image
+     // 10% without growing its layout box, so the two are no longer the same
+     // rectangle and the clear zone is a percentage of the artwork.
+     scale:+(ib.height/hb.height).toFixed(3),
+     capRightPct:+(100*(cb.right-ib.left)/ib.width).toFixed(1),
+     capBotPct:+(100*(cb.bottom-ib.top)/ib.height).toFixed(1),
      overlapPct:+(100*(hb.bottom-kb.top)/hb.height).toFixed(1),
      kColor:getComputedStyle(k).color,tColor:getComputedStyle(t).color,
      cardBg:getComputedStyle(card).backgroundColor,cardAlpha:alpha(getComputedStyle(card).backgroundColor),
@@ -143,6 +148,8 @@ const rgb=s=>s.match(/\d+/g).slice(0,3).map(Number);
    ok('the overlapping element is the completion card',/bigstat/.test(hero.cardIs),hero.cardIs);
    ok('overlapping card is fully opaque over the ropes',hero.cardAlpha===1,
       `${hero.cardBg} alpha ${hero.cardAlpha}`);
+   ok('hero art is scaled up',hero.scale>1.05&&hero.scale<1.2,'x'+hero.scale);
+   ok('scaling the art did not change its layout box',hero.cls<0.01,'CLS '+hero.cls);
    ok('hero clips its caption if the art fails',hero.overflow==='hidden',hero.overflow);
    ok('renderStats has its own container',hero.bodyExists);
    const field=rgb(await pg.evaluate(()=>getComputedStyle(document.getElementById('field')).backgroundColor));

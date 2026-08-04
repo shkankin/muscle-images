@@ -325,6 +325,16 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
  ok('dot grid is sized per figure',new Set(nm.dotCols).size>1,
     `--dot-cols values: ${[...new Set(nm.dotCols)].join(',')}`);
 
+ // ── v3.4: the list wordmark carries no shadow ──
+ await pg.locator('#nav button[data-view="list"]').click();await pg.waitForTimeout(600);
+ const logo=await pg.evaluate(()=>{const l=document.querySelector('.listlogo');
+   if(!l) return null; const c=getComputedStyle(l);
+   return {filter:c.filter,shadow:c.boxShadow,textShadow:c.textShadow};});
+ ok('list logo has no drop-shadow',
+    !!logo&&(logo.filter==='none'||!/drop-shadow/.test(logo.filter)),
+    logo?logo.filter:'no .listlogo');
+ ok('list logo has no box-shadow either',!!logo&&logo.shadow==='none',logo?logo.shadow:'-');
+
  ok('no JS errors',errs.length===0,errs.join(' | '));
  await b.close();console.log(`\n=== ${pass} passed, ${fail} failed ===`);process.exit(fail?1:0);
 })().catch(e=>{console.error(e);process.exit(1);});
