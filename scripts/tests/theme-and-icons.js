@@ -126,6 +126,9 @@ const rgb=s=>s.match(/\d+/g).slice(0,3).map(Number);
      // 10% without growing its layout box, so the two are no longer the same
      // rectangle and the clear zone is a percentage of the artwork.
      scale:+(ib.height/hb.height).toFixed(3),
+     // Where the scaled art spills past its box. .shero clips it, so the sign
+     // of these decides WHAT is lost.
+     clipTop:Math.round(hb.top-ib.top), clipBot:Math.round(ib.bottom-hb.bottom),
      capRightPct:+(100*(cb.right-ib.left)/ib.width).toFixed(1),
      capBotPct:+(100*(cb.bottom-ib.top)/ib.height).toFixed(1),
      overlapPct:+(100*(hb.bottom-kb.top)/hb.height).toFixed(1),
@@ -149,6 +152,13 @@ const rgb=s=>s.match(/\d+/g).slice(0,3).map(Number);
    ok('overlapping card is fully opaque over the ropes',hero.cardAlpha===1,
       `${hero.cardBg} alpha ${hero.cardAlpha}`);
    ok('hero art is scaled up',hero.scale>1.05&&hero.scale<1.2,'x'+hero.scale);
+   // The raised fingertips live in the top 0-5% of the artwork and the mohawk in
+   // the 5-10% band, so ANY clipping at the top decapitates him. The bottom 20%
+   // is only 4-6% opaque — the turnbuckle post — so that is where the spill goes.
+   ok('nothing is clipped off the top of the art',hero.clipTop<=0,
+      `${hero.clipTop}px lost at the top`);
+   ok('the spill goes off the bottom instead',hero.scale<=1.001||hero.clipBot>0,
+      `bottom spill ${hero.clipBot}px`);
    ok('scaling the art did not change its layout box',hero.cls<0.01,'CLS '+hero.cls);
    ok('hero clips its caption if the art fails',hero.overflow==='hidden',hero.overflow);
    ok('renderStats has its own container',hero.bodyExists);

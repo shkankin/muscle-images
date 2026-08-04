@@ -230,26 +230,28 @@
            margin-bottom: calc(-1 * var(--hero-lap)); overflow: hidden; }
   /* The artwork is scaled 10% but the BOX is not: transform does not affect
      layout, so the caption, the overlap and the page height all stay exactly
-     where they were. transform-origin pins it to the bottom-centre, so the
-     growth happens upward and outward into the empty top of the frame rather
-     than pushing the ropes down past the completion card. overflow:hidden on
-     .shero already clips the extra width at the screen edges, which is fine —
-     the ropes are drawn running off both sides anyway. */
+     where they were. overflow:hidden on .shero then clips whatever spills.
+     transform-origin is pinned to the TOP centre, which decides WHERE that
+     clipping lands: the raised fingertips sit in the top 0-5% of the artwork
+     and the mohawk in the 5-10% band, so anchoring at the bottom pushed both
+     off the top edge. Anchored at the top, nothing is lost up there and the
+     spill goes off the bottom instead — the last 20% of the art is only 4-6%
+     opaque, just the turnbuckle post and the lowest rope trailing away. */
   .shero img { display: block; width: 100%; height: auto; aspect-ratio: 1694 / 796;
-               transform: scale(1.10); transform-origin: 50% 100%; }
+               transform: scale(1.10); transform-origin: 50% 0; }
   /* How far the stats climb back over the artwork. The bottom ~15% of the
      image is just the lowest rope trailing off, so this covers mostly air. */
   .stats { --hero-lap: clamp(30px, 10vw, 74px); }
   /* Kept inside the artwork's clear corner: it is empty out to 60% width for
      the top third, and the caption is capped well short of that so the
      wrestler's hand is never crowded, at any width. */
-  .sherocap { position: absolute; left: 14px; top: 2%; max-width: 52%;
+  .sherocap { position: absolute; left: 14px; top: 3.5%; max-width: 52%;
               line-height: 1; pointer-events: none; }
   .sherocap .k { display: block; font-family: var(--disp);
-                 font-size: clamp(13px, 3.8vw, 20px); letter-spacing: 1.2px;
+                 font-size: clamp(14px, 4.1vw, 22px); letter-spacing: 1.2px;
                  text-transform: uppercase; color: var(--keyline); }
   .sherocap .t { display: block; font-family: var(--disp);
-                 font-size: clamp(31px, 8.8vw, 52px); letter-spacing: .5px;
+                 font-size: clamp(34px, 9.8vw, 58px); letter-spacing: .5px;
                  text-transform: uppercase; color: var(--star-full);
                  text-shadow: 0 2px 0 #FF6600, 0 3px 10px rgba(0,0,0,.55); }
   /* Sits above the artwork so the completion card reads as resting on the
