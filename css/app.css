@@ -96,13 +96,12 @@
      Poster only — it means nothing on the list or stats. */
   #zoom { position: fixed; top: calc(8px + var(--safe-t)); left: 10px; z-index: 40;
           width: 44px; height: 44px; border-radius: 50%; display: none;
-          align-items: center; justify-content: center; gap: 1px;
+          align-items: center; justify-content: center;
           background: rgba(8,4,12,.6); border: 1px solid var(--line);
-          color: var(--keyline); backdrop-filter: blur(6px);
-          font-family: var(--disp); font-size: 15px; letter-spacing: .5px; cursor: pointer; }
+          color: var(--keyline); backdrop-filter: blur(6px); cursor: pointer; }
   body.v-poster #zoom { display: flex; }
   #zoom:active { transform: scale(.94); }
-  #zoom svg { width: 15px; height: 15px; }
+  #zoom svg { width: 21px; height: 21px; display: block; }
 
   /* Owned and unowned used to differ only by #F2D98A vs #FFD700 — two bright
      yellows, indistinguishable at arm's length across a sheet of 236. Unowned

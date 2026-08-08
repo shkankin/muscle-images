@@ -107,7 +107,17 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
   ok('poster has a zoom button',!!zb&&zb.visible,JSON.stringify(zb));
   if(zb&&zb.visible){
     ok('zoom is a usable tap target',zb.w>=40,zb.w+'px');
-    ok('zoom shows the current count',/^\d+$/.test(zb.label),zb.label);
+    // v3.7: a magnifier showing the ACTION, not the column count. "4" was
+    // accurate but did not read as a control.
+    const zi=await pg.evaluate(()=>{const b=document.getElementById('zoom');
+      return {svg:!!b.querySelector('svg'), dir:b.dataset.dir,
+              label:b.getAttribute('aria-label')||'',
+              plus:b.querySelectorAll('svg path').length,
+              digits:/\d/.test(b.textContent||'')};});
+    ok('zoom shows a magnifier icon',zi.svg,'no svg');
+    ok('zoom shows no bare number',!zi.digits,'still has digits');
+    ok('at 4 across the action is zoom OUT',zi.dir==='out',zi.dir);
+    ok('and says so',/zoom out/i.test(zi.label),zi.label);
     ok('narrow default is 4 across',(await colsNow())===4,String(await colsNow()));
     const seq=[];
     for(let i=0;i<4;i++){
@@ -116,6 +126,14 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
     }
     // 8 and 10 were dropped in v3.3 — too cramped to read on a phone.
     ok('zoom toggles 4 and 6 only',seq.join()==='6,4,6,4',seq.join());
+    // the icon must FLIP when the state does
+    await pg.locator('#zoom').click();await pg.waitForTimeout(320);
+    const flipped=await pg.evaluate(()=>{const b=document.getElementById('zoom');
+      return {dir:b.dataset.dir,label:b.getAttribute('aria-label')||'',
+              cols:getComputedStyle(document.getElementById('grid')).gridTemplateColumns.split(' ').length};});
+    ok('at 6 across the action flips to zoom IN',
+       flipped.cols!==6||flipped.dir==='in',`${flipped.cols} cols, dir=${flipped.dir}`);
+    ok('label flips too',flipped.cols!==6||/zoom in/i.test(flipped.label),flipped.label);
     ok('zoom never goes past 6',Math.max(...seq)<=6,seq.join());
     // sit on the wider step and check the cells still behave
     if((await colsNow())!==6){ await pg.locator('#zoom').click();await pg.waitForTimeout(320); }

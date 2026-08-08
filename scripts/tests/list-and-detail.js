@@ -360,13 +360,20 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
    ok('list dots exist for '+withCls.id,!!d&&d.length===withCls.colors.length,
       d?`${d.length} dots vs ${withCls.colors.length} colors`:'no row');
    if(d){
-     // every dot that has a class in the catalog must show that exact letter
-     const want=withCls.colors.map(c=>(withCls.cls||{})[c]||'');
+     // Only A and B are printed — C is the common case and is implied by a
+     // blank dot. The tooltip still carries it either way.
+     const want=withCls.colors.map(c=>{
+       const k=(withCls.cls||{})[c]||'';
+       return (k==='A'||k==='B')?k:'';});
      const got=d.map(x=>x.txt);
      ok('each dot shows ITS OWN color\u2019s class',got.join()===want.join(),
         `got ${got.join()} want ${want.join()}`);
-     ok('the class is also in the tooltip',
-        d.every((x,i)=>!want[i]||/class /.test(x.title)),
+     const rawCls=withCls.colors.map(c=>(withCls.cls||{})[c]||'');
+     ok('class C is left blank',
+        d.every((x,i)=>rawCls[i]!=='C'||x.txt===''),
+        d.map((x,i)=>rawCls[i]+':'+x.txt).join(' '));
+     ok('every class is still in the tooltip, including C',
+        d.every((x,i)=>!rawCls[i]||/class /.test(x.title)),
         d.map(x=>x.title).join(' | '));
      ok('dots are big enough to hold a letter',d.every(x=>x.w>=14),
         d.map(x=>x.w).join());
@@ -380,6 +387,17 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
      }
    }
  }
+ // the swatches themselves are part of the design and get asserted
+ const pal=await pg.evaluate(()=>{
+   const seen={};
+   document.querySelectorAll('.ldots i').forEach(e=>{
+     seen[(e.getAttribute('title')||'').split(' \u00b7 ')[0]]=getComputedStyle(e).backgroundColor;});
+   return seen;});
+ const expect={'Green':'rgb(158, 219, 83)','Neon Orange':'rgb(251, 162, 36)',
+               'Salmon':'rgb(246, 105, 49)'};
+ Object.keys(expect).forEach(k=>{
+   ok(k+' uses the current swatch',!pal[k]||pal[k]===expect[k],`${pal[k]} vs ${expect[k]}`);});
+
  // and against EVERY one of the nine colors, not just this figure's
  const allC=await pg.evaluate(()=>{
    const seen={};

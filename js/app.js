@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='3.6';
+const APP_VERSION='3.7';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -15,8 +15,8 @@ const COLL_KEY='muscle-collection';
 const COLORS=[
   {k:'Flesh',hex:'#E5A594',s:'f'},{k:'Dark Blue',hex:'#31508C',s:'db'},
   {k:'Light Blue',hex:'#6FA9C9',s:'lb'},{k:'Red',hex:'#C6413A',s:'r'},
-  {k:'Green',hex:'#5E9E62',s:'g'},{k:'Neon Orange',hex:'#F2571E',s:'o'},
-  {k:'Salmon',hex:'#DD8A78',s:'s'},{k:'Purple',hex:'#7C5AA6',s:'p'},
+  {k:'Green',hex:'#9EDB53',s:'g'},{k:'Neon Orange',hex:'#FBA224',s:'o'},
+  {k:'Salmon',hex:'#F66931',s:'s'},{k:'Purple',hex:'#7C5AA6',s:'p'},
   {k:'Magenta',hex:'#B54A83',s:'m'}
 ];
 const HEX={},SUF={},INK={};
@@ -135,6 +135,19 @@ function effectiveCols(){
   const w=window.innerWidth;
   return w<=460?4:w<=720?6:w<=1000?8:10;
 }
+// A magnifier with + or - inside. The bare column count was accurate but not
+// self-explanatory — "4" does not tell you it is a control, let alone which way
+// it goes. The icon shows the ACTION the tap performs: at 4 across the thumbs
+// are already large, so the only move is out.
+const MAG=function(sign){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
+    +'stroke-linecap="round" aria-hidden="true">'
+    +'<circle cx="10.5" cy="10.5" r="6.5"></circle>'
+    +'<path d="M15.4 15.4 L21 21"></path>'
+    +'<path d="M7.4 10.5h6.2"></path>'
+    +(sign==='+'?'<path d="M10.5 7.4v6.2"></path>':'')
+    +'</svg>';
+};
 function applyZoom(){
   const g=$('grid'); if(!g) return;
   if(posterCols) g.style.setProperty('--cols',posterCols);
@@ -142,8 +155,12 @@ function applyZoom(){
   const b=$('zoom');
   if(b){
     const n=effectiveCols();
-    b.textContent=n;
-    b.setAttribute('aria-label','Showing '+n+' per row \u2014 tap to change');
+    const out=n<Math.max.apply(null,ZOOMS);      // more columns still available
+    b.innerHTML=MAG(out?'-':'+');
+    b.dataset.dir=out?'out':'in';
+    b.setAttribute('aria-label',out
+      ? 'Zoom out \u2014 show more figures per row'
+      : 'Zoom in \u2014 show fewer, larger figures');
   }
 }
 // Steps 4 -> 6 -> 8 -> 10 and wraps. One button rather than a pair: on a phone
@@ -229,10 +246,14 @@ function listRow(f){
   // can be C in flesh and A in purple, and this is the only place that shows it.
   const cls=f.cls||{};
   const dots=f.colors.map(function(c){
-    const k=cls[c]||'';
+    // C is the common case and is implied by the ABSENCE of a letter, so only
+    // A and B are printed. Nine of ten dots would otherwise read C and the two
+    // that matter would be lost in the noise. The tooltip still names it.
+    const raw=cls[c]||'';
+    const k=(raw==='A'||raw==='B')?raw:'';
     return '<i class="'+(mine.indexOf(c)>=0?'have':'')+(k?' lettered':'')+'"'
       +' style="background:'+(HEX[c]||'#888')+';color:'+(INK[c]||'#000')+'"'
-      +' title="'+esc(c)+(k?' \u00b7 class '+k:'')+'">'+(k||'')+'</i>';
+      +' title="'+esc(c)+(raw?' \u00b7 class '+raw:'')+'">'+k+'</i>';
   }).join('');
   // The dot grid reserves one column per color, up to 4 (it wraps to a second
   // row beyond that). It used to declare 4 columns unconditionally, so the 75
