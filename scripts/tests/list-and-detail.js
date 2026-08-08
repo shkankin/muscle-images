@@ -3,7 +3,8 @@ const http=require('http'),fs=require('fs'),path=require('path');
 const ROOT=require('path').resolve(__dirname,'../..'),PORT=8561;
 const MIME={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json',
             '.woff2':'font/woff2','.png':'image/png','.jpg':'image/jpeg'};
-const cat=fs.readFileSync(path.join(ROOT,'figures.json'),'utf8');
+const catRaw=fs.readFileSync(path.join(ROOT,'figures.json'),'utf8');
+const cat=catRaw;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]);if(p==='/')p='/index.html';
  const f=path.join(ROOT,p);
  if(!fs.existsSync(f)||fs.statSync(f).isDirectory()){r.writeHead(404);r.end();return;}
@@ -334,6 +335,72 @@ let pass=0,fail=0;const ok=(n,c,x='')=>{c?pass++:fail++;console.log((c?'PASS ':'
     !!logo&&(logo.filter==='none'||!/drop-shadow/.test(logo.filter)),
     logo?logo.filter:'no .listlogo');
  ok('list logo has no box-shadow either',!!logo&&logo.shadow==='none',logo?logo.shadow:'-');
+
+ // ── v3.6: class moved from the poster cell into the list color dot ──
+ // Class is PER COLOR, so showing one letter per figure on the poster was
+ // lossy as well as noisy. The dot that carries the letter is the dot for
+ // that exact color.
+ const rowsRaw=JSON.parse(catRaw);
+ const withCls=rowsRaw.find(r=>r.cls&&Object.keys(r.cls).length&&r.colors.length>1);
+ await pg.locator('#nav button[data-view="poster"]').click();await pg.waitForTimeout(600);
+ ok('poster cells carry no class chip',
+    await pg.evaluate(()=>document.querySelectorAll('.cell .cls').length===0),
+    String(await pg.evaluate(()=>document.querySelectorAll('.cell .cls').length)));
+ await pg.locator('#nav button[data-view="list"]').click();await pg.waitForTimeout(700);
+ if(withCls){
+   const d=await pg.evaluate(id=>{
+     const r=document.querySelector(`.lrow[data-row="${id}"]`);
+     if(!r) return null;
+     return [...r.querySelectorAll('.ldots i')].map(e=>({
+       txt:e.textContent.trim(), cls:e.className,
+       title:e.getAttribute('title')||'',
+       bg:getComputedStyle(e).backgroundColor,
+       color:getComputedStyle(e).color,
+       w:Math.round(e.getBoundingClientRect().width)}));},withCls.id);
+   ok('list dots exist for '+withCls.id,!!d&&d.length===withCls.colors.length,
+      d?`${d.length} dots vs ${withCls.colors.length} colors`:'no row');
+   if(d){
+     // every dot that has a class in the catalog must show that exact letter
+     const want=withCls.colors.map(c=>(withCls.cls||{})[c]||'');
+     const got=d.map(x=>x.txt);
+     ok('each dot shows ITS OWN color\u2019s class',got.join()===want.join(),
+        `got ${got.join()} want ${want.join()}`);
+     ok('the class is also in the tooltip',
+        d.every((x,i)=>!want[i]||/class /.test(x.title)),
+        d.map(x=>x.title).join(' | '));
+     ok('dots are big enough to hold a letter',d.every(x=>x.w>=14),
+        d.map(x=>x.w).join());
+     // the letter sits ON nine different color backgrounds — check the worst
+     const rgb=t=>{const m=t.match(/[\d.]+/g).map(Number);return[m[0],m[1],m[2]];};
+     const lettered=d.filter(x=>x.txt);
+     if(lettered.length){
+       const worst=Math.min(...lettered.map(x=>ratio(rgb(x.color),rgb(x.bg))));
+       console.log(`      class letter on its dot: worst ${worst.toFixed(2)}:1`);
+       ok('class letter readable on its own dot',worst>=4.5,`${worst.toFixed(2)}:1`);
+     }
+   }
+ }
+ // and against EVERY one of the nine colors, not just this figure's
+ const allC=await pg.evaluate(()=>{
+   const seen={};
+   document.querySelectorAll('.ldots i').forEach(e=>{
+     if(!e.textContent.trim()) return;
+     const cs=getComputedStyle(e);
+     seen[cs.backgroundColor]=cs.color;});
+   return seen;});
+ const rgb2=t=>{const m=t.match(/[\d.]+/g).map(Number);return[m[0],m[1],m[2]];};
+ const pairs=Object.entries(allC);
+ if(pairs.length){
+   const worstAll=Math.min(...pairs.map(([bg,fg])=>ratio(rgb2(fg),rgb2(bg))));
+   console.log(`      across ${pairs.length} distinct dot colors: worst ${worstAll.toFixed(2)}:1`);
+   ok('class letter readable on every color in use',worstAll>=4.5,`${worstAll.toFixed(2)}:1`);
+ }
+
+ // ── v3.6: printable want list ──
+ await pg.locator('#gear').click();await pg.waitForTimeout(500);
+ ok('settings offers a want-list sheet',
+    await pg.locator('#wantBtn').count()>0);
+ await pg.locator('#doneS').click();await pg.waitForTimeout(300);
 
  ok('no JS errors',errs.length===0,errs.join(' | '));
  await b.close();console.log(`\n=== ${pass} passed, ${fail} failed ===`);process.exit(fail?1:0);

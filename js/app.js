@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='3.5';
+const APP_VERSION='3.6';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -19,8 +19,25 @@ const COLORS=[
   {k:'Salmon',hex:'#DD8A78',s:'s'},{k:'Purple',hex:'#7C5AA6',s:'p'},
   {k:'Magenta',hex:'#B54A83',s:'m'}
 ];
-const HEX={},SUF={};
-COLORS.forEach(function(c){HEX[c.k]=c.hex;SUF[c.k]=c.s;});
+const HEX={},SUF={},INK={};
+// Ink for a class letter printed ON a color dot. A text-shadow halo looks fine
+// but measures nothing, so the letter's own color has to do the work: pick
+// black or white per swatch by WCAG contrast. Computed from the palette rather
+// than hardcoded, so adding a tenth color can never ship an unreadable letter.
+// Worst of the nine is 4.92:1 (Magenta); best is 10.14:1 (Flesh).
+function _lum(hex){
+  const v=[1,3,5].map(function(i){
+    const c=parseInt(hex.substr(i,2),16)/255;
+    return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4);
+  });
+  return 0.2126*v[0]+0.7152*v[1]+0.0722*v[2];
+}
+COLORS.forEach(function(c){
+  HEX[c.k]=c.hex; SUF[c.k]=c.s;
+  const L=_lum(c.hex);
+  const onBlack=(L+0.05)/0.05, onWhite=1.05/(L+0.05);
+  INK[c.k]= onBlack>=onWhite ? '#000' : '#fff';
+});
 const CLS_HEX={A:'#FFD700',B:'#06B0FE',C:'#B9C4D6'};
 const RANK={C:0,B:1,A:2};
 
@@ -93,14 +110,16 @@ async function loadFigs(){
 function dispName(f){return f.aka||f.name||('Figure '+f.num);}
 function subName(f){return (f.aka&&f.name)?f.name:'';}
 
+// The poster is the collector SHEET — a wall of silhouettes you scan for gaps.
+// Class is reference data, not something you read at a glance across 236 cells,
+// so it lives on the list now, inside the color dot it actually describes.
 function cell(f){
-  const owned=isOwned(f.id),k=topClass(f);
+  const owned=isOwned(f.id);
   return '<button class="cell '+(owned?'owned':'')+'" data-cell="'+esc(f.id)+'" aria-pressed="'+owned+'"'
     +' aria-label="No. '+f.num+' '+esc(dispName(f))+(owned?', collected':'')+'">'
     +'<span class="fig"><img src="'+IMG+'/MUSCLEFigure'+f.id+'f_poster.png" alt="" loading="lazy" decoding="async"'
     +' data-alt="'+IMG+'/MUSCLEFigure'+f.id+'ft.jpg"'
     +' data-fallback="chain"></span>'
-    +(k?'<span class="cls '+k.toLowerCase()+'">'+k+'</span>':'')
     +'<span class="num">'+f.num+'</span><span class="star">'+STAR+'</span></button>';
 }
 // ── poster zoom ────────────────────────────────────────────────────────
@@ -205,8 +224,15 @@ function activeFilterCount(){return (filters.own!=='all'?1:0)+(filters.color?1:0
 
 function listRow(f){
   const owned=isOwned(f.id),mine=ownedColors(f.id);
+  // Class is PER COLOR, so the letter belongs in the dot for that color rather
+  // than floating next to the row as one value for the whole figure. A figure
+  // can be C in flesh and A in purple, and this is the only place that shows it.
+  const cls=f.cls||{};
   const dots=f.colors.map(function(c){
-    return '<i class="'+(mine.indexOf(c)>=0?'have':'')+'" style="background:'+(HEX[c]||'#888')+'" title="'+esc(c)+'"></i>';
+    const k=cls[c]||'';
+    return '<i class="'+(mine.indexOf(c)>=0?'have':'')+(k?' lettered':'')+'"'
+      +' style="background:'+(HEX[c]||'#888')+';color:'+(INK[c]||'#000')+'"'
+      +' title="'+esc(c)+(k?' \u00b7 class '+k:'')+'">'+(k||'')+'</i>';
   }).join('');
   // The dot grid reserves one column per color, up to 4 (it wraps to a second
   // row beyond that). It used to declare 4 columns unconditionally, so the 75
@@ -557,6 +583,84 @@ function extLink(href,title,sub,accent){
     +'<span class="lnkt"><b>'+title+'</b><i>'+sub+'</i></span>'+EXT+'</a>';
 }
 
+// ── want list, as a printable sheet ────────────────────────────────────
+// Opens a self-contained page and calls print(); the phone's own print dialog
+// saves it as a PDF or shares it. No PDF library: the CSP is script-src 'self'
+// and vendoring jsPDF would mean shipping ~300KB and relaxing it, to produce a
+// worse-looking page than the browser's own print engine already makes.
+//
+// Images are the 450x450 ft.jpg files — the largest that exist for these
+// figures. There is no higher-resolution tier to reach for.
+function wantSheet(){
+  const rows=figs.filter(function(f){return isWanted(f.id);});
+  if(!rows.length){ toast('Nothing on your want list yet.'); return; }
+
+  const card=rows.map(function(f){
+    const cs=wantColors(f.id);
+    const cls=f.cls||{};
+    const chips=cs.map(function(c){
+      const k=cls[c]||'';
+      return '<span class="c"><i style="background:'+(HEX[c]||'#888')+'"></i>'
+        +esc(c)+(k?' <b>'+k+'</b>':'')+'</span>';
+    }).join('');
+    return '<article>'
+      +'<div class="ph"><img src="'+IMG+'/MUSCLEFigure'+f.id+'ft.jpg" alt=""></div>'
+      +'<div class="no">#'+f.num+'</div>'
+      +'<div class="nm">'+esc(dispName(f))+'</div>'
+      +(f.jp?'<div class="jp" lang="ja">'+esc(f.jp)+'</div>':'')
+      +'<div class="cc">'+chips+'</div></article>';
+  }).join('');
+
+  const total=rows.reduce(function(n,f){return n+wantColors(f.id).length;},0);
+  const when=new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+
+  const doc='<!doctype html><html lang="en"><head><meta charset="utf-8">'
+    +'<title>M.U.S.C.L.E. want list</title>'
+    +'<meta name="viewport" content="width=device-width,initial-scale=1">'
+    +'<style>'
+    +'@page{margin:12mm}'
+    +'*{box-sizing:border-box;margin:0}'
+    +'body{font:13px/1.4 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;color:#111;background:#fff;padding:16px}'
+    +'header{border-bottom:3px solid #111;padding-bottom:8px;margin-bottom:14px}'
+    +'h1{font-size:21px;letter-spacing:.4px}'
+    +'header p{color:#555;font-size:12.5px;margin-top:3px}'
+    +'.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}'
+    // break-inside avoids a figure being sliced across a page break
+    +'article{border:1px solid #bbb;border-radius:8px;padding:9px;text-align:center;'
+      +'break-inside:avoid;page-break-inside:avoid}'
+    +'.ph{aspect-ratio:1/1;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}'
+    +'.ph img{max-width:100%;max-height:100%;object-fit:contain}'
+    +'.no{font-weight:700;font-size:12px;color:#666;margin-top:5px}'
+    +'.nm{font-weight:700;font-size:13.5px;line-height:1.25}'
+    +'.jp{font-size:12px;color:#444;margin-top:1px}'
+    +'.cc{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px;justify-content:center}'
+    +'.c{font-size:10.5px;border:1px solid #bbb;border-radius:20px;padding:1px 6px;'
+      +'display:inline-flex;align-items:center;gap:3px;white-space:nowrap}'
+    +'.c i{width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}'
+    +'.c b{font-size:9.5px}'
+    +'footer{margin-top:16px;border-top:1px solid #bbb;padding-top:7px;color:#666;font-size:11.5px}'
+    // The toolbar is screen-only: it must never appear on the printed page.
+    +'#bar{position:sticky;top:0;background:#111;color:#fff;padding:10px;margin:-16px -16px 14px;'
+      +'display:flex;gap:8px;align-items:center;font-size:13px}'
+    +'#bar button{font:inherit;font-weight:700;border:0;border-radius:8px;padding:8px 14px;'
+      +'background:#FFD700;color:#241713;cursor:pointer}'
+    +'#bar span{color:#bbb}'
+    +'@media print{#bar{display:none}body{padding:0}}'
+    +'</style></head><body>'
+    +'<div id="bar"><button onclick="window.print()">Save as PDF / Print</button>'
+    +'<span>or use your browser\u2019s share menu</span></div>'
+    +'<header><h1>M.U.S.C.L.E. \u2014 still hunting</h1>'
+    +'<p>'+rows.length+' figure'+(rows.length===1?'':'s')+' \u00b7 '+total+' color'
+    +(total===1?'':'s')+' wanted \u00b7 '+when+'</p></header>'
+    +'<div class="grid">'+card+'</div>'
+    +'<footer>Generated by M.U.S.C.L.E. Collector \u00b7 musclemen.app</footer>'
+    +'</body></html>';
+
+  const w=window.open('','_blank');
+  if(!w){ toast('Allow pop-ups to build the sheet.'); return; }
+  w.document.open(); w.document.write(doc); w.document.close();
+}
+
 function openSettings(){
   lockScroll();
   document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div>'
@@ -568,6 +672,7 @@ function openSettings(){
     +'<button class="btn out" id="expBtn">Export collection</button>'
     +'<button class="btn in" id="impBtn">Import collection</button>'
     +'<input type="file" id="impFile" accept="application/json" hidden>'
+    +'<button class="btn want" id="wantBtn">Want list \u2192 printable sheet</button>'
     +'<div class="fld">Catalog</div><button class="btn" id="reloadBtn">Reload catalog</button>'
     // Coffee lives with the links now — it is a destination like the rest, and a
     // lone solid yellow button below them read as a second "Done".
@@ -693,6 +798,7 @@ document.addEventListener('click',function(e){
   if(e.target.closest('#clearF')){filters={own:'all',color:'',cls:'',scope:'catalog'};closeSheet();renderList();return;}
   if(e.target.closest('#doneF')||e.target.closest('#doneS')||e.target.closest('#closeS')||e.target.id==='scrim'){closeSheet();return;}
 
+  if(e.target.closest('#wantBtn')){closeSheet();wantSheet();return;}
   if(e.target.closest('#expBtn')){
     const blob=new Blob([JSON.stringify(coll,null,1)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);

@@ -135,11 +135,6 @@
   .cell.owned .star { width: clamp(15px,3.3vw,21px); height: clamp(15px,3.3vw,21px);
                       filter: drop-shadow(0 0 4px rgba(255,215,0,.85)); }
   .cell.owned .star svg path { fill: var(--star-full); }
-  .cls { position: absolute; top: 3px; right: 3px; z-index: 3; min-width: 14px; height: 14px;
-         padding: 0 3px; border-radius: 3px; font-family: var(--disp); font-size: 10px;
-         line-height: 14px; text-align: center; color: #10131A; letter-spacing: .5px;
-         box-shadow: 0 1px 3px rgba(0,0,0,.6); }
-  .cls.a { background: var(--cls-a); } .cls.b { background: var(--cls-b); } .cls.c { background: var(--cls-c); }
 
   /* muscle_logo.png is 1200x305 — reserved for the same reason as the wordmark. */
   .listlogo {
@@ -208,12 +203,21 @@
   /* --dot-cols is set per row from the figure's color count (capped at 4, then
      it wraps). Right-aligned, so the grid's right edge stays put across rows
      and only the space handed back to the name varies. */
+  /* Dots are 15px rather than 12px so a class letter fits inside one and stays
+     readable. That is 3px x up-to-4 columns = 12px off the name; the class chip
+     the poster gave up was 20px, so the row still comes out ahead. */
   .ldots {
-    display: grid; grid-template-columns: repeat(var(--dot-cols, 4), 12px);
+    display: grid; grid-template-columns: repeat(var(--dot-cols, 4), 15px);
     gap: 4px; flex: none; justify-content: end; align-content: center;
   }
-  .ldots i { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.45); }
+  .ldots i { width: 15px; height: 15px; border-radius: 50%;
+             box-shadow: inset 0 0 0 1px rgba(0,0,0,.45);
+             font-family: var(--disp); font-size: 9.5px; line-height: 15px;
+             text-align: center; font-style: normal; letter-spacing: 0; }
   .ldots i.have { box-shadow: inset 0 0 0 1px rgba(0,0,0,.45), 0 0 0 2px var(--star-full); }
+  /* The ink is set inline per dot (see INK in app.js) because it depends on the
+     swatch underneath. Nothing here may override that color. */
+  .ldots i.lettered { font-weight: 700; }
 
   .stats { padding-top: 10px; padding-bottom: 6px; }
   .stats > *:last-child { margin-bottom: 0; }
@@ -368,6 +372,10 @@
              background: rgba(255,215,0,.10); }
   .btn.in  { border-color: rgba(6,176,254,.55); color: #6FD2FF;
              background: rgba(6,176,254,.12); }
+  /* Third action in the same group, tinted to match the WANT blue used on the
+     detail screen so the two places that mean "hunting" agree. */
+  .btn.want { border-color: rgba(230,0,0,.5); color: #FF9C93;
+              background: rgba(230,0,0,.10); }
 
   /* Close X in the sheet header. The sheet already closes on Done and on the
      scrim, but neither is obvious, and Done sits past a screenful of prose. */
