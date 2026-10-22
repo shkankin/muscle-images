@@ -5,7 +5,7 @@
 // APP_VERSION must match VERSION in sw.js — the SW cache name drives the
 // update prompt, so they are bumped together every release.
 // ════════════════════════════════════════════════════════════════════
-const APP_VERSION='3.7';
+const APP_VERSION='3.8';
 const REPO='shkankin/muscle-images';
 const RAW='https://raw.githubusercontent.com/'+REPO+'/main';
 const IMG=RAW+'/images';
@@ -71,6 +71,7 @@ function toggleOwnColor(id,color){
     const w=e.want_colors.indexOf(color);
     if(w>=0) e.want_colors.splice(w,1);   // getting one you hunted clears it
   }
+  e.last=null;              // an edit here retires the poster's undo buffer
   e.owned=e.colors.length>0;e.ts=Date.now();saveColl();
 }
 function toggleWantColor(id,color){
@@ -78,8 +79,35 @@ function toggleWantColor(id,color){
   if(i>=0) e.want_colors.splice(i,1); else e.want_colors.push(color);
   e.want=e.want_colors.length>0;e.ts=Date.now();saveColl();
 }
-// Poster tap adds/removes flesh only, leaving other colors intact.
-function togglePosterOwn(id){toggleOwnColor(id,'Flesh');}
+// The poster star is binary, so the poster tap has to be binary too.
+//
+// It used to add and remove Flesh and nothing else. For a figure recorded in
+// any other color that left the star lit through both halves of the toggle —
+// the cell read as dead to the touch while each tap quietly wrote a Flesh
+// entry nobody asked for. Tap off now clears every owned color, which is the
+// only reading of "off" the star can honestly show.
+//
+// Clearing is destructive, so the colors go into e.last and the next tap puts
+// them back. A mistap costs one more tap, never the per-color detail.
+function togglePosterOwn(id){
+  const e=entry(id);
+  if(e.colors.length){
+    e.last=e.colors.slice();
+    if(e.colors.length>1) toast('Cleared '+e.colors.length+' colors \u2014 tap again to restore');
+    e.colors=[];
+  }else{
+    const back=(Array.isArray(e.last)&&e.last.length)?e.last.slice():['Flesh'];
+    e.colors=back;
+    for(let i=0;i<back.length;i++){           // getting one you hunted clears it
+      const w=e.want_colors.indexOf(back[i]);
+      if(w>=0) e.want_colors.splice(w,1);
+    }
+    e.want=e.want_colors.length>0;
+    e.last=null;
+    if(back.length>1) toast('Restored '+back.join(', '));
+  }
+  e.owned=e.colors.length>0;e.ts=Date.now();saveColl();
+}
 
 function topClass(f){
   let best=null,vals=Object.values(f.cls||{});

@@ -431,7 +431,12 @@
   .nav button.on { color: var(--star-full); }
   .nav svg { width: 21px; height: 21px; }
 
+  /* A readout, not a control — and a fixed one, so the whole grid scrolls
+     underneath it. Leaving it hit-testable made a 440x40 band across the
+     sheet dead to taps: the figure showing through the blur simply would not
+     toggle. Nothing in here is clickable, so nothing in here takes clicks. */
   .progress { position: fixed; left: 50%; transform: translateX(-50%);
+              pointer-events: none;
               bottom: calc(var(--bar-h) + var(--safe-b) + 10px); z-index: 45;
               width: min(92%, 440px); display: flex; align-items: center; gap: 10px;
               padding: 8px 15px; border-radius: 999px; background: rgba(10,6,18,.82);
